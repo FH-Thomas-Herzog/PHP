@@ -1,4 +1,4 @@
-= PHP Semester Project
+= PHP Semester Project (Communication list)
 Ing. Thomas Herzog
 :doctype: book
 :encoding: utf-8
@@ -6,5 +6,8 @@ Ing. Thomas Herzog
 :toc: left
 :numbered:
 
-include::01_propel_setup.asciidoc[]
+incluse::01_composer_setup.asciidoc[]
+
+include::02_propel_setup.asciidoc[]
+
 
