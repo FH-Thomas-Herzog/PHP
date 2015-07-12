@@ -6,7 +6,7 @@ Ing. Thomas Herzog
 :toc: left
 :numbered:
 
-incluse::01_composer_setup.asciidoc[]
+include::01_composer_setup.asciidoc[]
 
 include::02_propel_setup.asciidoc[]
 
