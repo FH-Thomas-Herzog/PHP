@@ -1,0 +1,10 @@
+== Composer setup
+This page covers the composer setup. +
+Composer is used to install the needed php dependencies for his php project. +
+
+[source,json]
+.composer.json
+include::../../source/composer/composer.json[]
+
+The *require* section holds the libraries which are used by this php project. +
+The *autoload* section holds the resources which get loaded via composer provided autoload mechanism.
