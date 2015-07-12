@@ -1,3 +1,6 @@
+<?php
+$user = AuthenticationManager::getAuthenticatedUser();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,8 +34,7 @@
 
 
         <div class="navbar-collapse collapse" id="bs-navbar-collapse-1">
-            <?php $view = ((isset($_REQUEST['view'])) ? $_REQUEST['view'] : '');
-            var_dump($view) ?>
+            <?php $view = ((isset($_REQUEST['view'])) ? $_REQUEST['view'] : ''); ?>
             <ul class="nav navbar-nav">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="index.php?view=list" <?php ($view == 'list') ? 'class="active"' : '' ?>>List</a></li>
@@ -59,19 +61,18 @@
                             </li>
                         </ul>
                     <?php else: ?>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                  Logged in as  <span class="badge"><?php echo Util::escape($user->getUserName()); ?></span>
-                  <b class="caret"></b>
-                </a>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                  <li class="centered">
-                    <form method="post" action="<?php echo Util::action('logout'); ?>">
-                      <input class="btn btn-xs" role="button" type="submit" value="Logout" />
-                    </form>
-                    </li>
-                  </ul>
-              <?php endif; ?>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Logged in as <span class="badge"><?php echo Util::escape($user->getUserName()); ?></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li class="centered">
+                                <form method="post" action="<?php echo Util::action('logout'); ?>">
+                                    <input class="btn btn-xs" role="button" type="submit" value="Logout"/>
+                                </form>
+                            </li>
+                        </ul>
+                    <?php endif; ?>
                 </li>
             </ul>
             <!-- /. login -->

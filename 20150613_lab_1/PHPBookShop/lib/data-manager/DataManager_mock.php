@@ -59,11 +59,21 @@ class DataManager extends BaseObject
     {
         global $__users;
         foreach ($__users AS $user) {
-            if ($__users->getUserName() === $userName) {
+            if ($__users->getUserName() == $userName) {
                 return $user;
             }
         }
         return null;
     }
 
+    public static function getUserForId($id)
+    {
+        global $__users;
+        foreach ($__users AS $user) {
+            if ($__users->getId() == $id) {
+                return $user;
+            }
+        }
+        return null;
+    }
 }

@@ -18,7 +18,9 @@ class Util extends BaseObject
 
     public static function action($action, $params = null)
     {
-        $page = $_SERVER['REQUEST_URI'];
+        $page = isset($_REQUEST['page']) && $_REQUEST['page'] ?
+            $_REQUEST['page'] :
+            $_SERVER['REQUEST_URI'];
         $return = 'index.php?action=' . rawurlencode($action) . '&page=' . rawurlencode($page);
         if (is_array($params)) {
             foreach ($params as $name => $value) {
