@@ -1,0 +1,10 @@
+= PHP Semester Project
+Ing. Thomas Herzog
+:doctype: book
+:encoding: utf-8
+:lang: en
+:toc: left
+:numbered:
+
+include::01_propel_setup.asciidoc[]
+

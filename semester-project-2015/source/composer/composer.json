@@ -3,5 +3,11 @@
     "apache/log4php": "2.3.0",
     "cboden/ratchet": "^0.3.3",
     "propel/propel": "~2.0@dev"
+  },
+
+  "autoload": {
+    "classmap": [
+      "../db/model/"
+    ]
   }
 }
