@@ -5,7 +5,7 @@
         "default": {
           "adapter": "mysql",
           "classname": "Propel\\Runtime\\Connection\\ConnectionWrapper",
-          "dsn": "mysql:host=127.0.0.1;port:3307;charset=utf-8;dbname=fh_2015_scm4_s1310307011",
+          "dsn": "mysql:host=127.0.0.1;port:3307;charset=utf8;dbname=fh_2015_scm4_s1310307011",
           "user": "root",
           "password": "root",
           "attributes": []
@@ -14,11 +14,26 @@
     },
     "runtime": {
       "defaultConnection": "default",
-      "connections": ["default"]
+      "connections": [
+        "default"
+      ],
+      "log": {
+        "defaultLogger": {
+          "type": "stream",
+          "path": "C:/propel.log",
+          "level": 300
+        },
+        "default": {
+          "type": "stream",
+          "path": "C:/propel.log"
+        }
+      }
     },
     "generator": {
       "defaultConnection": "default",
-      "connections": ["default"]
+      "connections": [
+        "default"
+      ]
     }
   }
 }

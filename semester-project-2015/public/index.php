@@ -3,6 +3,7 @@
 // set server root path
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'] . '/semester-project');
 require_once(ROOT_PATH . '/source/composer/vendor/autoload.php');
+//require_once(ROOT_PATH . '/source/db/config/propel.php');
 
 // log4php logging
 $logger = Logger::getLogger("main");
@@ -15,6 +16,8 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\Server\IoServer;
 
+$user = UserQuery::create()->find();
+var_dump($user);
 
 class Chat implements MessageComponentInterface
 {
