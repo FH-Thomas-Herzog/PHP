@@ -1,16 +1,24 @@
 {
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.zendframework.com/"
+    }
+  ],
   "require": {
     "apache/log4php": "2.3.0",
     "cboden/ratchet": "^0.3.3",
-    "propel/propel": "~2.0@dev"
+    "propel/propel": "~2.0@dev",
+    "twig/twig": "~1.0",
+    "tedivm/stash": "0.12.*"
   },
-
   "autoload": {
     "classmap": [
       "../db/model/"
     ],
-    "files" :[
-      "../db/config/propel.php"
+    "files": [
+      "../db/config/propel.php",
+      "vendor/twig/twig/lib/Twig/Autoloader.php"
     ]
   }
 }

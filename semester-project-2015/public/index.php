@@ -17,7 +17,30 @@ use Ratchet\ConnectionInterface;
 use Ratchet\Server\IoServer;
 
 $user = UserQuery::create()->find();
-var_dump($user);
+//var_dump($user);
+
+Twig_Autoloader::register();
+
+// TODO: Need to deploy internal and private resources to dir where they aren't accessible.
+$loader = new Twig_Loader_Filesystem($_SERVER['DOCUMENT_ROOT'] . 'semester-project/source/view/templates');
+$twig = new Twig_Environment($loader, array(
+    'cache' => $_SERVER['DOCUMENT_ROOT'] . 'semester-project/cache/templates',
+));
+
+// TODO: Cache implementations for templates, localizations and any other data
+// Create Driver with default options
+$driver = new Stash\Driver\FileSystem();
+$driver->setOptions(array());
+
+// Inject the driver into a new Pool object.
+$pool = new Stash\Pool($driver);
+
+// New Items will get and store their data using the same Driver.
+$item = $pool->getItem('path/to/data');
+
+var_dump($item);
+
+
 
 class Chat implements MessageComponentInterface
 {
