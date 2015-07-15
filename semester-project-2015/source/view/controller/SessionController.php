@@ -57,7 +57,7 @@ class SessionController
         if ($sessionTimeOut < 0) {
             throw new InternalErrorException("A session timeout smaller than 0 is not allowed");
         }
-        self::$sessionTimeOut = $sessionTimeOut;
+        $this->$sessionTimeOut = $sessionTimeOut;
     }
 
     /**
@@ -67,7 +67,7 @@ class SessionController
      */
     public function getUser()
     {
-        return self::getAttribute(self::$USER_MODEL);
+        return $this->getAttribute(self::$USER_MODEL);
     }
 
     /**
@@ -76,7 +76,7 @@ class SessionController
      */
     public function setSessionStart()
     {
-        self::getSession()[self::$SESSION_START] = new \DateTime();
+        $this->getSession()[self::$SESSION_START] = new \DateTime();
     }
 
     /**
@@ -85,7 +85,7 @@ class SessionController
      */
     public function setLastAccess()
     {
-        self::getSession()[self::$LAST_ACCESS_TIME] = new \DateTime();
+        $this->getSession()[self::$LAST_ACCESS_TIME] = new \DateTime();
     }
 
     /**
@@ -97,7 +97,7 @@ class SessionController
     public function getAttribute(string $name)
     {
         ObjectUtil::requireNotNull($name);
-        $session = self::getSession();
+        $session = $this->getSession();
         ObjectUtil::requireNotNull($session);
 
         if (isset($session[$name])) {
@@ -115,7 +115,7 @@ class SessionController
     public function setAttribute(string $name, $value)
     {
         ObjectUtil::requireNotNull($name);
-        $session = self::getSession();
+        $session = $this->getSession();
         ObjectUtil::requireNotNull($session);
 
         $session[$name] = $value;

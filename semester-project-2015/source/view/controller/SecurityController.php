@@ -49,11 +49,11 @@ class SecurityController extends Object
      */
     public static function getInstance()
     {
-        if (SecurityController::$instance == null) {
-            SecurityController::$instance = new SecurityController();
+        if (self::$instance == null) {
+            self::$instance = new SecurityController();
         }
 
-        return SecurityController::$instance;
+        return self::$instance;
     }
 
     /**
