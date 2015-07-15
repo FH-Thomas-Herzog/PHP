@@ -1,14 +1,20 @@
 <?php
 
 // set server root path
-define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'] . '/semester-project');
+define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'] . 'semester-project');
 require_once(ROOT_PATH . '/source/composer/vendor/autoload.php');
+require_once(ROOT_PATH . '/source/common/Object.php');
+require_once(ROOT_PATH . '/source/common/ObjectUtil.php');
+require_once(ROOT_PATH . '/source/common/Exceptions.php');
+require_once(ROOT_PATH . '/source/view/controller/SecurityController.php');
 //require_once(ROOT_PATH . '/source/db/config/propel.php');
+
+use \SCM4\View\Controller\SecurityController;
 
 // log4php logging
 $logger = Logger::getLogger("main");
 $logger->info("This is an informational message.");
-$logger->warn("I'm not feeling so good...");
+$logger->warn("I'm not feeling so good..." . SecurityController::getInstance() . PHP_EOL);
 
 
 // Web socket for php
@@ -39,7 +45,6 @@ $pool = new Stash\Pool($driver);
 $item = $pool->getItem('path/to/data');
 
 var_dump($item);
-
 
 
 class Chat implements MessageComponentInterface
