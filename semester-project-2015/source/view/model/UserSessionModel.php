@@ -34,7 +34,7 @@ class UserSessionModel extends Object
     public function __construct(User $user = null)
     {
         parent::__construct();
-        ObjectUtil::requireNotNull($user, new InternalErrorException("Cannot instantiate UserSessionModel with null user"));
+        ObjectUtil::requireSet($user, new InternalErrorException("Cannot instantiate UserSessionModel with null user"));
 
         $this->user = $user;
     }
@@ -45,7 +45,7 @@ class UserSessionModel extends Object
      */
     public function getUserId()
     {
-        return $this->user->getId();
+        return $this->getUser()->getId();
     }
 
     /**

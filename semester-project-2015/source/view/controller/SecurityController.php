@@ -8,15 +8,16 @@
 
 namespace SCM4\View\Controller;
 
-use SCM4\Common\Object;
+use SCM4\Common\SingletonObject;
 use SCM4\Common\Exception\SecurityException;
+use SCM4\View\Model\UserSessionModel;
 
 /**
  * This class holds the security error codes for security related exceptions.
  * Class SecurityErrorCodes
  * @package SCM4\View\Controller
  */
-class SecurityErrorCodes extends Object
+class SecurityErrorCodes
 {
     public static $LOGIN_REFUSED = 201;
     public static $NO_ACTIVE_SESSION = 202;
@@ -31,8 +32,9 @@ class SecurityErrorCodes extends Object
  * Class SecurityController
  * @package SCM4\View\Controller
  */
-class SecurityController extends Object
+class SecurityController extends SingletonObject
 {
+    private $sessionController;
 
     private static $instance = null;
 
@@ -41,6 +43,7 @@ class SecurityController extends Object
      */
     private function __construct()
     {
+        $this->sessionController = SessionController::getInstance();
     }
 
     /**
@@ -63,12 +66,16 @@ class SecurityController extends Object
      * @throws SecurityException if the login fails
      * @see SecurityErrorCodes for the relevant error codes
      */
-    public function loginUser(string $username, string $password)
+    public function loginUser($username, $password)
     {
         ObjectUtil::requireNotNull($username, new SecurityException("Username not allowed to be null", SecurityErrorCodes::$INSUFFICIENT_ARGS));
         ObjectUtil::requireNotNull($password, new SecurityException("Password not allowed to be null", SecurityErrorCodes::$INSUFFICIENT_ARGS));
 
         // TODO: log user in
+        $user = null;
+
+        $this->sessionController->startSession();
+        $this->sessionController->setAttribute(SessionController::$USER_MODEL, new UserSessionModel($user));
     }
 
     /**
@@ -78,34 +85,26 @@ class SecurityController extends Object
      * @see $this->getSession();
      * @see $this->destroySession();
      */
-    public function logoutUser(integer $userId)
+    public function logoutUser($userId = -666)
     {
-        ObjectUtil::requireNotNull($userId, new SecurityException("UserId not allowed to be null", SecurityErrorCodes::$INSUFFICIENT_ARGS));
-        // Check if an session exists
-        $session = $this->getSession();
-
-        // TODO: Check if session is owned by this user.
-
-        if (!$this->isUserLogged(userId)) {
+        if (!$this->isUserLogged($userId)) {
             throw new SecurityException("User not logged in", SecurityErrorCodes::$USER_NOT_LOGGED);
         }
-        // TODO: Log user out
-
-        $this->destroySession();
+        $this->sessionController->destroySession();
     }
 
     /**
      * Answers the question if the used with the given id is still logged in.
      * @param integer $userId the user id to check if still logged in
      * @return bool true if the user is still logged in, false otherwise
-     * @throws SecurityException if no session is active, user does not exists and user not logged in.
-     * @see $this->getSession();
      */
-    public function isUserLogged(integer $userId)
+    public function isUserLogged($userId = -666)
     {
-        ObjectUtil::requireNotNull($userId, new SecurityException("UserId not allowed to be null", SecurityErrorCodes::$INSUFFICIENT_ARGS));
-        //TODO: Check if user is logged
-        return false;
+        if ((!isset($userId)) || (!$this->sessionController->isSessionActive())) {
+            return false;
+        }
+        $userModel = $this->sessionController->getAttribute(SessionController::$USER_MODEL);
+        return ((isset($userModel)) && ($userModel->getUserId() === $userId));
     }
 
     /**
@@ -114,55 +113,11 @@ class SecurityController extends Object
      * @param $userId the user id
      * @return bool true if the user is valid, false otherwise
      */
-    public function isUserValid($userId)
+    public function isUserValid($userId = -666)
     {
-        ObjectUtil::requireNotNull($userId, new SecurityException("UserId not allowed to be null", SecurityErrorCodes::$INSUFFICIENT_ARGS));
-        //TODO: Check if user is valid (not deleted and blocked)
+        if (!isset($userId)) {
+            return false;
+        }
         return false;
-    }
-
-    /**
-     * Answers the question if a session exists.
-     * @return bool true if an session exists, false otherwise.
-     */
-    public function isSessionActive()
-    {
-        return session_status() == PHP_SESSION_ACTIVE;
-    }
-
-    /**
-     * Gets the current active session.
-     * @return $_SESSION the current active session
-     * @throws SecurityException if no active session is associates with the current request.
-     */
-    public function getSession()
-    {
-        if ($this->isSessionActive()) {
-            return $_SESSION;
-        }
-        throw new SecurityException("No session is associated with the current request", SecurityErrorCodes::$NO_ACTIVE_SESSION);
-    }
-
-    /**
-     * STarts a new session.
-     * @throws SecurityException if an session is already associated with the current request.
-     */
-    public function startSession()
-    {
-        if ($this->isSessionActive()) {
-            throw new SecurityException("Session already associated with the current request", SecurityErrorCodes::$ALREADY_ACTIVE_SESSION);
-        }
-        session_start();
-    }
-
-    /**
-     * Destroy the session associates with the current request.
-     * @throws SecurityException if no session is associated with the current request
-     * @see $this->getSession();
-     */
-    public function destroySession()
-    {
-        $this->getSession();
-        session_destroy();
     }
 }

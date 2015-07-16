@@ -10,6 +10,7 @@ namespace SCM4\View\Controller;
 
 use SCM4\Common\Exception\CoreException;
 use SCM4\Common\Exception\InternalErrorException;
+use SCM4\Common\SingletonObject;
 use SCM4\Common\ObjectUtil;
 
 /**
@@ -18,46 +19,56 @@ use SCM4\Common\ObjectUtil;
  * Class SessionController
  * @package SCM4\View\Controller
  */
-class SessionController
+class SessionController extends SingletonObject
 {
 
     /**
      * The key for the user model which represents the logged user
      * @var string
      */
-    private static $USER_MODEL = "USER_MODEL";
+    public static $USER_MODEL = "USER_MODEL";
 
     /**
      * The key for the session start date/time.
      * @var string
      */
-    private static $SESSION_START = "SESSION_START";
+    public static $SESSION_START = "SESSION_START";
 
     /**
      * The key for the last access time.
      * Represents the date/time of the last occurred request.
      * @var string
      */
-    private static $LAST_ACCESS_TIME = "LAST_ACCESS_TIME";
+    public static $LAST_ACCESS_TIME = "LAST_ACCESS_TIME";
 
     /**
-     * Timeout in minutes who long a session is allowed to exist before it gets invalidated.
-     * @var
+     * The key for the session timeout.
+     * Represents session timeout in minutes.
+     * @var string
      */
-    private $sessionTimeout;
+    public static $SESSION_TIMEOUT = "SESSION_TIMEOUT";
+
+    private static $instance = null;
 
     /**
      * Constructs an SessionController with the given sessionTimeOut.
      * @param integer $sessionTimeOut the session timeout >= 0 in minutes (0 = infinite, default = 30 minutes)
      * @throws InternalErrorException if the sessionTimeOut < 0
      */
-    public function __construct(integer $sessionTimeOut = 30)
+    private function __construct()
     {
-        parent::__construct();
-        if ($sessionTimeOut < 0) {
-            throw new InternalErrorException("A session timeout smaller than 0 is not allowed");
+    }
+
+    /**
+     * Creates and returns an singleton instance of an SessionController. (request scoped)
+     * @return SessionController the singleton instance
+     */
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new SessionController();
         }
-        $this->$sessionTimeOut = $sessionTimeOut;
+        return self::$instance;
     }
 
     /**
@@ -71,21 +82,12 @@ class SessionController
     }
 
     /**
-     * Sets the start date/time on the current associated session.
-     * @throws CoreException if tno session is active
-     */
-    public function setSessionStart()
-    {
-        $this->getSession()[self::$SESSION_START] = new \DateTime();
-    }
-
-    /**
      * Sets the last access date/time on the current associated session.
      * @throws CoreException if tno session is active
      */
     public function setLastAccess()
     {
-        $this->getSession()[self::$LAST_ACCESS_TIME] = new \DateTime();
+        $_SESSION[self::$LAST_ACCESS_TIME] = new \DateTime();
     }
 
     /**
@@ -94,14 +96,15 @@ class SessionController
      * @return any|null the attribute value or null if attribute not set
      * @throws \SCM4\Common\CoreException if no session is associated with the current request
      */
-    public function getAttribute(string $name)
+    public function getAttribute($name)
     {
-        ObjectUtil::requireNotNull($name);
-        $session = $this->getSession();
-        ObjectUtil::requireNotNull($session);
+        ObjectUtil::requireSet($name, new CoreException("Cannot get value for null attribute name"));
+        if (!$this->isSessionActive()) {
+            new CoreException("Cannot get attribute from non existing session");
+        }
 
-        if (isset($session[$name])) {
-            return $session[$name];
+        if (isset($_SESSION[$name])) {
+            return $_SESSION[$name];
         }
         return null;
     }
@@ -109,27 +112,65 @@ class SessionController
     /**
      * Sets the value for the given attribute on the current associated session.
      * @param string $name the attribute name
-     * @param $value the attribute value
+     * @param any|$value the attribute value to be set. if null then attribute is unset
      * @throws \SCM4\Common\CoreException if attribute name is null or no active session present
      */
-    public function setAttribute(string $name, $value)
+    public function setAttribute($name, $value = null)
     {
-        ObjectUtil::requireNotNull($name);
-        $session = $this->getSession();
-        ObjectUtil::requireNotNull($session);
+        ObjectUtil::requireSet($name, new CoreException("Cannot set value on null attribute name"));
+        if (!$this->isSessionActive()) {
+            new CoreException("Cannot get attribute from non existing session");
+        }
 
-        $session[$name] = $value;
+        if (isset($value)) {
+            $_SESSION[$name] = $value;
+        } else {
+            unset($_SESSION[$name]);
+        }
     }
 
     /**
-     * Gets the current associated session if one exists.
-     * @return $_SESSION if an session is associated with this request, null otherwise
+     * Answers the question if a session exists.
+     * @return bool true if an session exists, false otherwise.
      */
-    private function getSession()
+    public function isSessionActive()
     {
-        if (session_status() != PHP_SESSION_ACTIVE) {
-            return $_SESSION;
+        return session_status() == PHP_SESSION_ACTIVE;
+    }
+
+
+    /**
+     * Starts an http session with the given timeout.
+     * Will destroy an associated session if exists.
+     * @param int $sessionTimeout the $sessionTimeout the session timeout in minutes, default is 30
+     * @throws InternalErrorException
+     */
+    public function startSession($sessionTimeout = 30)
+    {
+        if ($this->isSessionActive()) {
+            $this->destroySession();
         }
-        return null;
+        if (!session_start()) {
+            throw new InternalErrorException("Session creation failed");
+        }
+        if ((integer)$sessionTimeout < 0) {
+            throw new InternalErrorException("A session timeout smaller than 0 not allowed");
+        }
+
+        $this->setAttribute(self::$SESSION_START, new \DateTime());
+        $this->setAttribute(self::$SESSION_TIMEOUT, (integer)$sessionTimeout);
+        $this->setLastAccess();
+    }
+
+    /**
+     * Destroy the session associates with the current request.
+     * @throws SecurityException if no session is associated with the current request
+     */
+    public function destroySession()
+    {
+        if ($this->isSessionActive()) {
+            session_unset();
+            session_destroy();
+        }
     }
 }

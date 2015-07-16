@@ -8,6 +8,8 @@
 
 namespace SCM4\Common;
 
+use SCM4\Common\Exception\InternalErrorException;
+
 /**
  * This class is the base class for all other implemented classes.
  * It provides magic methods for handling illegal access to an inherit class
@@ -25,7 +27,7 @@ abstract class Object
      */
     public function __call($name, $args)
     {
-        throw new InternalErrorException("Undefined function '" . $name . "(" . $args . ")'called", 2);
+        throw new InternalErrorException("Undefined function '" . $name . "(" . implode(",", $args) . ")'called", 2);
     }
 
     /**
@@ -68,4 +70,34 @@ abstract class Object
     {
         return "No string representation defined (" . get_class($this) . ")";
     }
+}
+
+/**
+ * Base object for all dynamic instance which allow multiple instance to be created.
+ * Class BaseObject
+ * @package SCM4\Common
+ */
+abstract class BaseObject extends Object
+{
+
+    /**
+     * Default private constructor for singleton instance
+     */
+    public function __construct()
+    {
+    }
+}
+
+abstract class SingletonObject extends Object
+{
+
+
+    /**
+     * Default private constructor for singleton instance
+     */
+    private function __construct()
+    {
+    }
+
+    public static abstract function getInstance();
 }
