@@ -6,12 +6,12 @@
  * Time: 8:46 PM
  */
 
-namespace SCM4\View\Controller;
+namespace source\view\controller;
 
-use SCM4\Common\Exception\CoreException;
-use SCM4\Common\Exception\InternalErrorException;
-use SCM4\Common\SingletonObject;
-use SCM4\Common\ObjectUtil;
+use source\common\CoreException;
+use source\common\InternalErrorException;
+use source\common\SingletonObject;
+use source\common\utils\ObjectUtil;
 
 /**
  * This class represents the session controller which handles the access to session

@@ -6,10 +6,10 @@
  * Time: 9:33 PM
  */
 
-namespace SCM4\View\Controller;
+namespace source\view\controller;
 
-use SCM4\Common\BaseObject;
-use SCM4\Common\Exception\InternalErrorException;
+use source\common\BaseObject;
+use source\common\InternalErrorException;
 
 /**
  * This class represents the view controller which handles the creation of the available views.
@@ -19,26 +19,40 @@ use SCM4\Common\Exception\InternalErrorException;
 class ViewController extends BaseObject
 {
 
-    public static $LOGIN = "login";
+    public static $VIEW_LOGIN = "login";
 
-    public static $LOGOUT = "logout";
+    public static $VIEW_LOGOUT = "logout";
+
+    public static $VIEW_START = "start";
 
     public static $REGISTRATION = "register";
 
-    private $engine;
+    public static $CONTEXT_ROOT = "/php-semester-project";
+
+    private static $POOL_NAME = "/view/controller/ViewController";
+
+    private static $VIEW_CONTROLLER_POOL = "VIEW_CONTROLLER_POOL";
+
+    private static $CSS_ROOT = "/public/css";
+
+    private $twig;
 
     /**
-     * Constructs this View handler and inits the used template engine
+     * Constructs this View handler and inits the used template engine.
+     * Be aware that the parameters must be given if no twig environment can be retrieved from the cache.
+     *
+     * @param null $templateLocation the location of the templates.
+     * @param array|null $twigOptions the options for the twig environment
      */
-    public function __construct()
+    public function __construct($templateLocation = null, array $twigOptions = null)
     {
         parent::__construct();
-        // TODO: Setup twig correctly
-        $loader = new Twig_Loader_Filesystem($_SERVER['DOCUMENT_ROOT'] . 'semester-project/source/view/templates');
-        $engine = new Twig_Environment($loader, array(
-            'cache' => $_SERVER['DOCUMENT_ROOT'] . 'semester-project/cache/templates',
-        ));
-        // TODO: Setup stash for caching the twig engine and maybe the rendered templates (login for instance)
+        $sessionCtrl = SessionController::getInstance();
+        $pool = $sessionCtrl->getAttribute(self::$VIEW_CONTROLLER_POOL);
+        if ($pool == null) {    // TODO: Setup twig correctly
+            $loader = new \Twig_Loader_Filesystem($templateLocation);
+            $this->twig = new \Twig_Environment($loader, $twigOptions);
+        }
     }
 
     /**
@@ -49,6 +63,7 @@ class ViewController extends BaseObject
      */
     public function renderView($viewId, array $args)
     {
-        // TODO: Validate view id and render view here
+        $args["cssRoot"] = self::$CONTEXT_ROOT . self::$CSS_ROOT;
+        return $this->twig->loadTemplate($viewId . ".html")->render($args);
     }
 }

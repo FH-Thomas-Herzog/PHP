@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{cssRoot}}/bootstrap.min.css">
+    <title>Login</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form id="loginForm" enctype="application/x-www-form-urlencoded" method="post">
+                <input id='action' name='action' value="{{actionValue}}" type='hidden'/>
+
+                <div id="container" class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4"><label id="usernameLabel">Username:</label></div>
+                            <div class="col-md-4"><input id="username" name="username" value="" type="text"
+                                                         placeholder="Enter your username"/>
+                            </div>
+                            <div class="col-md-4"><span id="usernameError"></span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"><label id="passwordLabel">Password:</label></div>
+                            <div class="col-md-4"><input id="password" name="password" value="" type="password"
+                                                         placeholder="Enter your password"/>
+                            </div>
+                            <div class="col-md-4"><span id="passwordError"></span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-center-block">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-default">Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+</body>
+</html>

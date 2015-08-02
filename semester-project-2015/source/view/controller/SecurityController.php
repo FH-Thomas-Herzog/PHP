@@ -6,10 +6,10 @@
  * Time: 7:22 PM
  */
 
-namespace SCM4\View\Controller;
+namespace source\view\controller;
 
-use SCM4\Common\SingletonObject;
-use SCM4\Common\Exception\SecurityException;
+use source\common\SingletonObject;
+use source\common\SecurityException;
 use SCM4\View\Model\UserSessionModel;
 
 /**

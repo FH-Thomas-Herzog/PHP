@@ -6,9 +6,9 @@
  * Time: 7:34 PM
  */
 
-namespace SCM4\Common;
+namespace source\common\utils;
 
-use SCM4\Common\Exception\CoreException;
+use source\common\CoreException;
 
 class ObjectUtil
 {

@@ -6,9 +6,9 @@
  * Time: 6:42 PM
  */
 
-namespace SCM4\Common;
+namespace source\common;
 
-use SCM4\Common\Exception\InternalErrorException;
+use source\common\InternalErrorException;
 
 /**
  * This class is the base class for all other implemented classes.

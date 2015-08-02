@@ -6,7 +6,7 @@
  * Time: 6:47 PM
  */
 
-namespace SCM4\Common\Exception;
+namespace source\common;
 
 /**
  * This exception is the base exception of all used exceptions.
