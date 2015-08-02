@@ -6,11 +6,11 @@
  * Time: 8:47 PM
  */
 
-namespace SCM4\View\Model;
+namespace source\view\model;
 
-use SCM4\Common\Exception\InternalErrorException;
-use SCM4\Common\Object;
-use SCM4\Common\ObjectUtil;
+use source\common\InternalErrorException;
+use source\common\Object;
+use source\common\ObjectUtil;
 
 /**
  * This class represents the user session model, which holds all relevant information

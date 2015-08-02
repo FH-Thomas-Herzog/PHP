@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{cssRoot}}/bootstrap.min.css">
+    <link rel="stylesheet" href="{{cssRoot}}/bootstrap-theme.min.css">
+    <script type="text/javascript" src="{{jsRoot}}/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="{{jsRoot}}/bootstrap-3.3.5.min.js"></script>
     <title>Login</title>
 </head>
 <body>
 <div class="container">
+    {% if message and messageType %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center">
+                <div class="alert alert-{{messageType}} alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <strong>{{message}}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
             <form id="loginForm" enctype="application/x-www-form-urlencoded" method="post">
-                <input id='action' name='action' value="{{actionValue}}" type='hidden'/>
+                <input id='actionId' name='actionId' value="{{actionId}}" type='hidden'/>
+                <input id='viewId' name='viewId' value="{{viewId}}" type='hidden'/>
 
                 <div id="container" class="row">
                     <div class="col-md-12">
@@ -30,7 +47,7 @@
                             <div class="col-md-4"><span id="passwordError"></span></div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12 col-center-block">
+                            <div class="col-md-12">
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-default">Login</button>
                                 </div>

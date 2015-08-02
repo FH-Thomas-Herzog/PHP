@@ -94,17 +94,17 @@ class SecurityController extends SingletonObject
     }
 
     /**
-     * Answers the question if the used with the given id is still logged in.
-     * @param integer $userId the user id to check if still logged in
-     * @return bool true if the user is still logged in, false otherwise
+     * Answers the question if the current active session holds an user.
+     * @return bool true if the current active has an valid active user set.
      */
-    public function isUserLogged($userId = -666)
+    public function isUserLogged()
     {
         if ((!isset($userId)) || (!$this->sessionController->isSessionActive())) {
             return false;
         }
         $userModel = $this->sessionController->getAttribute(SessionController::$USER_MODEL);
-        return ((isset($userModel)) && ($userModel->getUserId() === $userId));
+        // TODO: Check db for this user
+        return isset($userModel);
     }
 
     /**
