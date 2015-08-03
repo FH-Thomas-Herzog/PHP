@@ -2,14 +2,16 @@
 
 namespace Base;
 
-use \User as ChildUser;
-use \UserQuery as ChildUserQuery;
-use \UserType as ChildUserType;
-use \UserTypeQuery as ChildUserTypeQuery;
+use \Channel as ChildChannel;
+use \ChannelQuery as ChildChannelQuery;
+use \ChannelUserEntry as ChildChannelUserEntry;
+use \ChannelUserEntryQuery as ChildChannelUserEntryQuery;
+use \Thread as ChildThread;
+use \ThreadQuery as ChildThreadQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
-use Map\UserTypeTableMap;
+use Map\ChannelTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -25,18 +27,18 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'user_type' table.
+ * Base class that represents a row from the 'channel' table.
  *
  * 
  *
 * @package    propel.generator..Base
 */
-abstract class UserType implements ActiveRecordInterface 
+abstract class Channel implements ActiveRecordInterface 
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\UserTypeTableMap';
+    const TABLE_MAP = '\\Map\\ChannelTableMap';
 
 
     /**
@@ -67,22 +69,47 @@ abstract class UserType implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * @var        string
+     * @var        int
      */
     protected $id;
 
     /**
-     * The value for the created_date field.
+     * The value for the creation_date field.
      * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
      * @var        \DateTime
      */
-    protected $created_date;
+    protected $creation_date;
 
     /**
-     * @var        ObjectCollection|ChildUser[] Collection to store aggregation of ChildUser objects.
+     * The value for the updated_date field.
+     * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
+     * @var        \DateTime
      */
-    protected $collUsers;
-    protected $collUsersPartial;
+    protected $updated_date;
+
+    /**
+     * The value for the title field.
+     * @var        string
+     */
+    protected $title;
+
+    /**
+     * The value for the description field.
+     * @var        string
+     */
+    protected $description;
+
+    /**
+     * @var        ObjectCollection|ChildChannelUserEntry[] Collection to store aggregation of ChildChannelUserEntry objects.
+     */
+    protected $collChannelUserEntries;
+    protected $collChannelUserEntriesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildThread[] Collection to store aggregation of ChildThread objects.
+     */
+    protected $collThreads;
+    protected $collThreadsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -94,9 +121,15 @@ abstract class UserType implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildUser[]
+     * @var ObjectCollection|ChildChannelUserEntry[]
      */
-    protected $usersScheduledForDeletion = null;
+    protected $channelUserEntriesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildThread[]
+     */
+    protected $threadsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -109,7 +142,7 @@ abstract class UserType implements ActiveRecordInterface
     }
 
     /**
-     * Initializes internal state of Base\UserType object.
+     * Initializes internal state of Base\Channel object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -206,9 +239,9 @@ abstract class UserType implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>UserType</code> instance.  If
-     * <code>obj</code> is an instance of <code>UserType</code>, delegates to
-     * <code>equals(UserType)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Channel</code> instance.  If
+     * <code>obj</code> is an instance of <code>Channel</code>, delegates to
+     * <code>equals(Channel)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -274,7 +307,7 @@ abstract class UserType implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|UserType The current object, for fluid interface
+     * @return $this|Channel The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -330,7 +363,7 @@ abstract class UserType implements ActiveRecordInterface
     /**
      * Get the [id] column value.
      * 
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -338,7 +371,7 @@ abstract class UserType implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [created_date] column value.
+     * Get the [optionally formatted] temporal [creation_date] column value.
      * 
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -348,54 +381,154 @@ abstract class UserType implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getCreatedDate($format = NULL)
+    public function getCreationDate($format = NULL)
     {
         if ($format === null) {
-            return $this->created_date;
+            return $this->creation_date;
         } else {
-            return $this->created_date instanceof \DateTime ? $this->created_date->format($format) : null;
+            return $this->creation_date instanceof \DateTime ? $this->creation_date->format($format) : null;
         }
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [updated_date] column value.
+     * 
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getUpdatedDate($format = NULL)
+    {
+        if ($format === null) {
+            return $this->updated_date;
+        } else {
+            return $this->updated_date instanceof \DateTime ? $this->updated_date->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [title] column value.
+     * 
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Get the [description] column value.
+     * 
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
      * Set the value of [id] column.
      * 
-     * @param string $v new value
-     * @return $this|\UserType The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\Channel The current object (for fluent API support)
      */
     public function setId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[UserTypeTableMap::COL_ID] = true;
+            $this->modifiedColumns[ChannelTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Sets the value of [created_date] column to a normalized version of the date/time value specified.
+     * Sets the value of [creation_date] column to a normalized version of the date/time value specified.
      * 
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\UserType The current object (for fluent API support)
+     * @return $this|\Channel The current object (for fluent API support)
      */
-    public function setCreatedDate($v)
+    public function setCreationDate($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_date !== null || $dt !== null) {
-            if ($this->created_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_date->format("Y-m-d H:i:s")) {
-                $this->created_date = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[UserTypeTableMap::COL_CREATED_DATE] = true;
+        if ($this->creation_date !== null || $dt !== null) {
+            if ($this->creation_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->creation_date->format("Y-m-d H:i:s")) {
+                $this->creation_date = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[ChannelTableMap::COL_CREATION_DATE] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setCreatedDate()
+    } // setCreationDate()
+
+    /**
+     * Sets the value of [updated_date] column to a normalized version of the date/time value specified.
+     * 
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\Channel The current object (for fluent API support)
+     */
+    public function setUpdatedDate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->updated_date !== null || $dt !== null) {
+            if ($this->updated_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_date->format("Y-m-d H:i:s")) {
+                $this->updated_date = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[ChannelTableMap::COL_UPDATED_DATE] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setUpdatedDate()
+
+    /**
+     * Set the value of [title] column.
+     * 
+     * @param string $v new value
+     * @return $this|\Channel The current object (for fluent API support)
+     */
+    public function setTitle($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[ChannelTableMap::COL_TITLE] = true;
+        }
+
+        return $this;
+    } // setTitle()
+
+    /**
+     * Set the value of [description] column.
+     * 
+     * @param string $v new value
+     * @return $this|\Channel The current object (for fluent API support)
+     */
+    public function setDescription($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[ChannelTableMap::COL_DESCRIPTION] = true;
+        }
+
+        return $this;
+    } // setDescription()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -433,14 +566,26 @@ abstract class UserType implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserTypeTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ChannelTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTypeTableMap::translateFieldName('CreatedDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ChannelTableMap::translateFieldName('CreationDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->creation_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ChannelTableMap::translateFieldName('UpdatedDate', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->updated_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ChannelTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->title = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ChannelTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->description = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -449,10 +594,10 @@ abstract class UserType implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = UserTypeTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = ChannelTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\UserType'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Channel'), 0, $e);
         }
     }
 
@@ -465,7 +610,7 @@ abstract class UserType implements ActiveRecordInterface
      *
      * You can override this method in the stub class, but you should always invoke
      * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
+     * in case your model_propel changes.
      *
      * @throws PropelException
      */
@@ -494,13 +639,13 @@ abstract class UserType implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(UserTypeTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(ChannelTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildUserTypeQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildChannelQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -510,7 +655,9 @@ abstract class UserType implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collUsers = null;
+            $this->collChannelUserEntries = null;
+
+            $this->collThreads = null;
 
         } // if (deep)
     }
@@ -521,8 +668,8 @@ abstract class UserType implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see UserType::setDeleted()
-     * @see UserType::isDeleted()
+     * @see Channel::setDeleted()
+     * @see Channel::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -531,11 +678,11 @@ abstract class UserType implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTypeTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ChannelTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildUserTypeQuery::create()
+            $deleteQuery = ChildChannelQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -566,7 +713,7 @@ abstract class UserType implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTypeTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ChannelTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -585,7 +732,7 @@ abstract class UserType implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                UserTypeTableMap::addInstanceToPool($this);
+                ChannelTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -622,17 +769,34 @@ abstract class UserType implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->usersScheduledForDeletion !== null) {
-                if (!$this->usersScheduledForDeletion->isEmpty()) {
-                    \UserQuery::create()
-                        ->filterByPrimaryKeys($this->usersScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->channelUserEntriesScheduledForDeletion !== null) {
+                if (!$this->channelUserEntriesScheduledForDeletion->isEmpty()) {
+                    \ChannelUserEntryQuery::create()
+                        ->filterByPrimaryKeys($this->channelUserEntriesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->usersScheduledForDeletion = null;
+                    $this->channelUserEntriesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collUsers !== null) {
-                foreach ($this->collUsers as $referrerFK) {
+            if ($this->collChannelUserEntries !== null) {
+                foreach ($this->collChannelUserEntries as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->threadsScheduledForDeletion !== null) {
+                if (!$this->threadsScheduledForDeletion->isEmpty()) {
+                    \ThreadQuery::create()
+                        ->filterByPrimaryKeys($this->threadsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->threadsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collThreads !== null) {
+                foreach ($this->collThreads as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -659,17 +823,30 @@ abstract class UserType implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[ChannelTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ChannelTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(UserTypeTableMap::COL_ID)) {
+        if ($this->isColumnModified(ChannelTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(UserTypeTableMap::COL_CREATED_DATE)) {
-            $modifiedColumns[':p' . $index++]  = 'created_date';
+        if ($this->isColumnModified(ChannelTableMap::COL_CREATION_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'creation_date';
+        }
+        if ($this->isColumnModified(ChannelTableMap::COL_UPDATED_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'updated_date';
+        }
+        if ($this->isColumnModified(ChannelTableMap::COL_TITLE)) {
+            $modifiedColumns[':p' . $index++]  = 'title';
+        }
+        if ($this->isColumnModified(ChannelTableMap::COL_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = 'description';
         }
 
         $sql = sprintf(
-            'INSERT INTO user_type (%s) VALUES (%s)',
+            'INSERT INTO channel (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -679,10 +856,19 @@ abstract class UserType implements ActiveRecordInterface
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
                     case 'id':                        
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'created_date':                        
-                        $stmt->bindValue($identifier, $this->created_date ? $this->created_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'creation_date':                        
+                        $stmt->bindValue($identifier, $this->creation_date ? $this->creation_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'updated_date':                        
+                        $stmt->bindValue($identifier, $this->updated_date ? $this->updated_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'title':                        
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                        break;
+                    case 'description':                        
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -691,6 +877,13 @@ abstract class UserType implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -723,7 +916,7 @@ abstract class UserType implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UserTypeTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ChannelTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -743,7 +936,16 @@ abstract class UserType implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getCreatedDate();
+                return $this->getCreationDate();
+                break;
+            case 2:
+                return $this->getUpdatedDate();
+                break;
+            case 3:
+                return $this->getTitle();
+                break;
+            case 4:
+                return $this->getDescription();
                 break;
             default:
                 return null;
@@ -769,14 +971,17 @@ abstract class UserType implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['UserType'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Channel'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['UserType'][$this->hashCode()] = true;
-        $keys = UserTypeTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Channel'][$this->hashCode()] = true;
+        $keys = ChannelTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getCreatedDate(),
+            $keys[1] => $this->getCreationDate(),
+            $keys[2] => $this->getUpdatedDate(),
+            $keys[3] => $this->getTitle(),
+            $keys[4] => $this->getDescription(),
         );
 
         $utc = new \DateTimeZone('utc');
@@ -786,26 +991,47 @@ abstract class UserType implements ActiveRecordInterface
             $result[$keys[1]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
         
+        if ($result[$keys[2]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[2]];
+            $result[$keys[2]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+        
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
         
         if ($includeForeignObjects) {
-            if (null !== $this->collUsers) {
+            if (null !== $this->collChannelUserEntries) {
                 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'users';
+                        $key = 'channelUserEntries';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'users';
+                        $key = 'channel_user_entries';
                         break;
                     default:
-                        $key = 'Users';
+                        $key = 'ChannelUserEntries';
                 }
         
-                $result[$key] = $this->collUsers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collChannelUserEntries->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collThreads) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'threads';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'threads';
+                        break;
+                    default:
+                        $key = 'Threads';
+                }
+        
+                $result[$key] = $this->collThreads->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -821,11 +1047,11 @@ abstract class UserType implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\UserType
+     * @return $this|\Channel
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UserTypeTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ChannelTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -836,7 +1062,7 @@ abstract class UserType implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\UserType
+     * @return $this|\Channel
      */
     public function setByPosition($pos, $value)
     {
@@ -845,7 +1071,16 @@ abstract class UserType implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setCreatedDate($value);
+                $this->setCreationDate($value);
+                break;
+            case 2:
+                $this->setUpdatedDate($value);
+                break;
+            case 3:
+                $this->setTitle($value);
+                break;
+            case 4:
+                $this->setDescription($value);
                 break;
         } // switch()
 
@@ -871,13 +1106,22 @@ abstract class UserType implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = UserTypeTableMap::getFieldNames($keyType);
+        $keys = ChannelTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCreatedDate($arr[$keys[1]]);
+            $this->setCreationDate($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setUpdatedDate($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setTitle($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setDescription($arr[$keys[4]]);
         }
     }
 
@@ -898,7 +1142,7 @@ abstract class UserType implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\UserType The current object, for fluid interface
+     * @return $this|\Channel The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -918,13 +1162,22 @@ abstract class UserType implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(UserTypeTableMap::DATABASE_NAME);
+        $criteria = new Criteria(ChannelTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(UserTypeTableMap::COL_ID)) {
-            $criteria->add(UserTypeTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(ChannelTableMap::COL_ID)) {
+            $criteria->add(ChannelTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(UserTypeTableMap::COL_CREATED_DATE)) {
-            $criteria->add(UserTypeTableMap::COL_CREATED_DATE, $this->created_date);
+        if ($this->isColumnModified(ChannelTableMap::COL_CREATION_DATE)) {
+            $criteria->add(ChannelTableMap::COL_CREATION_DATE, $this->creation_date);
+        }
+        if ($this->isColumnModified(ChannelTableMap::COL_UPDATED_DATE)) {
+            $criteria->add(ChannelTableMap::COL_UPDATED_DATE, $this->updated_date);
+        }
+        if ($this->isColumnModified(ChannelTableMap::COL_TITLE)) {
+            $criteria->add(ChannelTableMap::COL_TITLE, $this->title);
+        }
+        if ($this->isColumnModified(ChannelTableMap::COL_DESCRIPTION)) {
+            $criteria->add(ChannelTableMap::COL_DESCRIPTION, $this->description);
         }
 
         return $criteria;
@@ -942,8 +1195,8 @@ abstract class UserType implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildUserTypeQuery::create();
-        $criteria->add(UserTypeTableMap::COL_ID, $this->id);
+        $criteria = ChildChannelQuery::create();
+        $criteria->add(ChannelTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -972,7 +1225,7 @@ abstract class UserType implements ActiveRecordInterface
         
     /**
      * Returns the primary key for this object (row).
-     * @return string
+     * @return int
      */
     public function getPrimaryKey()
     {
@@ -982,7 +1235,7 @@ abstract class UserType implements ActiveRecordInterface
     /**
      * Generic method to set the primary key (id column).
      *
-     * @param       string $key Primary key.
+     * @param       int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
@@ -1005,24 +1258,32 @@ abstract class UserType implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \UserType (or compatible) type.
+     * @param      object $copyObj An object of \Channel (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setId($this->getId());
-        $copyObj->setCreatedDate($this->getCreatedDate());
+        $copyObj->setCreationDate($this->getCreationDate());
+        $copyObj->setUpdatedDate($this->getUpdatedDate());
+        $copyObj->setTitle($this->getTitle());
+        $copyObj->setDescription($this->getDescription());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getUsers() as $relObj) {
+            foreach ($this->getChannelUserEntries() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUser($relObj->copy($deepCopy));
+                    $copyObj->addChannelUserEntry($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getThreads() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addThread($relObj->copy($deepCopy));
                 }
             }
 
@@ -1030,6 +1291,7 @@ abstract class UserType implements ActiveRecordInterface
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1042,7 +1304,7 @@ abstract class UserType implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \UserType Clone of current object.
+     * @return \Channel Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1066,37 +1328,40 @@ abstract class UserType implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('User' == $relationName) {
-            return $this->initUsers();
+        if ('ChannelUserEntry' == $relationName) {
+            return $this->initChannelUserEntries();
+        }
+        if ('Thread' == $relationName) {
+            return $this->initThreads();
         }
     }
 
     /**
-     * Clears out the collUsers collection
+     * Clears out the collChannelUserEntries collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addUsers()
+     * @see        addChannelUserEntries()
      */
-    public function clearUsers()
+    public function clearChannelUserEntries()
     {
-        $this->collUsers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collChannelUserEntries = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collUsers collection loaded partially.
+     * Reset is the collChannelUserEntries collection loaded partially.
      */
-    public function resetPartialUsers($v = true)
+    public function resetPartialChannelUserEntries($v = true)
     {
-        $this->collUsersPartial = $v;
+        $this->collChannelUserEntriesPartial = $v;
     }
 
     /**
-     * Initializes the collUsers collection.
+     * Initializes the collChannelUserEntries collection.
      *
-     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
+     * By default this just sets the collChannelUserEntries collection to an empty array (like clearcollChannelUserEntries());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1105,185 +1370,188 @@ abstract class UserType implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initUsers($overrideExisting = true)
+    public function initChannelUserEntries($overrideExisting = true)
     {
-        if (null !== $this->collUsers && !$overrideExisting) {
+        if (null !== $this->collChannelUserEntries && !$overrideExisting) {
             return;
         }
-        $this->collUsers = new ObjectCollection();
-        $this->collUsers->setModel('\User');
+        $this->collChannelUserEntries = new ObjectCollection();
+        $this->collChannelUserEntries->setModel('\ChannelUserEntry');
     }
 
     /**
-     * Gets an array of ChildUser objects which contain a foreign key that references this object.
+     * Gets an array of ChildChannelUserEntry objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUserType is new, it will return
+     * If this ChildChannel is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     * @return ObjectCollection|ChildChannelUserEntry[] List of ChildChannelUserEntry objects
      * @throws PropelException
      */
-    public function getUsers(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getChannelUserEntries(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
+        $partial = $this->collChannelUserEntriesPartial && !$this->isNew();
+        if (null === $this->collChannelUserEntries || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collChannelUserEntries) {
                 // return empty collection
-                $this->initUsers();
+                $this->initChannelUserEntries();
             } else {
-                $collUsers = ChildUserQuery::create(null, $criteria)
-                    ->filterByUserType($this)
+                $collChannelUserEntries = ChildChannelUserEntryQuery::create(null, $criteria)
+                    ->filterByChannel($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collUsersPartial && count($collUsers)) {
-                        $this->initUsers(false);
+                    if (false !== $this->collChannelUserEntriesPartial && count($collChannelUserEntries)) {
+                        $this->initChannelUserEntries(false);
 
-                        foreach ($collUsers as $obj) {
-                            if (false == $this->collUsers->contains($obj)) {
-                                $this->collUsers->append($obj);
+                        foreach ($collChannelUserEntries as $obj) {
+                            if (false == $this->collChannelUserEntries->contains($obj)) {
+                                $this->collChannelUserEntries->append($obj);
                             }
                         }
 
-                        $this->collUsersPartial = true;
+                        $this->collChannelUserEntriesPartial = true;
                     }
 
-                    return $collUsers;
+                    return $collChannelUserEntries;
                 }
 
-                if ($partial && $this->collUsers) {
-                    foreach ($this->collUsers as $obj) {
+                if ($partial && $this->collChannelUserEntries) {
+                    foreach ($this->collChannelUserEntries as $obj) {
                         if ($obj->isNew()) {
-                            $collUsers[] = $obj;
+                            $collChannelUserEntries[] = $obj;
                         }
                     }
                 }
 
-                $this->collUsers = $collUsers;
-                $this->collUsersPartial = false;
+                $this->collChannelUserEntries = $collChannelUserEntries;
+                $this->collChannelUserEntriesPartial = false;
             }
         }
 
-        return $this->collUsers;
+        return $this->collChannelUserEntries;
     }
 
     /**
-     * Sets a collection of ChildUser objects related by a one-to-many relationship
+     * Sets a collection of ChildChannelUserEntry objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $users A Propel collection.
+     * @param      Collection $channelUserEntries A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUserType The current object (for fluent API support)
+     * @return $this|ChildChannel The current object (for fluent API support)
      */
-    public function setUsers(Collection $users, ConnectionInterface $con = null)
+    public function setChannelUserEntries(Collection $channelUserEntries, ConnectionInterface $con = null)
     {
-        /** @var ChildUser[] $usersToDelete */
-        $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
+        /** @var ChildChannelUserEntry[] $channelUserEntriesToDelete */
+        $channelUserEntriesToDelete = $this->getChannelUserEntries(new Criteria(), $con)->diff($channelUserEntries);
 
         
-        $this->usersScheduledForDeletion = $usersToDelete;
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->channelUserEntriesScheduledForDeletion = clone $channelUserEntriesToDelete;
 
-        foreach ($usersToDelete as $userRemoved) {
-            $userRemoved->setUserType(null);
+        foreach ($channelUserEntriesToDelete as $channelUserEntryRemoved) {
+            $channelUserEntryRemoved->setChannel(null);
         }
 
-        $this->collUsers = null;
-        foreach ($users as $user) {
-            $this->addUser($user);
+        $this->collChannelUserEntries = null;
+        foreach ($channelUserEntries as $channelUserEntry) {
+            $this->addChannelUserEntry($channelUserEntry);
         }
 
-        $this->collUsers = $users;
-        $this->collUsersPartial = false;
+        $this->collChannelUserEntries = $channelUserEntries;
+        $this->collChannelUserEntriesPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related User objects.
+     * Returns the number of related ChannelUserEntry objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related User objects.
+     * @return int             Count of related ChannelUserEntry objects.
      * @throws PropelException
      */
-    public function countUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countChannelUserEntries(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
+        $partial = $this->collChannelUserEntriesPartial && !$this->isNew();
+        if (null === $this->collChannelUserEntries || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collChannelUserEntries) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getUsers());
+                return count($this->getChannelUserEntries());
             }
 
-            $query = ChildUserQuery::create(null, $criteria);
+            $query = ChildChannelUserEntryQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByUserType($this)
+                ->filterByChannel($this)
                 ->count($con);
         }
 
-        return count($this->collUsers);
+        return count($this->collChannelUserEntries);
     }
 
     /**
-     * Method called to associate a ChildUser object to this object
-     * through the ChildUser foreign key attribute.
+     * Method called to associate a ChildChannelUserEntry object to this object
+     * through the ChildChannelUserEntry foreign key attribute.
      *
-     * @param  ChildUser $l ChildUser
-     * @return $this|\UserType The current object (for fluent API support)
+     * @param  ChildChannelUserEntry $l ChildChannelUserEntry
+     * @return $this|\Channel The current object (for fluent API support)
      */
-    public function addUser(ChildUser $l)
+    public function addChannelUserEntry(ChildChannelUserEntry $l)
     {
-        if ($this->collUsers === null) {
-            $this->initUsers();
-            $this->collUsersPartial = true;
+        if ($this->collChannelUserEntries === null) {
+            $this->initChannelUserEntries();
+            $this->collChannelUserEntriesPartial = true;
         }
 
-        if (!$this->collUsers->contains($l)) {
-            $this->doAddUser($l);
+        if (!$this->collChannelUserEntries->contains($l)) {
+            $this->doAddChannelUserEntry($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildUser $user The ChildUser object to add.
+     * @param ChildChannelUserEntry $channelUserEntry The ChildChannelUserEntry object to add.
      */
-    protected function doAddUser(ChildUser $user)
+    protected function doAddChannelUserEntry(ChildChannelUserEntry $channelUserEntry)
     {
-        $this->collUsers[]= $user;
-        $user->setUserType($this);
+        $this->collChannelUserEntries[]= $channelUserEntry;
+        $channelUserEntry->setChannel($this);
     }
 
     /**
-     * @param  ChildUser $user The ChildUser object to remove.
-     * @return $this|ChildUserType The current object (for fluent API support)
+     * @param  ChildChannelUserEntry $channelUserEntry The ChildChannelUserEntry object to remove.
+     * @return $this|ChildChannel The current object (for fluent API support)
      */
-    public function removeUser(ChildUser $user)
+    public function removeChannelUserEntry(ChildChannelUserEntry $channelUserEntry)
     {
-        if ($this->getUsers()->contains($user)) {
-            $pos = $this->collUsers->search($user);
-            $this->collUsers->remove($pos);
-            if (null === $this->usersScheduledForDeletion) {
-                $this->usersScheduledForDeletion = clone $this->collUsers;
-                $this->usersScheduledForDeletion->clear();
+        if ($this->getChannelUserEntries()->contains($channelUserEntry)) {
+            $pos = $this->collChannelUserEntries->search($channelUserEntry);
+            $this->collChannelUserEntries->remove($pos);
+            if (null === $this->channelUserEntriesScheduledForDeletion) {
+                $this->channelUserEntriesScheduledForDeletion = clone $this->collChannelUserEntries;
+                $this->channelUserEntriesScheduledForDeletion->clear();
             }
-            $this->usersScheduledForDeletion[]= clone $user;
-            $user->setUserType(null);
+            $this->channelUserEntriesScheduledForDeletion[]= clone $channelUserEntry;
+            $channelUserEntry->setChannel(null);
         }
 
         return $this;
@@ -1293,25 +1561,268 @@ abstract class UserType implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this UserType is new, it will return
-     * an empty collection; or if this UserType has previously
-     * been saved, it will retrieve related Users from storage.
+     * Otherwise if this Channel is new, it will return
+     * an empty collection; or if this Channel has previously
+     * been saved, it will retrieve related ChannelUserEntries from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in UserType.
+     * actually need in Channel.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     * @return ObjectCollection|ChildChannelUserEntry[] List of ChildChannelUserEntry objects
      */
-    public function getUsersJoinLocale(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getChannelUserEntriesJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildUserQuery::create(null, $criteria);
-        $query->joinWith('Locale', $joinBehavior);
+        $query = ChildChannelUserEntryQuery::create(null, $criteria);
+        $query->joinWith('User', $joinBehavior);
 
-        return $this->getUsers($query, $con);
+        return $this->getChannelUserEntries($query, $con);
+    }
+
+    /**
+     * Clears out the collThreads collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addThreads()
+     */
+    public function clearThreads()
+    {
+        $this->collThreads = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collThreads collection loaded partially.
+     */
+    public function resetPartialThreads($v = true)
+    {
+        $this->collThreadsPartial = $v;
+    }
+
+    /**
+     * Initializes the collThreads collection.
+     *
+     * By default this just sets the collThreads collection to an empty array (like clearcollThreads());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initThreads($overrideExisting = true)
+    {
+        if (null !== $this->collThreads && !$overrideExisting) {
+            return;
+        }
+        $this->collThreads = new ObjectCollection();
+        $this->collThreads->setModel('\Thread');
+    }
+
+    /**
+     * Gets an array of ChildThread objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildChannel is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildThread[] List of ChildThread objects
+     * @throws PropelException
+     */
+    public function getThreads(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collThreadsPartial && !$this->isNew();
+        if (null === $this->collThreads || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collThreads) {
+                // return empty collection
+                $this->initThreads();
+            } else {
+                $collThreads = ChildThreadQuery::create(null, $criteria)
+                    ->filterByChannel($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collThreadsPartial && count($collThreads)) {
+                        $this->initThreads(false);
+
+                        foreach ($collThreads as $obj) {
+                            if (false == $this->collThreads->contains($obj)) {
+                                $this->collThreads->append($obj);
+                            }
+                        }
+
+                        $this->collThreadsPartial = true;
+                    }
+
+                    return $collThreads;
+                }
+
+                if ($partial && $this->collThreads) {
+                    foreach ($this->collThreads as $obj) {
+                        if ($obj->isNew()) {
+                            $collThreads[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collThreads = $collThreads;
+                $this->collThreadsPartial = false;
+            }
+        }
+
+        return $this->collThreads;
+    }
+
+    /**
+     * Sets a collection of ChildThread objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $threads A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildChannel The current object (for fluent API support)
+     */
+    public function setThreads(Collection $threads, ConnectionInterface $con = null)
+    {
+        /** @var ChildThread[] $threadsToDelete */
+        $threadsToDelete = $this->getThreads(new Criteria(), $con)->diff($threads);
+
+        
+        $this->threadsScheduledForDeletion = $threadsToDelete;
+
+        foreach ($threadsToDelete as $threadRemoved) {
+            $threadRemoved->setChannel(null);
+        }
+
+        $this->collThreads = null;
+        foreach ($threads as $thread) {
+            $this->addThread($thread);
+        }
+
+        $this->collThreads = $threads;
+        $this->collThreadsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Thread objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Thread objects.
+     * @throws PropelException
+     */
+    public function countThreads(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collThreadsPartial && !$this->isNew();
+        if (null === $this->collThreads || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collThreads) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getThreads());
+            }
+
+            $query = ChildThreadQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByChannel($this)
+                ->count($con);
+        }
+
+        return count($this->collThreads);
+    }
+
+    /**
+     * Method called to associate a ChildThread object to this object
+     * through the ChildThread foreign key attribute.
+     *
+     * @param  ChildThread $l ChildThread
+     * @return $this|\Channel The current object (for fluent API support)
+     */
+    public function addThread(ChildThread $l)
+    {
+        if ($this->collThreads === null) {
+            $this->initThreads();
+            $this->collThreadsPartial = true;
+        }
+
+        if (!$this->collThreads->contains($l)) {
+            $this->doAddThread($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildThread $thread The ChildThread object to add.
+     */
+    protected function doAddThread(ChildThread $thread)
+    {
+        $this->collThreads[]= $thread;
+        $thread->setChannel($this);
+    }
+
+    /**
+     * @param  ChildThread $thread The ChildThread object to remove.
+     * @return $this|ChildChannel The current object (for fluent API support)
+     */
+    public function removeThread(ChildThread $thread)
+    {
+        if ($this->getThreads()->contains($thread)) {
+            $pos = $this->collThreads->search($thread);
+            $this->collThreads->remove($pos);
+            if (null === $this->threadsScheduledForDeletion) {
+                $this->threadsScheduledForDeletion = clone $this->collThreads;
+                $this->threadsScheduledForDeletion->clear();
+            }
+            $this->threadsScheduledForDeletion[]= clone $thread;
+            $thread->setChannel(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Channel is new, it will return
+     * an empty collection; or if this Channel has previously
+     * been saved, it will retrieve related Threads from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Channel.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildThread[] List of ChildThread objects
+     */
+    public function getThreadsJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildThreadQuery::create(null, $criteria);
+        $query->joinWith('User', $joinBehavior);
+
+        return $this->getThreads($query, $con);
     }
 
     /**
@@ -1322,7 +1833,10 @@ abstract class UserType implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->created_date = null;
+        $this->creation_date = null;
+        $this->updated_date = null;
+        $this->title = null;
+        $this->description = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1332,7 +1846,7 @@ abstract class UserType implements ActiveRecordInterface
     }
 
     /**
-     * Resets all references and back-references to other model objects or collections of model objects.
+     * Resets all references and back-references to other model_propel objects or collections of model_propel objects.
      *
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
@@ -1342,14 +1856,20 @@ abstract class UserType implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collUsers) {
-                foreach ($this->collUsers as $o) {
+            if ($this->collChannelUserEntries) {
+                foreach ($this->collChannelUserEntries as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collThreads) {
+                foreach ($this->collThreads as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collUsers = null;
+        $this->collChannelUserEntries = null;
+        $this->collThreads = null;
     }
 
     /**
@@ -1359,7 +1879,7 @@ abstract class UserType implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(UserTypeTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(ChannelTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

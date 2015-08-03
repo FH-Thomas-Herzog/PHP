@@ -2,8 +2,8 @@
 
 namespace Map;
 
-use \ThreadUserEntry;
-use \ThreadUserEntryQuery;
+use \Comment;
+use \CommentQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'thread_user_entry' table.
+ * This class defines the structure of the 'comment' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class ThreadUserEntryTableMap extends TableMap
+class CommentTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class ThreadUserEntryTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.ThreadUserEntryTableMap';
+    const CLASS_NAME = '.Map.CommentTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class ThreadUserEntryTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'thread_user_entry';
+    const TABLE_NAME = 'comment';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\ThreadUserEntry';
+    const OM_CLASS = '\\Comment';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'ThreadUserEntry';
+    const CLASS_DEFAULT = 'Comment';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -69,30 +69,45 @@ class ThreadUserEntryTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /**
-     * the column name for the thread_id field
+     * the column name for the id field
      */
-    const COL_THREAD_ID = 'thread_user_entry.thread_id';
-
-    /**
-     * the column name for the user_id field
-     */
-    const COL_USER_ID = 'thread_user_entry.user_id';
-
-    /**
-     * the column name for the favorite_flag field
-     */
-    const COL_FAVORITE_FLAG = 'thread_user_entry.favorite_flag';
+    const COL_ID = 'comment.id';
 
     /**
      * the column name for the created_date field
      */
-    const COL_CREATED_DATE = 'thread_user_entry.created_date';
+    const COL_CREATED_DATE = 'comment.created_date';
 
     /**
-     * The default string format for model objects of the related table
+     * the column name for the updated_date field
+     */
+    const COL_UPDATED_DATE = 'comment.updated_date';
+
+    /**
+     * the column name for the user_comment field
+     */
+    const COL_USER_COMMENT = 'comment.user_comment';
+
+    /**
+     * the column name for the user_id field
+     */
+    const COL_USER_ID = 'comment.user_id';
+
+    /**
+     * the column name for the theme_id field
+     */
+    const COL_THEME_ID = 'comment.theme_id';
+
+    /**
+     * the column name for the thread_id field
+     */
+    const COL_THREAD_ID = 'comment.thread_id';
+
+    /**
+     * The default string format for model_propel objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -103,11 +118,11 @@ class ThreadUserEntryTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ThreadId', 'UserId', 'FavoriteFlag', 'CreatedDate', ),
-        self::TYPE_CAMELNAME     => array('threadId', 'userId', 'favoriteFlag', 'createdDate', ),
-        self::TYPE_COLNAME       => array(ThreadUserEntryTableMap::COL_THREAD_ID, ThreadUserEntryTableMap::COL_USER_ID, ThreadUserEntryTableMap::COL_FAVORITE_FLAG, ThreadUserEntryTableMap::COL_CREATED_DATE, ),
-        self::TYPE_FIELDNAME     => array('thread_id', 'user_id', 'favorite_flag', 'created_date', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'CreatedDate', 'UpdatedDate', 'UserComment', 'UserId', 'ThemeId', 'ThreadId', ),
+        self::TYPE_CAMELNAME     => array('id', 'createdDate', 'updatedDate', 'userComment', 'userId', 'themeId', 'threadId', ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID, CommentTableMap::COL_CREATED_DATE, CommentTableMap::COL_UPDATED_DATE, CommentTableMap::COL_USER_COMMENT, CommentTableMap::COL_USER_ID, CommentTableMap::COL_THEME_ID, CommentTableMap::COL_THREAD_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'created_date', 'updated_date', 'user_comment', 'user_id', 'theme_id', 'thread_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -117,11 +132,11 @@ class ThreadUserEntryTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ThreadId' => 0, 'UserId' => 1, 'FavoriteFlag' => 2, 'CreatedDate' => 3, ),
-        self::TYPE_CAMELNAME     => array('threadId' => 0, 'userId' => 1, 'favoriteFlag' => 2, 'createdDate' => 3, ),
-        self::TYPE_COLNAME       => array(ThreadUserEntryTableMap::COL_THREAD_ID => 0, ThreadUserEntryTableMap::COL_USER_ID => 1, ThreadUserEntryTableMap::COL_FAVORITE_FLAG => 2, ThreadUserEntryTableMap::COL_CREATED_DATE => 3, ),
-        self::TYPE_FIELDNAME     => array('thread_id' => 0, 'user_id' => 1, 'favorite_flag' => 2, 'created_date' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'CreatedDate' => 1, 'UpdatedDate' => 2, 'UserComment' => 3, 'UserId' => 4, 'ThemeId' => 5, 'ThreadId' => 6, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'createdDate' => 1, 'updatedDate' => 2, 'userComment' => 3, 'userId' => 4, 'themeId' => 5, 'threadId' => 6, ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID => 0, CommentTableMap::COL_CREATED_DATE => 1, CommentTableMap::COL_UPDATED_DATE => 2, CommentTableMap::COL_USER_COMMENT => 3, CommentTableMap::COL_USER_ID => 4, CommentTableMap::COL_THEME_ID => 5, CommentTableMap::COL_THREAD_ID => 6, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'created_date' => 1, 'updated_date' => 2, 'user_comment' => 3, 'user_id' => 4, 'theme_id' => 5, 'thread_id' => 6, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -134,17 +149,20 @@ class ThreadUserEntryTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('thread_user_entry');
-        $this->setPhpName('ThreadUserEntry');
+        $this->setName('comment');
+        $this->setPhpName('Comment');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\ThreadUserEntry');
+        $this->setClassName('\\Comment');
         $this->setPackage('');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
-        $this->addForeignPrimaryKey('thread_id', 'ThreadId', 'INTEGER' , 'thread', 'id', true, null, null);
-        $this->addForeignPrimaryKey('user_id', 'UserId', 'INTEGER' , 'user', 'id', true, null, null);
-        $this->addColumn('favorite_flag', 'FavoriteFlag', 'BOOLEAN', true, 1, false);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('created_date', 'CreatedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+        $this->addColumn('updated_date', 'UpdatedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+        $this->addColumn('user_comment', 'UserComment', 'LONGVARCHAR', true, null, null);
+        $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'user', 'id', true, null, null);
+        $this->addForeignKey('theme_id', 'ThemeId', 'INTEGER', 'thread', 'id', true, null, null);
+        $this->addForeignKey('thread_id', 'ThreadId', 'INTEGER', 'comment', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -152,10 +170,17 @@ class ThreadUserEntryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Thread', '\\Thread', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('CommentRelatedByThreadId', '\\Comment', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':thread_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Thread', '\\Thread', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':theme_id',
     1 => ':id',
   ),
 ), null, null, null, false);
@@ -166,60 +191,21 @@ class ThreadUserEntryTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
+        $this->addRelation('CommentRelatedById', '\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':thread_id',
+    1 => ':id',
+  ),
+), null, null, 'CommentsRelatedById', false);
+        $this->addRelation('CommentUserEntry', '\\CommentUserEntry', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':comment_id',
+    1 => ':id',
+  ),
+), null, null, 'CommentUserEntries', false);
     } // buildRelations()
-
-    /**
-     * Adds an object to the instance pool.
-     *
-     * Propel keeps cached copies of objects in an instance pool when they are retrieved
-     * from the database. In some cases you may need to explicitly add objects
-     * to the cache in order to ensure that the same objects are always returned by find*()
-     * and findPk*() calls.
-     *
-     * @param \ThreadUserEntry $obj A \ThreadUserEntry object.
-     * @param string $key             (optional) key to use for instance map (for performance boost if key was already calculated externally).
-     */
-    public static function addInstanceToPool($obj, $key = null)
-    {
-        if (Propel::isInstancePoolingEnabled()) {
-            if (null === $key) {
-                $key = serialize(array((string) $obj->getThreadId(), (string) $obj->getUserId()));
-            } // if key === null
-            self::$instances[$key] = $obj;
-        }
-    }
-
-    /**
-     * Removes an object from the instance pool.
-     *
-     * Propel keeps cached copies of objects in an instance pool when they are retrieved
-     * from the database.  In some cases -- especially when you override doDelete
-     * methods in your stub classes -- you may need to explicitly remove objects
-     * from the cache in order to prevent returning objects that no longer exist.
-     *
-     * @param mixed $value A \ThreadUserEntry object or a primary key value.
-     */
-    public static function removeInstanceFromPool($value)
-    {
-        if (Propel::isInstancePoolingEnabled() && null !== $value) {
-            if (is_object($value) && $value instanceof \ThreadUserEntry) {
-                $key = serialize(array((string) $value->getThreadId(), (string) $value->getUserId()));
-
-            } elseif (is_array($value) && count($value) === 2) {
-                // assume we've been passed a primary key";
-                $key = serialize(array((string) $value[0], (string) $value[1]));
-            } elseif ($value instanceof Criteria) {
-                self::$instances = [];
-
-                return;
-            } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \ThreadUserEntry object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
-                throw $e;
-            }
-
-            unset(self::$instances[$key]);
-        }
-    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -237,11 +223,11 @@ class ThreadUserEntryTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ThreadId', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize(array((string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ThreadId', TableMap::TYPE_PHPNAME, $indexType)], (string) $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)]));
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -258,20 +244,11 @@ class ThreadUserEntryTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-            $pks = [];
-            
-        $pks[] = (int) $row[
+        return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('ThreadId', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
-        $pks[] = (int) $row[
-            $indexType == TableMap::TYPE_NUM
-                ? 1 + $offset
-                : self::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)
-        ];
-
-        return $pks;
     }
     
     /**
@@ -287,7 +264,7 @@ class ThreadUserEntryTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? ThreadUserEntryTableMap::CLASS_DEFAULT : ThreadUserEntryTableMap::OM_CLASS;
+        return $withPrefix ? CommentTableMap::CLASS_DEFAULT : CommentTableMap::OM_CLASS;
     }
 
     /**
@@ -301,22 +278,22 @@ class ThreadUserEntryTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (ThreadUserEntry object, last column rank)
+     * @return array           (Comment object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = ThreadUserEntryTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = ThreadUserEntryTableMap::getInstanceFromPool($key))) {
+        $key = CommentTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = CommentTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + ThreadUserEntryTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + CommentTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = ThreadUserEntryTableMap::OM_CLASS;
-            /** @var ThreadUserEntry $obj */
+            $cls = CommentTableMap::OM_CLASS;
+            /** @var Comment $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            ThreadUserEntryTableMap::addInstanceToPool($obj, $key);
+            CommentTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -339,18 +316,18 @@ class ThreadUserEntryTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = ThreadUserEntryTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = ThreadUserEntryTableMap::getInstanceFromPool($key))) {
+            $key = CommentTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = CommentTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var ThreadUserEntry $obj */
+                /** @var Comment $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                ThreadUserEntryTableMap::addInstanceToPool($obj, $key);
+                CommentTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -371,15 +348,21 @@ class ThreadUserEntryTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(ThreadUserEntryTableMap::COL_THREAD_ID);
-            $criteria->addSelectColumn(ThreadUserEntryTableMap::COL_USER_ID);
-            $criteria->addSelectColumn(ThreadUserEntryTableMap::COL_FAVORITE_FLAG);
-            $criteria->addSelectColumn(ThreadUserEntryTableMap::COL_CREATED_DATE);
+            $criteria->addSelectColumn(CommentTableMap::COL_ID);
+            $criteria->addSelectColumn(CommentTableMap::COL_CREATED_DATE);
+            $criteria->addSelectColumn(CommentTableMap::COL_UPDATED_DATE);
+            $criteria->addSelectColumn(CommentTableMap::COL_USER_COMMENT);
+            $criteria->addSelectColumn(CommentTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(CommentTableMap::COL_THEME_ID);
+            $criteria->addSelectColumn(CommentTableMap::COL_THREAD_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.thread_id');
-            $criteria->addSelectColumn($alias . '.user_id');
-            $criteria->addSelectColumn($alias . '.favorite_flag');
+            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.created_date');
+            $criteria->addSelectColumn($alias . '.updated_date');
+            $criteria->addSelectColumn($alias . '.user_comment');
+            $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.theme_id');
+            $criteria->addSelectColumn($alias . '.thread_id');
         }
     }
 
@@ -392,7 +375,7 @@ class ThreadUserEntryTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(ThreadUserEntryTableMap::DATABASE_NAME)->getTable(ThreadUserEntryTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(CommentTableMap::DATABASE_NAME)->getTable(CommentTableMap::TABLE_NAME);
     }
 
     /**
@@ -400,16 +383,16 @@ class ThreadUserEntryTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(ThreadUserEntryTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(ThreadUserEntryTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new ThreadUserEntryTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(CommentTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(CommentTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new CommentTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a ThreadUserEntry or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Comment or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or ThreadUserEntry object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Comment object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -420,37 +403,27 @@ class ThreadUserEntryTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ThreadUserEntryTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \ThreadUserEntry) { // it's a model object
+        } elseif ($values instanceof \Comment) { // it's a model_propel object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(ThreadUserEntryTableMap::DATABASE_NAME);
-            // primary key is composite; we therefore, expect
-            // the primary key passed to be an array of pkey values
-            if (count($values) == count($values, COUNT_RECURSIVE)) {
-                // array is not multi-dimensional
-                $values = array($values);
-            }
-            foreach ($values as $value) {
-                $criterion = $criteria->getNewCriterion(ThreadUserEntryTableMap::COL_THREAD_ID, $value[0]);
-                $criterion->addAnd($criteria->getNewCriterion(ThreadUserEntryTableMap::COL_USER_ID, $value[1]));
-                $criteria->addOr($criterion);
-            }
+            $criteria = new Criteria(CommentTableMap::DATABASE_NAME);
+            $criteria->add(CommentTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = ThreadUserEntryQuery::create()->mergeWith($criteria);
+        $query = CommentQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            ThreadUserEntryTableMap::clearInstancePool();
+            CommentTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                ThreadUserEntryTableMap::removeInstanceFromPool($singleval);
+                CommentTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -458,20 +431,20 @@ class ThreadUserEntryTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the thread_user_entry table.
+     * Deletes all rows from the comment table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return ThreadUserEntryQuery::create()->doDeleteAll($con);
+        return CommentQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a ThreadUserEntry or Criteria object.
+     * Performs an INSERT on the database, given a Comment or Criteria object.
      *
-     * @param mixed               $criteria Criteria or ThreadUserEntry object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Comment object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -480,18 +453,22 @@ class ThreadUserEntryTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ThreadUserEntryTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from ThreadUserEntry object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Comment object
+        }
+
+        if ($criteria->containsKey(CommentTableMap::COL_ID) && $criteria->keyContainsValue(CommentTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.CommentTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = ThreadUserEntryQuery::create()->mergeWith($criteria);
+        $query = CommentQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -500,7 +477,7 @@ class ThreadUserEntryTableMap extends TableMap
         });
     }
 
-} // ThreadUserEntryTableMap
+} // CommentTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-ThreadUserEntryTableMap::buildTableMap();
+CommentTableMap::buildTableMap();

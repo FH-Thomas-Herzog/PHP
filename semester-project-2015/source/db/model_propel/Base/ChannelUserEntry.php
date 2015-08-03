@@ -2,41 +2,39 @@
 
 namespace Base;
 
-use \Locale as ChildLocale;
-use \LocaleQuery as ChildLocaleQuery;
+use \Channel as ChildChannel;
+use \ChannelQuery as ChildChannelQuery;
+use \ChannelUserEntryQuery as ChildChannelUserEntryQuery;
 use \User as ChildUser;
 use \UserQuery as ChildUserQuery;
-use \DateTime;
 use \Exception;
 use \PDO;
-use Map\LocaleTableMap;
+use Map\ChannelUserEntryTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'locale' table.
+ * Base class that represents a row from the 'channel_user_entry' table.
  *
  * 
  *
 * @package    propel.generator..Base
 */
-abstract class Locale implements ActiveRecordInterface 
+abstract class ChannelUserEntry implements ActiveRecordInterface 
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\LocaleTableMap';
+    const TABLE_MAP = '\\Map\\ChannelUserEntryTableMap';
 
 
     /**
@@ -66,36 +64,33 @@ abstract class Locale implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the id field.
-     * @var        string
+     * The value for the user_id field.
+     * @var        int
      */
-    protected $id;
+    protected $user_id;
 
     /**
-     * The value for the created_date field.
-     * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
-     * @var        \DateTime
+     * The value for the channel_id field.
+     * @var        int
      */
-    protected $created_date;
+    protected $channel_id;
 
     /**
-     * The value for the updated_date field.
-     * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
-     * @var        \DateTime
+     * The value for the favorite_flag field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
      */
-    protected $updated_date;
+    protected $favorite_flag;
 
     /**
-     * The value for the resource_key field.
-     * @var        string
+     * @var        ChildUser
      */
-    protected $resource_key;
+    protected $aUser;
 
     /**
-     * @var        ObjectCollection|ChildUser[] Collection to store aggregation of ChildUser objects.
+     * @var        ChildChannel
      */
-    protected $collUsers;
-    protected $collUsersPartial;
+    protected $aChannel;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -106,12 +101,6 @@ abstract class Locale implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildUser[]
-     */
-    protected $usersScheduledForDeletion = null;
-
-    /**
      * Applies default values to this object.
      * This method should be called from the object's constructor (or
      * equivalent initialization method).
@@ -119,10 +108,11 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function applyDefaultValues()
     {
+        $this->favorite_flag = false;
     }
 
     /**
-     * Initializes internal state of Base\Locale object.
+     * Initializes internal state of Base\ChannelUserEntry object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -219,9 +209,9 @@ abstract class Locale implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Locale</code> instance.  If
-     * <code>obj</code> is an instance of <code>Locale</code>, delegates to
-     * <code>equals(Locale)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>ChannelUserEntry</code> instance.  If
+     * <code>obj</code> is an instance of <code>ChannelUserEntry</code>, delegates to
+     * <code>equals(ChannelUserEntry)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -287,7 +277,7 @@ abstract class Locale implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Locale The current object, for fluid interface
+     * @return $this|ChannelUserEntry The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -341,144 +331,120 @@ abstract class Locale implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
+     * Get the [user_id] column value.
      * 
-     * @return string
+     * @return int
      */
-    public function getId()
+    public function getUserId()
     {
-        return $this->id;
+        return $this->user_id;
     }
 
     /**
-     * Get the [optionally formatted] temporal [created_date] column value.
+     * Get the [channel_id] column value.
      * 
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
+     * @return int
      */
-    public function getCreatedDate($format = NULL)
+    public function getChannelId()
     {
-        if ($format === null) {
-            return $this->created_date;
-        } else {
-            return $this->created_date instanceof \DateTime ? $this->created_date->format($format) : null;
-        }
+        return $this->channel_id;
     }
 
     /**
-     * Get the [optionally formatted] temporal [updated_date] column value.
+     * Get the [favorite_flag] column value.
      * 
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
+     * @return boolean
      */
-    public function getUpdatedDate($format = NULL)
+    public function getFavoriteFlag()
     {
-        if ($format === null) {
-            return $this->updated_date;
-        } else {
-            return $this->updated_date instanceof \DateTime ? $this->updated_date->format($format) : null;
-        }
+        return $this->favorite_flag;
     }
 
     /**
-     * Get the [resource_key] column value.
+     * Get the [favorite_flag] column value.
      * 
-     * @return string
+     * @return boolean
      */
-    public function getResourceKey()
+    public function isFavoriteFlag()
     {
-        return $this->resource_key;
+        return $this->getFavoriteFlag();
     }
 
     /**
-     * Set the value of [id] column.
+     * Set the value of [user_id] column.
      * 
-     * @param string $v new value
-     * @return $this|\Locale The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\ChannelUserEntry The current object (for fluent API support)
      */
-    public function setId($v)
+    public function setUserId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[LocaleTableMap::COL_ID] = true;
+        if ($this->user_id !== $v) {
+            $this->user_id = $v;
+            $this->modifiedColumns[ChannelUserEntryTableMap::COL_USER_ID] = true;
+        }
+
+        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
+            $this->aUser = null;
         }
 
         return $this;
-    } // setId()
+    } // setUserId()
 
     /**
-     * Sets the value of [created_date] column to a normalized version of the date/time value specified.
+     * Set the value of [channel_id] column.
      * 
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Locale The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\ChannelUserEntry The current object (for fluent API support)
      */
-    public function setCreatedDate($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_date !== null || $dt !== null) {
-            if ($this->created_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_date->format("Y-m-d H:i:s")) {
-                $this->created_date = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[LocaleTableMap::COL_CREATED_DATE] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setCreatedDate()
-
-    /**
-     * Sets the value of [updated_date] column to a normalized version of the date/time value specified.
-     * 
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Locale The current object (for fluent API support)
-     */
-    public function setUpdatedDate($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->updated_date !== null || $dt !== null) {
-            if ($this->updated_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_date->format("Y-m-d H:i:s")) {
-                $this->updated_date = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[LocaleTableMap::COL_UPDATED_DATE] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setUpdatedDate()
-
-    /**
-     * Set the value of [resource_key] column.
-     * 
-     * @param string $v new value
-     * @return $this|\Locale The current object (for fluent API support)
-     */
-    public function setResourceKey($v)
+    public function setChannelId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->resource_key !== $v) {
-            $this->resource_key = $v;
-            $this->modifiedColumns[LocaleTableMap::COL_RESOURCE_KEY] = true;
+        if ($this->channel_id !== $v) {
+            $this->channel_id = $v;
+            $this->modifiedColumns[ChannelUserEntryTableMap::COL_CHANNEL_ID] = true;
+        }
+
+        if ($this->aChannel !== null && $this->aChannel->getId() !== $v) {
+            $this->aChannel = null;
         }
 
         return $this;
-    } // setResourceKey()
+    } // setChannelId()
+
+    /**
+     * Sets the value of the [favorite_flag] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * 
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\ChannelUserEntry The current object (for fluent API support)
+     */
+    public function setFavoriteFlag($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->favorite_flag !== $v) {
+            $this->favorite_flag = $v;
+            $this->modifiedColumns[ChannelUserEntryTableMap::COL_FAVORITE_FLAG] = true;
+        }
+
+        return $this;
+    } // setFavoriteFlag()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -490,6 +456,10 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->favorite_flag !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -516,23 +486,14 @@ abstract class Locale implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : LocaleTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ChannelUserEntryTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : LocaleTableMap::translateFieldName('CreatedDate', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->created_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ChannelUserEntryTableMap::translateFieldName('ChannelId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->channel_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : LocaleTableMap::translateFieldName('UpdatedDate', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->updated_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : LocaleTableMap::translateFieldName('ResourceKey', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->resource_key = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ChannelUserEntryTableMap::translateFieldName('FavoriteFlag', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->favorite_flag = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -541,10 +502,10 @@ abstract class Locale implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = LocaleTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = ChannelUserEntryTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Locale'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\ChannelUserEntry'), 0, $e);
         }
     }
 
@@ -557,12 +518,18 @@ abstract class Locale implements ActiveRecordInterface
      *
      * You can override this method in the stub class, but you should always invoke
      * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
+     * in case your model_propel changes.
      *
      * @throws PropelException
      */
     public function ensureConsistency()
     {
+        if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
+            $this->aUser = null;
+        }
+        if ($this->aChannel !== null && $this->channel_id !== $this->aChannel->getId()) {
+            $this->aChannel = null;
+        }
     } // ensureConsistency
 
     /**
@@ -586,13 +553,13 @@ abstract class Locale implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(LocaleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(ChannelUserEntryTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildLocaleQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildChannelUserEntryQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -602,8 +569,8 @@ abstract class Locale implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collUsers = null;
-
+            $this->aUser = null;
+            $this->aChannel = null;
         } // if (deep)
     }
 
@@ -613,8 +580,8 @@ abstract class Locale implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Locale::setDeleted()
-     * @see Locale::isDeleted()
+     * @see ChannelUserEntry::setDeleted()
+     * @see ChannelUserEntry::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -623,11 +590,11 @@ abstract class Locale implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(LocaleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ChannelUserEntryTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildLocaleQuery::create()
+            $deleteQuery = ChildChannelUserEntryQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -658,7 +625,7 @@ abstract class Locale implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(LocaleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ChannelUserEntryTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -677,7 +644,7 @@ abstract class Locale implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                LocaleTableMap::addInstanceToPool($this);
+                ChannelUserEntryTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -703,6 +670,25 @@ abstract class Locale implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aUser !== null) {
+                if ($this->aUser->isModified() || $this->aUser->isNew()) {
+                    $affectedRows += $this->aUser->save($con);
+                }
+                $this->setUser($this->aUser);
+            }
+
+            if ($this->aChannel !== null) {
+                if ($this->aChannel->isModified() || $this->aChannel->isNew()) {
+                    $affectedRows += $this->aChannel->save($con);
+                }
+                $this->setChannel($this->aChannel);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -712,23 +698,6 @@ abstract class Locale implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->usersScheduledForDeletion !== null) {
-                if (!$this->usersScheduledForDeletion->isEmpty()) {
-                    \UserQuery::create()
-                        ->filterByPrimaryKeys($this->usersScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->usersScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collUsers !== null) {
-                foreach ($this->collUsers as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -753,21 +722,18 @@ abstract class Locale implements ActiveRecordInterface
 
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(LocaleTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
+        if ($this->isColumnModified(ChannelUserEntryTableMap::COL_USER_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'user_id';
         }
-        if ($this->isColumnModified(LocaleTableMap::COL_CREATED_DATE)) {
-            $modifiedColumns[':p' . $index++]  = 'created_date';
+        if ($this->isColumnModified(ChannelUserEntryTableMap::COL_CHANNEL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'channel_id';
         }
-        if ($this->isColumnModified(LocaleTableMap::COL_UPDATED_DATE)) {
-            $modifiedColumns[':p' . $index++]  = 'updated_date';
-        }
-        if ($this->isColumnModified(LocaleTableMap::COL_RESOURCE_KEY)) {
-            $modifiedColumns[':p' . $index++]  = 'resource_key';
+        if ($this->isColumnModified(ChannelUserEntryTableMap::COL_FAVORITE_FLAG)) {
+            $modifiedColumns[':p' . $index++]  = 'favorite_flag';
         }
 
         $sql = sprintf(
-            'INSERT INTO locale (%s) VALUES (%s)',
+            'INSERT INTO channel_user_entry (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -776,17 +742,14 @@ abstract class Locale implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':                        
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_STR);
+                    case 'user_id':                        
+                        $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
                         break;
-                    case 'created_date':                        
-                        $stmt->bindValue($identifier, $this->created_date ? $this->created_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'channel_id':                        
+                        $stmt->bindValue($identifier, $this->channel_id, PDO::PARAM_INT);
                         break;
-                    case 'updated_date':                        
-                        $stmt->bindValue($identifier, $this->updated_date ? $this->updated_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'resource_key':                        
-                        $stmt->bindValue($identifier, $this->resource_key, PDO::PARAM_STR);
+                    case 'favorite_flag':
+                        $stmt->bindValue($identifier, (int) $this->favorite_flag, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -827,7 +790,7 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = LocaleTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ChannelUserEntryTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -844,16 +807,13 @@ abstract class Locale implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
+                return $this->getUserId();
                 break;
             case 1:
-                return $this->getCreatedDate();
+                return $this->getChannelId();
                 break;
             case 2:
-                return $this->getUpdatedDate();
-                break;
-            case 3:
-                return $this->getResourceKey();
+                return $this->getFavoriteFlag();
                 break;
             default:
                 return null;
@@ -879,51 +839,51 @@ abstract class Locale implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Locale'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['ChannelUserEntry'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Locale'][$this->hashCode()] = true;
-        $keys = LocaleTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['ChannelUserEntry'][$this->hashCode()] = true;
+        $keys = ChannelUserEntryTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getCreatedDate(),
-            $keys[2] => $this->getUpdatedDate(),
-            $keys[3] => $this->getResourceKey(),
+            $keys[0] => $this->getUserId(),
+            $keys[1] => $this->getChannelId(),
+            $keys[2] => $this->getFavoriteFlag(),
         );
-
-        $utc = new \DateTimeZone('utc');
-        if ($result[$keys[1]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[1]];
-            $result[$keys[1]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-        
-        if ($result[$keys[2]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[2]];
-            $result[$keys[2]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-        
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
         
         if ($includeForeignObjects) {
-            if (null !== $this->collUsers) {
+            if (null !== $this->aUser) {
                 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'users';
+                        $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'users';
+                        $key = 'user';
                         break;
                     default:
-                        $key = 'Users';
+                        $key = 'User';
                 }
         
-                $result[$key] = $this->collUsers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aChannel) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'channel';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'channel';
+                        break;
+                    default:
+                        $key = 'Channel';
+                }
+        
+                $result[$key] = $this->aChannel->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -939,11 +899,11 @@ abstract class Locale implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Locale
+     * @return $this|\ChannelUserEntry
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = LocaleTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ChannelUserEntryTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -954,22 +914,19 @@ abstract class Locale implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Locale
+     * @return $this|\ChannelUserEntry
      */
     public function setByPosition($pos, $value)
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
+                $this->setUserId($value);
                 break;
             case 1:
-                $this->setCreatedDate($value);
+                $this->setChannelId($value);
                 break;
             case 2:
-                $this->setUpdatedDate($value);
-                break;
-            case 3:
-                $this->setResourceKey($value);
+                $this->setFavoriteFlag($value);
                 break;
         } // switch()
 
@@ -995,19 +952,16 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = LocaleTableMap::getFieldNames($keyType);
+        $keys = ChannelUserEntryTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
+            $this->setUserId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCreatedDate($arr[$keys[1]]);
+            $this->setChannelId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setUpdatedDate($arr[$keys[2]]);
-        }
-        if (array_key_exists($keys[3], $arr)) {
-            $this->setResourceKey($arr[$keys[3]]);
+            $this->setFavoriteFlag($arr[$keys[2]]);
         }
     }
 
@@ -1028,7 +982,7 @@ abstract class Locale implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Locale The current object, for fluid interface
+     * @return $this|\ChannelUserEntry The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1048,19 +1002,16 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(LocaleTableMap::DATABASE_NAME);
+        $criteria = new Criteria(ChannelUserEntryTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(LocaleTableMap::COL_ID)) {
-            $criteria->add(LocaleTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(ChannelUserEntryTableMap::COL_USER_ID)) {
+            $criteria->add(ChannelUserEntryTableMap::COL_USER_ID, $this->user_id);
         }
-        if ($this->isColumnModified(LocaleTableMap::COL_CREATED_DATE)) {
-            $criteria->add(LocaleTableMap::COL_CREATED_DATE, $this->created_date);
+        if ($this->isColumnModified(ChannelUserEntryTableMap::COL_CHANNEL_ID)) {
+            $criteria->add(ChannelUserEntryTableMap::COL_CHANNEL_ID, $this->channel_id);
         }
-        if ($this->isColumnModified(LocaleTableMap::COL_UPDATED_DATE)) {
-            $criteria->add(LocaleTableMap::COL_UPDATED_DATE, $this->updated_date);
-        }
-        if ($this->isColumnModified(LocaleTableMap::COL_RESOURCE_KEY)) {
-            $criteria->add(LocaleTableMap::COL_RESOURCE_KEY, $this->resource_key);
+        if ($this->isColumnModified(ChannelUserEntryTableMap::COL_FAVORITE_FLAG)) {
+            $criteria->add(ChannelUserEntryTableMap::COL_FAVORITE_FLAG, $this->favorite_flag);
         }
 
         return $criteria;
@@ -1078,8 +1029,9 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildLocaleQuery::create();
-        $criteria->add(LocaleTableMap::COL_ID, $this->id);
+        $criteria = ChildChannelUserEntryQuery::create();
+        $criteria->add(ChannelUserEntryTableMap::COL_USER_ID, $this->user_id);
+        $criteria->add(ChannelUserEntryTableMap::COL_CHANNEL_ID, $this->channel_id);
 
         return $criteria;
     }
@@ -1092,10 +1044,25 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getId();
+        $validPk = null !== $this->getUserId() &&
+            null !== $this->getChannelId();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
+
+        //relation FK_CHANNEL_USER_ENTRY_CHANNEL_ID to table user
+        if ($this->aUser && $hash = spl_object_hash($this->aUser)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation fk_CHANNEL_USER_ENTRY_CHANNEL1 to table channel
+        if ($this->aChannel && $hash = spl_object_hash($this->aChannel)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1107,23 +1074,29 @@ abstract class Locale implements ActiveRecordInterface
     }
         
     /**
-     * Returns the primary key for this object (row).
-     * @return string
+     * Returns the composite primary key for this object.
+     * The array elements will be in same order as specified in XML.
+     * @return array
      */
     public function getPrimaryKey()
     {
-        return $this->getId();
+        $pks = array();
+        $pks[0] = $this->getUserId();
+        $pks[1] = $this->getChannelId();
+
+        return $pks;
     }
 
     /**
-     * Generic method to set the primary key (id column).
+     * Set the [composite] primary key.
      *
-     * @param       string $key Primary key.
+     * @param      array $keys The elements of the composite key (order must match the order in XML file).
      * @return void
      */
-    public function setPrimaryKey($key)
+    public function setPrimaryKey($keys)
     {
-        $this->setId($key);
+        $this->setUserId($keys[0]);
+        $this->setChannelId($keys[1]);
     }
 
     /**
@@ -1132,7 +1105,7 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getId();
+        return (null === $this->getUserId()) && (null === $this->getChannelId());
     }
 
     /**
@@ -1141,31 +1114,16 @@ abstract class Locale implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Locale (or compatible) type.
+     * @param      object $copyObj An object of \ChannelUserEntry (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setId($this->getId());
-        $copyObj->setCreatedDate($this->getCreatedDate());
-        $copyObj->setUpdatedDate($this->getUpdatedDate());
-        $copyObj->setResourceKey($this->getResourceKey());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getUsers() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUser($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
+        $copyObj->setUserId($this->getUserId());
+        $copyObj->setChannelId($this->getChannelId());
+        $copyObj->setFavoriteFlag($this->getFavoriteFlag());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1180,7 +1138,7 @@ abstract class Locale implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Locale Clone of current object.
+     * @return \ChannelUserEntry Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1193,263 +1151,106 @@ abstract class Locale implements ActiveRecordInterface
         return $copyObj;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ChildUser object.
      *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('User' == $relationName) {
-            return $this->initUsers();
-        }
-    }
-
-    /**
-     * Clears out the collUsers collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addUsers()
-     */
-    public function clearUsers()
-    {
-        $this->collUsers = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collUsers collection loaded partially.
-     */
-    public function resetPartialUsers($v = true)
-    {
-        $this->collUsersPartial = $v;
-    }
-
-    /**
-     * Initializes the collUsers collection.
-     *
-     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initUsers($overrideExisting = true)
-    {
-        if (null !== $this->collUsers && !$overrideExisting) {
-            return;
-        }
-        $this->collUsers = new ObjectCollection();
-        $this->collUsers->setModel('\User');
-    }
-
-    /**
-     * Gets an array of ChildUser objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildLocale is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     * @param  ChildUser $v
+     * @return $this|\ChannelUserEntry The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getUsers(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function setUser(ChildUser $v = null)
     {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
-                // return empty collection
-                $this->initUsers();
-            } else {
-                $collUsers = ChildUserQuery::create(null, $criteria)
-                    ->filterByLocale($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collUsersPartial && count($collUsers)) {
-                        $this->initUsers(false);
-
-                        foreach ($collUsers as $obj) {
-                            if (false == $this->collUsers->contains($obj)) {
-                                $this->collUsers->append($obj);
-                            }
-                        }
-
-                        $this->collUsersPartial = true;
-                    }
-
-                    return $collUsers;
-                }
-
-                if ($partial && $this->collUsers) {
-                    foreach ($this->collUsers as $obj) {
-                        if ($obj->isNew()) {
-                            $collUsers[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collUsers = $collUsers;
-                $this->collUsersPartial = false;
-            }
+        if ($v === null) {
+            $this->setUserId(NULL);
+        } else {
+            $this->setUserId($v->getId());
         }
 
-        return $this->collUsers;
-    }
+        $this->aUser = $v;
 
-    /**
-     * Sets a collection of ChildUser objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $users A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildLocale The current object (for fluent API support)
-     */
-    public function setUsers(Collection $users, ConnectionInterface $con = null)
-    {
-        /** @var ChildUser[] $usersToDelete */
-        $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
-
-        
-        $this->usersScheduledForDeletion = $usersToDelete;
-
-        foreach ($usersToDelete as $userRemoved) {
-            $userRemoved->setLocale(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUser object, it will not be re-added.
+        if ($v !== null) {
+            $v->addChannelUserEntry($this);
         }
 
-        $this->collUsers = null;
-        foreach ($users as $user) {
-            $this->addUser($user);
-        }
-
-        $this->collUsers = $users;
-        $this->collUsersPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related User objects.
+     * Get the associated ChildUser object
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related User objects.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildUser The associated ChildUser object.
      * @throws PropelException
      */
-    public function countUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function getUser(ConnectionInterface $con = null)
     {
-        $partial = $this->collUsersPartial && !$this->isNew();
-        if (null === $this->collUsers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUsers) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getUsers());
-            }
-
-            $query = ChildUserQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByLocale($this)
-                ->count($con);
+        if ($this->aUser === null && ($this->user_id !== null)) {
+            $this->aUser = ChildUserQuery::create()->findPk($this->user_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUser->addChannelUserEntries($this);
+             */
         }
 
-        return count($this->collUsers);
+        return $this->aUser;
     }
 
     /**
-     * Method called to associate a ChildUser object to this object
-     * through the ChildUser foreign key attribute.
+     * Declares an association between this object and a ChildChannel object.
      *
-     * @param  ChildUser $l ChildUser
-     * @return $this|\Locale The current object (for fluent API support)
+     * @param  ChildChannel $v
+     * @return $this|\ChannelUserEntry The current object (for fluent API support)
+     * @throws PropelException
      */
-    public function addUser(ChildUser $l)
+    public function setChannel(ChildChannel $v = null)
     {
-        if ($this->collUsers === null) {
-            $this->initUsers();
-            $this->collUsersPartial = true;
+        if ($v === null) {
+            $this->setChannelId(NULL);
+        } else {
+            $this->setChannelId($v->getId());
         }
 
-        if (!$this->collUsers->contains($l)) {
-            $this->doAddUser($l);
+        $this->aChannel = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildChannel object, it will not be re-added.
+        if ($v !== null) {
+            $v->addChannelUserEntry($this);
         }
 
-        return $this;
-    }
-
-    /**
-     * @param ChildUser $user The ChildUser object to add.
-     */
-    protected function doAddUser(ChildUser $user)
-    {
-        $this->collUsers[]= $user;
-        $user->setLocale($this);
-    }
-
-    /**
-     * @param  ChildUser $user The ChildUser object to remove.
-     * @return $this|ChildLocale The current object (for fluent API support)
-     */
-    public function removeUser(ChildUser $user)
-    {
-        if ($this->getUsers()->contains($user)) {
-            $pos = $this->collUsers->search($user);
-            $this->collUsers->remove($pos);
-            if (null === $this->usersScheduledForDeletion) {
-                $this->usersScheduledForDeletion = clone $this->collUsers;
-                $this->usersScheduledForDeletion->clear();
-            }
-            $this->usersScheduledForDeletion[]= clone $user;
-            $user->setLocale(null);
-        }
 
         return $this;
     }
 
 
     /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Locale is new, it will return
-     * an empty collection; or if this Locale has previously
-     * been saved, it will retrieve related Users from storage.
+     * Get the associated ChildChannel object
      *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Locale.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildChannel The associated ChildChannel object.
+     * @throws PropelException
      */
-    public function getUsersJoinUserType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getChannel(ConnectionInterface $con = null)
     {
-        $query = ChildUserQuery::create(null, $criteria);
-        $query->joinWith('UserType', $joinBehavior);
+        if ($this->aChannel === null && ($this->channel_id !== null)) {
+            $this->aChannel = ChildChannelQuery::create()->findPk($this->channel_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aChannel->addChannelUserEntries($this);
+             */
+        }
 
-        return $this->getUsers($query, $con);
+        return $this->aChannel;
     }
 
     /**
@@ -1459,10 +1260,15 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->id = null;
-        $this->created_date = null;
-        $this->updated_date = null;
-        $this->resource_key = null;
+        if (null !== $this->aUser) {
+            $this->aUser->removeChannelUserEntry($this);
+        }
+        if (null !== $this->aChannel) {
+            $this->aChannel->removeChannelUserEntry($this);
+        }
+        $this->user_id = null;
+        $this->channel_id = null;
+        $this->favorite_flag = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1472,7 +1278,7 @@ abstract class Locale implements ActiveRecordInterface
     }
 
     /**
-     * Resets all references and back-references to other model objects or collections of model objects.
+     * Resets all references and back-references to other model_propel objects or collections of model_propel objects.
      *
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
@@ -1482,14 +1288,10 @@ abstract class Locale implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collUsers) {
-                foreach ($this->collUsers as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collUsers = null;
+        $this->aUser = null;
+        $this->aChannel = null;
     }
 
     /**
@@ -1499,7 +1301,7 @@ abstract class Locale implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(LocaleTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(ChannelUserEntryTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

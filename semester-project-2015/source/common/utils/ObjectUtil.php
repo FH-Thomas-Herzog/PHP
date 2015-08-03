@@ -8,9 +8,10 @@
 
 namespace source\common\utils;
 
-use source\common\CoreException;
+use\source\common\BaseObject;
+use \source\common\CoreException;
 
-class ObjectUtil
+class ObjectUtil extends BaseObject
 {
     /**
      * Checks if the given variable is null or not.

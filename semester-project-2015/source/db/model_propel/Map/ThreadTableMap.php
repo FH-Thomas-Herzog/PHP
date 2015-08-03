@@ -2,8 +2,8 @@
 
 namespace Map;
 
-use \ChannelUserEntry;
-use \ChannelUserEntryQuery;
+use \Thread;
+use \ThreadQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'channel_user_entry' table.
+ * This class defines the structure of the 'thread' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class ChannelUserEntryTableMap extends TableMap
+class ThreadTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class ChannelUserEntryTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.ChannelUserEntryTableMap';
+    const CLASS_NAME = '.Map.ThreadTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class ChannelUserEntryTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'channel_user_entry';
+    const TABLE_NAME = 'thread';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\ChannelUserEntry';
+    const OM_CLASS = '\\Thread';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'ChannelUserEntry';
+    const CLASS_DEFAULT = 'Thread';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -69,25 +69,45 @@ class ChannelUserEntryTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /**
-     * the column name for the user_id field
+     * the column name for the id field
      */
-    const COL_USER_ID = 'channel_user_entry.user_id';
+    const COL_ID = 'thread.id';
+
+    /**
+     * the column name for the creation_date field
+     */
+    const COL_CREATION_DATE = 'thread.creation_date';
+
+    /**
+     * the column name for the updated_date field
+     */
+    const COL_UPDATED_DATE = 'thread.updated_date';
+
+    /**
+     * the column name for the title field
+     */
+    const COL_TITLE = 'thread.title';
+
+    /**
+     * the column name for the description field
+     */
+    const COL_DESCRIPTION = 'thread.description';
 
     /**
      * the column name for the channel_id field
      */
-    const COL_CHANNEL_ID = 'channel_user_entry.channel_id';
+    const COL_CHANNEL_ID = 'thread.channel_id';
 
     /**
-     * the column name for the favorite_flag field
+     * the column name for the owner_user_id field
      */
-    const COL_FAVORITE_FLAG = 'channel_user_entry.favorite_flag';
+    const COL_OWNER_USER_ID = 'thread.owner_user_id';
 
     /**
-     * The default string format for model objects of the related table
+     * The default string format for model_propel objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -98,11 +118,11 @@ class ChannelUserEntryTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('UserId', 'ChannelId', 'FavoriteFlag', ),
-        self::TYPE_CAMELNAME     => array('userId', 'channelId', 'favoriteFlag', ),
-        self::TYPE_COLNAME       => array(ChannelUserEntryTableMap::COL_USER_ID, ChannelUserEntryTableMap::COL_CHANNEL_ID, ChannelUserEntryTableMap::COL_FAVORITE_FLAG, ),
-        self::TYPE_FIELDNAME     => array('user_id', 'channel_id', 'favorite_flag', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'CreationDate', 'UpdatedDate', 'Title', 'Description', 'ChannelId', 'OwnerUserId', ),
+        self::TYPE_CAMELNAME     => array('id', 'creationDate', 'updatedDate', 'title', 'description', 'channelId', 'ownerUserId', ),
+        self::TYPE_COLNAME       => array(ThreadTableMap::COL_ID, ThreadTableMap::COL_CREATION_DATE, ThreadTableMap::COL_UPDATED_DATE, ThreadTableMap::COL_TITLE, ThreadTableMap::COL_DESCRIPTION, ThreadTableMap::COL_CHANNEL_ID, ThreadTableMap::COL_OWNER_USER_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'creation_date', 'updated_date', 'title', 'description', 'channel_id', 'owner_user_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -112,11 +132,11 @@ class ChannelUserEntryTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('UserId' => 0, 'ChannelId' => 1, 'FavoriteFlag' => 2, ),
-        self::TYPE_CAMELNAME     => array('userId' => 0, 'channelId' => 1, 'favoriteFlag' => 2, ),
-        self::TYPE_COLNAME       => array(ChannelUserEntryTableMap::COL_USER_ID => 0, ChannelUserEntryTableMap::COL_CHANNEL_ID => 1, ChannelUserEntryTableMap::COL_FAVORITE_FLAG => 2, ),
-        self::TYPE_FIELDNAME     => array('user_id' => 0, 'channel_id' => 1, 'favorite_flag' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'CreationDate' => 1, 'UpdatedDate' => 2, 'Title' => 3, 'Description' => 4, 'ChannelId' => 5, 'OwnerUserId' => 6, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'creationDate' => 1, 'updatedDate' => 2, 'title' => 3, 'description' => 4, 'channelId' => 5, 'ownerUserId' => 6, ),
+        self::TYPE_COLNAME       => array(ThreadTableMap::COL_ID => 0, ThreadTableMap::COL_CREATION_DATE => 1, ThreadTableMap::COL_UPDATED_DATE => 2, ThreadTableMap::COL_TITLE => 3, ThreadTableMap::COL_DESCRIPTION => 4, ThreadTableMap::COL_CHANNEL_ID => 5, ThreadTableMap::COL_OWNER_USER_ID => 6, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'creation_date' => 1, 'updated_date' => 2, 'title' => 3, 'description' => 4, 'channel_id' => 5, 'owner_user_id' => 6, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -129,16 +149,20 @@ class ChannelUserEntryTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('channel_user_entry');
-        $this->setPhpName('ChannelUserEntry');
+        $this->setName('thread');
+        $this->setPhpName('Thread');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\ChannelUserEntry');
+        $this->setClassName('\\Thread');
         $this->setPackage('');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
-        $this->addForeignPrimaryKey('user_id', 'UserId', 'INTEGER' , 'user', 'id', true, null, null);
-        $this->addForeignPrimaryKey('channel_id', 'ChannelId', 'INTEGER' , 'channel', 'id', true, null, null);
-        $this->addColumn('favorite_flag', 'FavoriteFlag', 'BOOLEAN', true, 1, false);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('creation_date', 'CreationDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+        $this->addColumn('updated_date', 'UpdatedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 255, null);
+        $this->addColumn('description', 'Description', 'VARCHAR', true, 255, null);
+        $this->addForeignKey('channel_id', 'ChannelId', 'INTEGER', 'channel', 'id', true, null, null);
+        $this->addForeignKey('owner_user_id', 'OwnerUserId', 'INTEGER', 'user', 'id', true, null, null);
     } // initialize()
 
     /**
@@ -146,13 +170,6 @@ class ChannelUserEntryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('User', '\\User', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':user_id',
-    1 => ':id',
-  ),
-), null, null, null, false);
         $this->addRelation('Channel', '\\Channel', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
@@ -160,60 +177,28 @@ class ChannelUserEntryTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
+        $this->addRelation('User', '\\User', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':owner_user_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Comment', '\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':theme_id',
+    1 => ':id',
+  ),
+), null, null, 'Comments', false);
+        $this->addRelation('ThreadUserEntry', '\\ThreadUserEntry', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':thread_id',
+    1 => ':id',
+  ),
+), null, null, 'ThreadUserEntries', false);
     } // buildRelations()
-
-    /**
-     * Adds an object to the instance pool.
-     *
-     * Propel keeps cached copies of objects in an instance pool when they are retrieved
-     * from the database. In some cases you may need to explicitly add objects
-     * to the cache in order to ensure that the same objects are always returned by find*()
-     * and findPk*() calls.
-     *
-     * @param \ChannelUserEntry $obj A \ChannelUserEntry object.
-     * @param string $key             (optional) key to use for instance map (for performance boost if key was already calculated externally).
-     */
-    public static function addInstanceToPool($obj, $key = null)
-    {
-        if (Propel::isInstancePoolingEnabled()) {
-            if (null === $key) {
-                $key = serialize(array((string) $obj->getUserId(), (string) $obj->getChannelId()));
-            } // if key === null
-            self::$instances[$key] = $obj;
-        }
-    }
-
-    /**
-     * Removes an object from the instance pool.
-     *
-     * Propel keeps cached copies of objects in an instance pool when they are retrieved
-     * from the database.  In some cases -- especially when you override doDelete
-     * methods in your stub classes -- you may need to explicitly remove objects
-     * from the cache in order to prevent returning objects that no longer exist.
-     *
-     * @param mixed $value A \ChannelUserEntry object or a primary key value.
-     */
-    public static function removeInstanceFromPool($value)
-    {
-        if (Propel::isInstancePoolingEnabled() && null !== $value) {
-            if (is_object($value) && $value instanceof \ChannelUserEntry) {
-                $key = serialize(array((string) $value->getUserId(), (string) $value->getChannelId()));
-
-            } elseif (is_array($value) && count($value) === 2) {
-                // assume we've been passed a primary key";
-                $key = serialize(array((string) $value[0], (string) $value[1]));
-            } elseif ($value instanceof Criteria) {
-                self::$instances = [];
-
-                return;
-            } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \ChannelUserEntry object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
-                throw $e;
-            }
-
-            unset(self::$instances[$key]);
-        }
-    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -231,11 +216,11 @@ class ChannelUserEntryTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('ChannelId', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize(array((string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)], (string) $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('ChannelId', TableMap::TYPE_PHPNAME, $indexType)]));
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -252,20 +237,11 @@ class ChannelUserEntryTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-            $pks = [];
-            
-        $pks[] = (int) $row[
+        return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
-        $pks[] = (int) $row[
-            $indexType == TableMap::TYPE_NUM
-                ? 1 + $offset
-                : self::translateFieldName('ChannelId', TableMap::TYPE_PHPNAME, $indexType)
-        ];
-
-        return $pks;
     }
     
     /**
@@ -281,7 +257,7 @@ class ChannelUserEntryTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? ChannelUserEntryTableMap::CLASS_DEFAULT : ChannelUserEntryTableMap::OM_CLASS;
+        return $withPrefix ? ThreadTableMap::CLASS_DEFAULT : ThreadTableMap::OM_CLASS;
     }
 
     /**
@@ -295,22 +271,22 @@ class ChannelUserEntryTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (ChannelUserEntry object, last column rank)
+     * @return array           (Thread object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = ChannelUserEntryTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = ChannelUserEntryTableMap::getInstanceFromPool($key))) {
+        $key = ThreadTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = ThreadTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + ChannelUserEntryTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + ThreadTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = ChannelUserEntryTableMap::OM_CLASS;
-            /** @var ChannelUserEntry $obj */
+            $cls = ThreadTableMap::OM_CLASS;
+            /** @var Thread $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            ChannelUserEntryTableMap::addInstanceToPool($obj, $key);
+            ThreadTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -333,18 +309,18 @@ class ChannelUserEntryTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = ChannelUserEntryTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = ChannelUserEntryTableMap::getInstanceFromPool($key))) {
+            $key = ThreadTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = ThreadTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var ChannelUserEntry $obj */
+                /** @var Thread $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                ChannelUserEntryTableMap::addInstanceToPool($obj, $key);
+                ThreadTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -365,13 +341,21 @@ class ChannelUserEntryTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(ChannelUserEntryTableMap::COL_USER_ID);
-            $criteria->addSelectColumn(ChannelUserEntryTableMap::COL_CHANNEL_ID);
-            $criteria->addSelectColumn(ChannelUserEntryTableMap::COL_FAVORITE_FLAG);
+            $criteria->addSelectColumn(ThreadTableMap::COL_ID);
+            $criteria->addSelectColumn(ThreadTableMap::COL_CREATION_DATE);
+            $criteria->addSelectColumn(ThreadTableMap::COL_UPDATED_DATE);
+            $criteria->addSelectColumn(ThreadTableMap::COL_TITLE);
+            $criteria->addSelectColumn(ThreadTableMap::COL_DESCRIPTION);
+            $criteria->addSelectColumn(ThreadTableMap::COL_CHANNEL_ID);
+            $criteria->addSelectColumn(ThreadTableMap::COL_OWNER_USER_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.creation_date');
+            $criteria->addSelectColumn($alias . '.updated_date');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.channel_id');
-            $criteria->addSelectColumn($alias . '.favorite_flag');
+            $criteria->addSelectColumn($alias . '.owner_user_id');
         }
     }
 
@@ -384,7 +368,7 @@ class ChannelUserEntryTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(ChannelUserEntryTableMap::DATABASE_NAME)->getTable(ChannelUserEntryTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(ThreadTableMap::DATABASE_NAME)->getTable(ThreadTableMap::TABLE_NAME);
     }
 
     /**
@@ -392,16 +376,16 @@ class ChannelUserEntryTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(ChannelUserEntryTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(ChannelUserEntryTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new ChannelUserEntryTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(ThreadTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(ThreadTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new ThreadTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a ChannelUserEntry or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Thread or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or ChannelUserEntry object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Thread object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -412,37 +396,27 @@ class ChannelUserEntryTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ChannelUserEntryTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ThreadTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \ChannelUserEntry) { // it's a model object
+        } elseif ($values instanceof \Thread) { // it's a model_propel object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(ChannelUserEntryTableMap::DATABASE_NAME);
-            // primary key is composite; we therefore, expect
-            // the primary key passed to be an array of pkey values
-            if (count($values) == count($values, COUNT_RECURSIVE)) {
-                // array is not multi-dimensional
-                $values = array($values);
-            }
-            foreach ($values as $value) {
-                $criterion = $criteria->getNewCriterion(ChannelUserEntryTableMap::COL_USER_ID, $value[0]);
-                $criterion->addAnd($criteria->getNewCriterion(ChannelUserEntryTableMap::COL_CHANNEL_ID, $value[1]));
-                $criteria->addOr($criterion);
-            }
+            $criteria = new Criteria(ThreadTableMap::DATABASE_NAME);
+            $criteria->add(ThreadTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = ChannelUserEntryQuery::create()->mergeWith($criteria);
+        $query = ThreadQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            ChannelUserEntryTableMap::clearInstancePool();
+            ThreadTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                ChannelUserEntryTableMap::removeInstanceFromPool($singleval);
+                ThreadTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -450,20 +424,20 @@ class ChannelUserEntryTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the channel_user_entry table.
+     * Deletes all rows from the thread table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return ChannelUserEntryQuery::create()->doDeleteAll($con);
+        return ThreadQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a ChannelUserEntry or Criteria object.
+     * Performs an INSERT on the database, given a Thread or Criteria object.
      *
-     * @param mixed               $criteria Criteria or ChannelUserEntry object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Thread object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -472,18 +446,22 @@ class ChannelUserEntryTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ChannelUserEntryTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ThreadTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from ChannelUserEntry object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Thread object
+        }
+
+        if ($criteria->containsKey(ThreadTableMap::COL_ID) && $criteria->keyContainsValue(ThreadTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ThreadTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = ChannelUserEntryQuery::create()->mergeWith($criteria);
+        $query = ThreadQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -492,7 +470,7 @@ class ChannelUserEntryTableMap extends TableMap
         });
     }
 
-} // ChannelUserEntryTableMap
+} // ThreadTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-ChannelUserEntryTableMap::buildTableMap();
+ThreadTableMap::buildTableMap();

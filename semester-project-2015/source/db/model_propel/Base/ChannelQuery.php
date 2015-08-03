@@ -81,8 +81,8 @@ abstract class ChannelQuery extends ModelCriteria
      * Initializes internal state of \Base\ChannelQuery object.
      *
      * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param     string $modelName The phpName of a model_propel, e.g. 'Book'
+     * @param     string $modelAlias The alias for the model_propel in this query, e.g. 'b'
      */
     public function __construct($dbName = 'default', $modelName = '\\Channel', $modelAlias = null)
     {
@@ -92,7 +92,7 @@ abstract class ChannelQuery extends ModelCriteria
     /**
      * Returns a new ChildChannelQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
+     * @param     string $modelAlias The alias of a model_propel in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildChannelQuery
@@ -158,7 +158,7 @@ abstract class ChannelQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildChannel A model object, or null if the key is not found
+     * @return ChildChannel A model_propel object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {

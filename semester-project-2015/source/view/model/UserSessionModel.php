@@ -8,20 +8,20 @@
 
 namespace source\view\model;
 
-use source\common\InternalErrorException;
-use source\common\Object;
-use source\common\ObjectUtil;
+use \source\common\BaseObject;
+use \source\common\InternalErrorException;
+use \source\common\utils\ObjectUtil;
 
 /**
- * This class represents the user session model, which holds all relevant information
+ * This class represents the user session model_propel, which holds all relevant information
  * about an logged user.
  * Class UserSessionModel
  * @package SCM4\View\Model
  */
-class UserSessionModel extends Object
+class UserSessionModel extends BaseObject
 {
     /**
-     * The related user database model
+     * The related user database model_propel
      * @var User
      */
     private $user;
@@ -31,7 +31,7 @@ class UserSessionModel extends Object
      * @param User|null $user the logged user
      * @throws InternalErrorException if the given user is null
      */
-    public function __construct(User $user = null)
+    public function __construct($user = null)
     {
         parent::__construct();
         ObjectUtil::requireSet($user, new InternalErrorException("Cannot instantiate UserSessionModel with null user"));

@@ -8,9 +8,9 @@
 
 namespace source\view\controller;
 
-use source\common\SingletonObject;
-use source\common\SecurityException;
-use SCM4\View\Model\UserSessionModel;
+use \source\common\SingletonObject;
+use \source\common\SecurityException;
+use \source\view\model\UserSessionModel;
 
 /**
  * This class holds the security error codes for security related exceptions.
@@ -61,19 +61,13 @@ class SecurityController extends SingletonObject
 
     /**
      * Logs the user with given username and password in.
-     * @param string $username the username of the user
-     * @param string $password the password of the user
+     *
+     * @param stdClass user the suer to be logged in
      * @throws SecurityException if the login fails
      * @see SecurityErrorCodes for the relevant error codes
      */
-    public function loginUser($username, $password)
+    public function loginUser($user)
     {
-        ObjectUtil::requireNotNull($username, new SecurityException("Username not allowed to be null", SecurityErrorCodes::$INSUFFICIENT_ARGS));
-        ObjectUtil::requireNotNull($password, new SecurityException("Password not allowed to be null", SecurityErrorCodes::$INSUFFICIENT_ARGS));
-
-        // TODO: log user in
-        $user = null;
-
         $this->sessionController->startSession();
         $this->sessionController->setAttribute(SessionController::$USER_MODEL, new UserSessionModel($user));
     }

@@ -51,12 +51,12 @@ class ViewController extends AbstractRequestController
         switch ($this->viewId) {
             case ViewController::$VIEW_LOGIN:
                 switch ($this->actionId) {
-                    case ActionController::$ACTION_LOGIN:
-                        if ($this->actionCtrl->handleRequest()) {
+                    case LoginRequestController::$ACTION_LOGIN:
+                        if ((new LoginRequestController())->handleRequest()) {
                             echo " - Next page would be called here";
                         } else {
                             echo $this->getTemplateController()->renderView(self::$VIEW_LOGIN, true, true, array(
-                                ActionController::$ACTION_ID => ActionController::$ACTION_LOGIN,
+                                "actionId" => LoginRequestController::$ACTION_LOGIN,
                                 "message" => "Username or password are invalid. Please try again",
                                 "messageType" => "danger"
                             ));
@@ -71,7 +71,7 @@ class ViewController extends AbstractRequestController
             default:
                 $this->sesionCtrl->startSession();
                 echo $this->getTemplateController()->renderView(self::$VIEW_LOGIN, true, true, array(
-                    ActionController::$ACTION_ID => ActionController::$ACTION_LOGIN
+                    "actionId" => ActionController::$ACTION_LOGIN
                 ));
                 return;
         }

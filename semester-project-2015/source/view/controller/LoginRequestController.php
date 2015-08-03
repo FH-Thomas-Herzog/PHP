@@ -9,31 +9,60 @@
 namespace source\view\controller;
 
 
-use source\common\AbstractRequestController;
-use source\common\InternalErrorException;
+use \source\common\AbstractRequestController;
+use \source\common\InternalErrorException;
+use \source\db\controller\UserController;
+use \source\view\controller\SecurityController;
 
 class LoginRequestController extends AbstractRequestController
 {
-    private $pool;
+    public static $ACTION_LOGIN = "ACTION_LOGIN";
+
+    public static $ACTION_LOGOUT = "ACTION_LOGOUT";
+
     private $viewController;
 
-    public function __construct(Pool $pool)
+    public function __construct()
     {
         parent::__construct();
-        $this->pool = $pool;
     }
 
     public function handleRequest()
     {
         parent::handleRequest();
 
-        if (!StringUtil::compare($this->viewId, TemplateController::$VIEW_LOGIN)) {
-            throw new InternalErrorException("Action: '" . $this->actionId . "' called from invalid view: '" . $this->viewId . "''");
+        switch ($this->actionId) {
+            case ActionController::$ACTION_LOGIN:
+                return $this->handleLogin();
+            default:
+                throw new InternalErrorException("Action: '" . $this->actionId . "' cannot be handled by: '" . __CLASS__ . "''");
         }
 
+        // TODO: Login user
+    }
+
+    private function handleLogin()
+    {
         $username = parent::getParameter("username");
         $password = parent::getParameter("password");
 
-        // TODO: Login user
+        if (!isset($username) || (!isset($password))) {
+            return false;
+        }
+
+        $userCtrl = new UserController();
+        $user = $userCtrl->getByUsername($username);
+        if (!isset($user)) {
+            return false;
+        } else if (password_verify($password, $user->password)) {
+            SecurityController::getInstance()->loginUser($user);
+            return true;
+        }
+        return false;
+    }
+
+    private function handleLogout()
+    {
+
     }
 }

@@ -1099,7 +1099,7 @@ abstract class User implements ActiveRecordInterface
      *
      * You can override this method in the stub class, but you should always invoke
      * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
+     * in case your model_propel changes.
      *
      * @throws PropelException
      */
@@ -3590,7 +3590,7 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Resets all references and back-references to other model objects or collections of model objects.
+     * Resets all references and back-references to other model_propel objects or collections of model_propel objects.
      *
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.

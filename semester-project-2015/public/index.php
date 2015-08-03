@@ -17,6 +17,7 @@ use \Stash\Driver\FileSystem;
 use \source\view\controller\TemplateController;
 use \source\view\controller\ViewController;
 use \source\view\controller\PoolController;
+use \source\db\controller\UserController;
 
 // register loaders
 Autoloader::register();

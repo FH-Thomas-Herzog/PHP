@@ -102,7 +102,7 @@ class CommentUserEntryTableMap extends TableMap
     const COL_READ_FLAG = 'comment_user_entry.read_flag';
 
     /**
-     * The default string format for model objects of the related table
+     * The default string format for model_propel objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -442,7 +442,7 @@ class CommentUserEntryTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \CommentUserEntry) { // it's a model object
+        } elseif ($values instanceof \CommentUserEntry) { // it's a model_propel object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks

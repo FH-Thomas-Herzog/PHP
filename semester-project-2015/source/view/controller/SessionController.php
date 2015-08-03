@@ -23,7 +23,7 @@ class SessionController extends SingletonObject
 {
 
     /**
-     * The key for the user model which represents the logged user
+     * The key for the user model_propel which represents the logged user
      * @var string
      */
     public static $USER_MODEL = "USER_MODEL";

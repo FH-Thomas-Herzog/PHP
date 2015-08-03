@@ -71,8 +71,8 @@ abstract class ChannelUserEntryQuery extends ModelCriteria
      * Initializes internal state of \Base\ChannelUserEntryQuery object.
      *
      * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param     string $modelName The phpName of a model_propel, e.g. 'Book'
+     * @param     string $modelAlias The alias for the model_propel in this query, e.g. 'b'
      */
     public function __construct($dbName = 'default', $modelName = '\\ChannelUserEntry', $modelAlias = null)
     {
@@ -82,7 +82,7 @@ abstract class ChannelUserEntryQuery extends ModelCriteria
     /**
      * Returns a new ChildChannelUserEntryQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
+     * @param     string $modelAlias The alias of a model_propel in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildChannelUserEntryQuery
@@ -148,7 +148,7 @@ abstract class ChannelUserEntryQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildChannelUserEntry A model object, or null if the key is not found
+     * @return ChildChannelUserEntry A model_propel object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {

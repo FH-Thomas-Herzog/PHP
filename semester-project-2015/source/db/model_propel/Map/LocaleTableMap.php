@@ -2,8 +2,8 @@
 
 namespace Map;
 
-use \Comment;
-use \CommentQuery;
+use \Locale;
+use \LocaleQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'comment' table.
+ * This class defines the structure of the 'locale' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class CommentTableMap extends TableMap
+class LocaleTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class CommentTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.CommentTableMap';
+    const CLASS_NAME = '.Map.LocaleTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class CommentTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'comment';
+    const TABLE_NAME = 'locale';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Comment';
+    const OM_CLASS = '\\Locale';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Comment';
+    const CLASS_DEFAULT = 'Locale';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,45 +69,30 @@ class CommentTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'comment.id';
+    const COL_ID = 'locale.id';
 
     /**
      * the column name for the created_date field
      */
-    const COL_CREATED_DATE = 'comment.created_date';
+    const COL_CREATED_DATE = 'locale.created_date';
 
     /**
      * the column name for the updated_date field
      */
-    const COL_UPDATED_DATE = 'comment.updated_date';
+    const COL_UPDATED_DATE = 'locale.updated_date';
 
     /**
-     * the column name for the user_comment field
+     * the column name for the resource_key field
      */
-    const COL_USER_COMMENT = 'comment.user_comment';
+    const COL_RESOURCE_KEY = 'locale.resource_key';
 
     /**
-     * the column name for the user_id field
-     */
-    const COL_USER_ID = 'comment.user_id';
-
-    /**
-     * the column name for the theme_id field
-     */
-    const COL_THEME_ID = 'comment.theme_id';
-
-    /**
-     * the column name for the thread_id field
-     */
-    const COL_THREAD_ID = 'comment.thread_id';
-
-    /**
-     * The default string format for model objects of the related table
+     * The default string format for model_propel objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -118,11 +103,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'CreatedDate', 'UpdatedDate', 'UserComment', 'UserId', 'ThemeId', 'ThreadId', ),
-        self::TYPE_CAMELNAME     => array('id', 'createdDate', 'updatedDate', 'userComment', 'userId', 'themeId', 'threadId', ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID, CommentTableMap::COL_CREATED_DATE, CommentTableMap::COL_UPDATED_DATE, CommentTableMap::COL_USER_COMMENT, CommentTableMap::COL_USER_ID, CommentTableMap::COL_THEME_ID, CommentTableMap::COL_THREAD_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'created_date', 'updated_date', 'user_comment', 'user_id', 'theme_id', 'thread_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'CreatedDate', 'UpdatedDate', 'ResourceKey', ),
+        self::TYPE_CAMELNAME     => array('id', 'createdDate', 'updatedDate', 'resourceKey', ),
+        self::TYPE_COLNAME       => array(LocaleTableMap::COL_ID, LocaleTableMap::COL_CREATED_DATE, LocaleTableMap::COL_UPDATED_DATE, LocaleTableMap::COL_RESOURCE_KEY, ),
+        self::TYPE_FIELDNAME     => array('id', 'created_date', 'updated_date', 'resource_key', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -132,11 +117,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'CreatedDate' => 1, 'UpdatedDate' => 2, 'UserComment' => 3, 'UserId' => 4, 'ThemeId' => 5, 'ThreadId' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'createdDate' => 1, 'updatedDate' => 2, 'userComment' => 3, 'userId' => 4, 'themeId' => 5, 'threadId' => 6, ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID => 0, CommentTableMap::COL_CREATED_DATE => 1, CommentTableMap::COL_UPDATED_DATE => 2, CommentTableMap::COL_USER_COMMENT => 3, CommentTableMap::COL_USER_ID => 4, CommentTableMap::COL_THEME_ID => 5, CommentTableMap::COL_THREAD_ID => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'created_date' => 1, 'updated_date' => 2, 'user_comment' => 3, 'user_id' => 4, 'theme_id' => 5, 'thread_id' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'CreatedDate' => 1, 'UpdatedDate' => 2, 'ResourceKey' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'createdDate' => 1, 'updatedDate' => 2, 'resourceKey' => 3, ),
+        self::TYPE_COLNAME       => array(LocaleTableMap::COL_ID => 0, LocaleTableMap::COL_CREATED_DATE => 1, LocaleTableMap::COL_UPDATED_DATE => 2, LocaleTableMap::COL_RESOURCE_KEY => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'created_date' => 1, 'updated_date' => 2, 'resource_key' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -149,20 +134,17 @@ class CommentTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('comment');
-        $this->setPhpName('Comment');
+        $this->setName('locale');
+        $this->setPhpName('Locale');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Comment');
+        $this->setClassName('\\Locale');
         $this->setPackage('');
-        $this->setUseIdGenerator(true);
+        $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('id', 'Id', 'VARCHAR', true, 5, null);
         $this->addColumn('created_date', 'CreatedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('updated_date', 'UpdatedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
-        $this->addColumn('user_comment', 'UserComment', 'LONGVARCHAR', true, null, null);
-        $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'user', 'id', true, null, null);
-        $this->addForeignKey('theme_id', 'ThemeId', 'INTEGER', 'thread', 'id', true, null, null);
-        $this->addForeignKey('thread_id', 'ThreadId', 'INTEGER', 'comment', 'id', false, null, null);
+        $this->addColumn('resource_key', 'ResourceKey', 'VARCHAR', true, 50, null);
     } // initialize()
 
     /**
@@ -170,41 +152,13 @@ class CommentTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CommentRelatedByThreadId', '\\Comment', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('User', '\\User', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
-    0 => ':thread_id',
+    0 => ':locale_id',
     1 => ':id',
   ),
-), null, null, null, false);
-        $this->addRelation('Thread', '\\Thread', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':theme_id',
-    1 => ':id',
-  ),
-), null, null, null, false);
-        $this->addRelation('User', '\\User', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':user_id',
-    1 => ':id',
-  ),
-), null, null, null, false);
-        $this->addRelation('CommentRelatedById', '\\Comment', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':thread_id',
-    1 => ':id',
-  ),
-), null, null, 'CommentsRelatedById', false);
-        $this->addRelation('CommentUserEntry', '\\CommentUserEntry', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':comment_id',
-    1 => ':id',
-  ),
-), null, null, 'CommentUserEntries', false);
+), null, null, 'Users', false);
     } // buildRelations()
 
     /**
@@ -244,7 +198,7 @@ class CommentTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return (int) $row[
+        return (string) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
@@ -264,7 +218,7 @@ class CommentTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? CommentTableMap::CLASS_DEFAULT : CommentTableMap::OM_CLASS;
+        return $withPrefix ? LocaleTableMap::CLASS_DEFAULT : LocaleTableMap::OM_CLASS;
     }
 
     /**
@@ -278,22 +232,22 @@ class CommentTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Comment object, last column rank)
+     * @return array           (Locale object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = CommentTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = CommentTableMap::getInstanceFromPool($key))) {
+        $key = LocaleTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = LocaleTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + CommentTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + LocaleTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = CommentTableMap::OM_CLASS;
-            /** @var Comment $obj */
+            $cls = LocaleTableMap::OM_CLASS;
+            /** @var Locale $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            CommentTableMap::addInstanceToPool($obj, $key);
+            LocaleTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -316,18 +270,18 @@ class CommentTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = CommentTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = CommentTableMap::getInstanceFromPool($key))) {
+            $key = LocaleTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = LocaleTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Comment $obj */
+                /** @var Locale $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                CommentTableMap::addInstanceToPool($obj, $key);
+                LocaleTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -348,21 +302,15 @@ class CommentTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(CommentTableMap::COL_ID);
-            $criteria->addSelectColumn(CommentTableMap::COL_CREATED_DATE);
-            $criteria->addSelectColumn(CommentTableMap::COL_UPDATED_DATE);
-            $criteria->addSelectColumn(CommentTableMap::COL_USER_COMMENT);
-            $criteria->addSelectColumn(CommentTableMap::COL_USER_ID);
-            $criteria->addSelectColumn(CommentTableMap::COL_THEME_ID);
-            $criteria->addSelectColumn(CommentTableMap::COL_THREAD_ID);
+            $criteria->addSelectColumn(LocaleTableMap::COL_ID);
+            $criteria->addSelectColumn(LocaleTableMap::COL_CREATED_DATE);
+            $criteria->addSelectColumn(LocaleTableMap::COL_UPDATED_DATE);
+            $criteria->addSelectColumn(LocaleTableMap::COL_RESOURCE_KEY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.created_date');
             $criteria->addSelectColumn($alias . '.updated_date');
-            $criteria->addSelectColumn($alias . '.user_comment');
-            $criteria->addSelectColumn($alias . '.user_id');
-            $criteria->addSelectColumn($alias . '.theme_id');
-            $criteria->addSelectColumn($alias . '.thread_id');
+            $criteria->addSelectColumn($alias . '.resource_key');
         }
     }
 
@@ -375,7 +323,7 @@ class CommentTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(CommentTableMap::DATABASE_NAME)->getTable(CommentTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(LocaleTableMap::DATABASE_NAME)->getTable(LocaleTableMap::TABLE_NAME);
     }
 
     /**
@@ -383,16 +331,16 @@ class CommentTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(CommentTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(CommentTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new CommentTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(LocaleTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(LocaleTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new LocaleTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Comment or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Locale or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Comment object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Locale object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -403,27 +351,27 @@ class CommentTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(LocaleTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Comment) { // it's a model object
+        } elseif ($values instanceof \Locale) { // it's a model_propel object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(CommentTableMap::DATABASE_NAME);
-            $criteria->add(CommentTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(LocaleTableMap::DATABASE_NAME);
+            $criteria->add(LocaleTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = CommentQuery::create()->mergeWith($criteria);
+        $query = LocaleQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            CommentTableMap::clearInstancePool();
+            LocaleTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                CommentTableMap::removeInstanceFromPool($singleval);
+                LocaleTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -431,20 +379,20 @@ class CommentTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the comment table.
+     * Deletes all rows from the locale table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return CommentQuery::create()->doDeleteAll($con);
+        return LocaleQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Comment or Criteria object.
+     * Performs an INSERT on the database, given a Locale or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Comment object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Locale object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -453,22 +401,18 @@ class CommentTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(LocaleTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Comment object
-        }
-
-        if ($criteria->containsKey(CommentTableMap::COL_ID) && $criteria->keyContainsValue(CommentTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.CommentTableMap::COL_ID.')');
+            $criteria = $criteria->buildCriteria(); // build Criteria from Locale object
         }
 
 
         // Set the correct dbName
-        $query = CommentQuery::create()->mergeWith($criteria);
+        $query = LocaleQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -477,7 +421,7 @@ class CommentTableMap extends TableMap
         });
     }
 
-} // CommentTableMap
+} // LocaleTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-CommentTableMap::buildTableMap();
+LocaleTableMap::buildTableMap();

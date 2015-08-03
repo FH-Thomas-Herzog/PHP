@@ -2,18 +2,20 @@
 
 namespace Base;
 
+use \Channel as ChildChannel;
+use \ChannelQuery as ChildChannelQuery;
 use \Comment as ChildComment;
 use \CommentQuery as ChildCommentQuery;
-use \CommentUserEntry as ChildCommentUserEntry;
-use \CommentUserEntryQuery as ChildCommentUserEntryQuery;
 use \Thread as ChildThread;
 use \ThreadQuery as ChildThreadQuery;
+use \ThreadUserEntry as ChildThreadUserEntry;
+use \ThreadUserEntryQuery as ChildThreadUserEntryQuery;
 use \User as ChildUser;
 use \UserQuery as ChildUserQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
-use Map\CommentTableMap;
+use Map\ThreadTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -29,18 +31,18 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'comment' table.
+ * Base class that represents a row from the 'thread' table.
  *
  * 
  *
 * @package    propel.generator..Base
 */
-abstract class Comment implements ActiveRecordInterface 
+abstract class Thread implements ActiveRecordInterface 
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\CommentTableMap';
+    const TABLE_MAP = '\\Map\\ThreadTableMap';
 
 
     /**
@@ -76,11 +78,11 @@ abstract class Comment implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the created_date field.
+     * The value for the creation_date field.
      * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
      * @var        \DateTime
      */
-    protected $created_date;
+    protected $creation_date;
 
     /**
      * The value for the updated_date field.
@@ -90,38 +92,33 @@ abstract class Comment implements ActiveRecordInterface
     protected $updated_date;
 
     /**
-     * The value for the user_comment field.
+     * The value for the title field.
      * @var        string
      */
-    protected $user_comment;
+    protected $title;
 
     /**
-     * The value for the user_id field.
+     * The value for the description field.
+     * @var        string
+     */
+    protected $description;
+
+    /**
+     * The value for the channel_id field.
      * @var        int
      */
-    protected $user_id;
+    protected $channel_id;
 
     /**
-     * The value for the theme_id field.
+     * The value for the owner_user_id field.
      * @var        int
      */
-    protected $theme_id;
+    protected $owner_user_id;
 
     /**
-     * The value for the thread_id field.
-     * @var        int
+     * @var        ChildChannel
      */
-    protected $thread_id;
-
-    /**
-     * @var        ChildComment
-     */
-    protected $aCommentRelatedByThreadId;
-
-    /**
-     * @var        ChildThread
-     */
-    protected $aThread;
+    protected $aChannel;
 
     /**
      * @var        ChildUser
@@ -131,14 +128,14 @@ abstract class Comment implements ActiveRecordInterface
     /**
      * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
      */
-    protected $collCommentsRelatedById;
-    protected $collCommentsRelatedByIdPartial;
+    protected $collComments;
+    protected $collCommentsPartial;
 
     /**
-     * @var        ObjectCollection|ChildCommentUserEntry[] Collection to store aggregation of ChildCommentUserEntry objects.
+     * @var        ObjectCollection|ChildThreadUserEntry[] Collection to store aggregation of ChildThreadUserEntry objects.
      */
-    protected $collCommentUserEntries;
-    protected $collCommentUserEntriesPartial;
+    protected $collThreadUserEntries;
+    protected $collThreadUserEntriesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -152,13 +149,13 @@ abstract class Comment implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildComment[]
      */
-    protected $commentsRelatedByIdScheduledForDeletion = null;
+    protected $commentsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildCommentUserEntry[]
+     * @var ObjectCollection|ChildThreadUserEntry[]
      */
-    protected $commentUserEntriesScheduledForDeletion = null;
+    protected $threadUserEntriesScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -171,7 +168,7 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Initializes internal state of Base\Comment object.
+     * Initializes internal state of Base\Thread object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -268,9 +265,9 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Comment</code> instance.  If
-     * <code>obj</code> is an instance of <code>Comment</code>, delegates to
-     * <code>equals(Comment)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Thread</code> instance.  If
+     * <code>obj</code> is an instance of <code>Thread</code>, delegates to
+     * <code>equals(Thread)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -336,7 +333,7 @@ abstract class Comment implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Comment The current object, for fluid interface
+     * @return $this|Thread The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -400,7 +397,7 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [created_date] column value.
+     * Get the [optionally formatted] temporal [creation_date] column value.
      * 
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -410,12 +407,12 @@ abstract class Comment implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getCreatedDate($format = NULL)
+    public function getCreationDate($format = NULL)
     {
         if ($format === null) {
-            return $this->created_date;
+            return $this->creation_date;
         } else {
-            return $this->created_date instanceof \DateTime ? $this->created_date->format($format) : null;
+            return $this->creation_date instanceof \DateTime ? $this->creation_date->format($format) : null;
         }
     }
 
@@ -440,50 +437,50 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Get the [user_comment] column value.
+     * Get the [title] column value.
      * 
      * @return string
      */
-    public function getUserComment()
+    public function getTitle()
     {
-        return $this->user_comment;
+        return $this->title;
     }
 
     /**
-     * Get the [user_id] column value.
+     * Get the [description] column value.
      * 
-     * @return int
+     * @return string
      */
-    public function getUserId()
+    public function getDescription()
     {
-        return $this->user_id;
+        return $this->description;
     }
 
     /**
-     * Get the [theme_id] column value.
+     * Get the [channel_id] column value.
      * 
      * @return int
      */
-    public function getThemeId()
+    public function getChannelId()
     {
-        return $this->theme_id;
+        return $this->channel_id;
     }
 
     /**
-     * Get the [thread_id] column value.
+     * Get the [owner_user_id] column value.
      * 
      * @return int
      */
-    public function getThreadId()
+    public function getOwnerUserId()
     {
-        return $this->thread_id;
+        return $this->owner_user_id;
     }
 
     /**
      * Set the value of [id] column.
      * 
      * @param int $v new value
-     * @return $this|\Comment The current object (for fluent API support)
+     * @return $this|\Thread The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -493,38 +490,38 @@ abstract class Comment implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[CommentTableMap::COL_ID] = true;
+            $this->modifiedColumns[ThreadTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Sets the value of [created_date] column to a normalized version of the date/time value specified.
+     * Sets the value of [creation_date] column to a normalized version of the date/time value specified.
      * 
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Comment The current object (for fluent API support)
+     * @return $this|\Thread The current object (for fluent API support)
      */
-    public function setCreatedDate($v)
+    public function setCreationDate($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_date !== null || $dt !== null) {
-            if ($this->created_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_date->format("Y-m-d H:i:s")) {
-                $this->created_date = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[CommentTableMap::COL_CREATED_DATE] = true;
+        if ($this->creation_date !== null || $dt !== null) {
+            if ($this->creation_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->creation_date->format("Y-m-d H:i:s")) {
+                $this->creation_date = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[ThreadTableMap::COL_CREATION_DATE] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setCreatedDate()
+    } // setCreationDate()
 
     /**
      * Sets the value of [updated_date] column to a normalized version of the date/time value specified.
      * 
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Comment The current object (for fluent API support)
+     * @return $this|\Thread The current object (for fluent API support)
      */
     public function setUpdatedDate($v)
     {
@@ -532,7 +529,7 @@ abstract class Comment implements ActiveRecordInterface
         if ($this->updated_date !== null || $dt !== null) {
             if ($this->updated_date === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_date->format("Y-m-d H:i:s")) {
                 $this->updated_date = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[CommentTableMap::COL_UPDATED_DATE] = true;
+                $this->modifiedColumns[ThreadTableMap::COL_UPDATED_DATE] = true;
             }
         } // if either are not null
 
@@ -540,40 +537,84 @@ abstract class Comment implements ActiveRecordInterface
     } // setUpdatedDate()
 
     /**
-     * Set the value of [user_comment] column.
+     * Set the value of [title] column.
      * 
      * @param string $v new value
-     * @return $this|\Comment The current object (for fluent API support)
+     * @return $this|\Thread The current object (for fluent API support)
      */
-    public function setUserComment($v)
+    public function setTitle($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->user_comment !== $v) {
-            $this->user_comment = $v;
-            $this->modifiedColumns[CommentTableMap::COL_USER_COMMENT] = true;
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[ThreadTableMap::COL_TITLE] = true;
         }
 
         return $this;
-    } // setUserComment()
+    } // setTitle()
 
     /**
-     * Set the value of [user_id] column.
+     * Set the value of [description] column.
+     * 
+     * @param string $v new value
+     * @return $this|\Thread The current object (for fluent API support)
+     */
+    public function setDescription($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[ThreadTableMap::COL_DESCRIPTION] = true;
+        }
+
+        return $this;
+    } // setDescription()
+
+    /**
+     * Set the value of [channel_id] column.
      * 
      * @param int $v new value
-     * @return $this|\Comment The current object (for fluent API support)
+     * @return $this|\Thread The current object (for fluent API support)
      */
-    public function setUserId($v)
+    public function setChannelId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->user_id !== $v) {
-            $this->user_id = $v;
-            $this->modifiedColumns[CommentTableMap::COL_USER_ID] = true;
+        if ($this->channel_id !== $v) {
+            $this->channel_id = $v;
+            $this->modifiedColumns[ThreadTableMap::COL_CHANNEL_ID] = true;
+        }
+
+        if ($this->aChannel !== null && $this->aChannel->getId() !== $v) {
+            $this->aChannel = null;
+        }
+
+        return $this;
+    } // setChannelId()
+
+    /**
+     * Set the value of [owner_user_id] column.
+     * 
+     * @param int $v new value
+     * @return $this|\Thread The current object (for fluent API support)
+     */
+    public function setOwnerUserId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->owner_user_id !== $v) {
+            $this->owner_user_id = $v;
+            $this->modifiedColumns[ThreadTableMap::COL_OWNER_USER_ID] = true;
         }
 
         if ($this->aUser !== null && $this->aUser->getId() !== $v) {
@@ -581,55 +622,7 @@ abstract class Comment implements ActiveRecordInterface
         }
 
         return $this;
-    } // setUserId()
-
-    /**
-     * Set the value of [theme_id] column.
-     * 
-     * @param int $v new value
-     * @return $this|\Comment The current object (for fluent API support)
-     */
-    public function setThemeId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->theme_id !== $v) {
-            $this->theme_id = $v;
-            $this->modifiedColumns[CommentTableMap::COL_THEME_ID] = true;
-        }
-
-        if ($this->aThread !== null && $this->aThread->getId() !== $v) {
-            $this->aThread = null;
-        }
-
-        return $this;
-    } // setThemeId()
-
-    /**
-     * Set the value of [thread_id] column.
-     * 
-     * @param int $v new value
-     * @return $this|\Comment The current object (for fluent API support)
-     */
-    public function setThreadId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->thread_id !== $v) {
-            $this->thread_id = $v;
-            $this->modifiedColumns[CommentTableMap::COL_THREAD_ID] = true;
-        }
-
-        if ($this->aCommentRelatedByThreadId !== null && $this->aCommentRelatedByThreadId->getId() !== $v) {
-            $this->aCommentRelatedByThreadId = null;
-        }
-
-        return $this;
-    } // setThreadId()
+    } // setOwnerUserId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -667,32 +660,32 @@ abstract class Comment implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CommentTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ThreadTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CommentTableMap::translateFieldName('CreatedDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ThreadTableMap::translateFieldName('CreationDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->created_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->creation_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CommentTableMap::translateFieldName('UpdatedDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ThreadTableMap::translateFieldName('UpdatedDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CommentTableMap::translateFieldName('UserComment', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->user_comment = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ThreadTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CommentTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->user_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ThreadTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->description = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CommentTableMap::translateFieldName('ThemeId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->theme_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ThreadTableMap::translateFieldName('ChannelId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->channel_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CommentTableMap::translateFieldName('ThreadId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->thread_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ThreadTableMap::translateFieldName('OwnerUserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->owner_user_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -701,10 +694,10 @@ abstract class Comment implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = CommentTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = ThreadTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Comment'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Thread'), 0, $e);
         }
     }
 
@@ -717,20 +710,17 @@ abstract class Comment implements ActiveRecordInterface
      *
      * You can override this method in the stub class, but you should always invoke
      * the base method from the overridden method (i.e. parent::ensureConsistency()),
-     * in case your model changes.
+     * in case your model_propel changes.
      *
      * @throws PropelException
      */
     public function ensureConsistency()
     {
-        if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
+        if ($this->aChannel !== null && $this->channel_id !== $this->aChannel->getId()) {
+            $this->aChannel = null;
+        }
+        if ($this->aUser !== null && $this->owner_user_id !== $this->aUser->getId()) {
             $this->aUser = null;
-        }
-        if ($this->aThread !== null && $this->theme_id !== $this->aThread->getId()) {
-            $this->aThread = null;
-        }
-        if ($this->aCommentRelatedByThreadId !== null && $this->thread_id !== $this->aCommentRelatedByThreadId->getId()) {
-            $this->aCommentRelatedByThreadId = null;
         }
     } // ensureConsistency
 
@@ -755,13 +745,13 @@ abstract class Comment implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(CommentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(ThreadTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildCommentQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildThreadQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -771,12 +761,11 @@ abstract class Comment implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCommentRelatedByThreadId = null;
-            $this->aThread = null;
+            $this->aChannel = null;
             $this->aUser = null;
-            $this->collCommentsRelatedById = null;
+            $this->collComments = null;
 
-            $this->collCommentUserEntries = null;
+            $this->collThreadUserEntries = null;
 
         } // if (deep)
     }
@@ -787,8 +776,8 @@ abstract class Comment implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Comment::setDeleted()
-     * @see Comment::isDeleted()
+     * @see Thread::setDeleted()
+     * @see Thread::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -797,11 +786,11 @@ abstract class Comment implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ThreadTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildCommentQuery::create()
+            $deleteQuery = ChildThreadQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -832,7 +821,7 @@ abstract class Comment implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ThreadTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -851,7 +840,7 @@ abstract class Comment implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                CommentTableMap::addInstanceToPool($this);
+                ThreadTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -882,18 +871,11 @@ abstract class Comment implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCommentRelatedByThreadId !== null) {
-                if ($this->aCommentRelatedByThreadId->isModified() || $this->aCommentRelatedByThreadId->isNew()) {
-                    $affectedRows += $this->aCommentRelatedByThreadId->save($con);
+            if ($this->aChannel !== null) {
+                if ($this->aChannel->isModified() || $this->aChannel->isNew()) {
+                    $affectedRows += $this->aChannel->save($con);
                 }
-                $this->setCommentRelatedByThreadId($this->aCommentRelatedByThreadId);
-            }
-
-            if ($this->aThread !== null) {
-                if ($this->aThread->isModified() || $this->aThread->isNew()) {
-                    $affectedRows += $this->aThread->save($con);
-                }
-                $this->setThread($this->aThread);
+                $this->setChannel($this->aChannel);
             }
 
             if ($this->aUser !== null) {
@@ -914,35 +896,34 @@ abstract class Comment implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->commentsRelatedByIdScheduledForDeletion !== null) {
-                if (!$this->commentsRelatedByIdScheduledForDeletion->isEmpty()) {
-                    foreach ($this->commentsRelatedByIdScheduledForDeletion as $commentRelatedById) {
-                        // need to save related object because we set the relation to null
-                        $commentRelatedById->save($con);
-                    }
-                    $this->commentsRelatedByIdScheduledForDeletion = null;
+            if ($this->commentsScheduledForDeletion !== null) {
+                if (!$this->commentsScheduledForDeletion->isEmpty()) {
+                    \CommentQuery::create()
+                        ->filterByPrimaryKeys($this->commentsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->commentsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collCommentsRelatedById !== null) {
-                foreach ($this->collCommentsRelatedById as $referrerFK) {
+            if ($this->collComments !== null) {
+                foreach ($this->collComments as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->commentUserEntriesScheduledForDeletion !== null) {
-                if (!$this->commentUserEntriesScheduledForDeletion->isEmpty()) {
-                    \CommentUserEntryQuery::create()
-                        ->filterByPrimaryKeys($this->commentUserEntriesScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->threadUserEntriesScheduledForDeletion !== null) {
+                if (!$this->threadUserEntriesScheduledForDeletion->isEmpty()) {
+                    \ThreadUserEntryQuery::create()
+                        ->filterByPrimaryKeys($this->threadUserEntriesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->commentUserEntriesScheduledForDeletion = null;
+                    $this->threadUserEntriesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collCommentUserEntries !== null) {
-                foreach ($this->collCommentUserEntries as $referrerFK) {
+            if ($this->collThreadUserEntries !== null) {
+                foreach ($this->collThreadUserEntries as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -969,36 +950,36 @@ abstract class Comment implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[CommentTableMap::COL_ID] = true;
+        $this->modifiedColumns[ThreadTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CommentTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ThreadTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(CommentTableMap::COL_ID)) {
+        if ($this->isColumnModified(ThreadTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(CommentTableMap::COL_CREATED_DATE)) {
-            $modifiedColumns[':p' . $index++]  = 'created_date';
+        if ($this->isColumnModified(ThreadTableMap::COL_CREATION_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'creation_date';
         }
-        if ($this->isColumnModified(CommentTableMap::COL_UPDATED_DATE)) {
+        if ($this->isColumnModified(ThreadTableMap::COL_UPDATED_DATE)) {
             $modifiedColumns[':p' . $index++]  = 'updated_date';
         }
-        if ($this->isColumnModified(CommentTableMap::COL_USER_COMMENT)) {
-            $modifiedColumns[':p' . $index++]  = 'user_comment';
+        if ($this->isColumnModified(ThreadTableMap::COL_TITLE)) {
+            $modifiedColumns[':p' . $index++]  = 'title';
         }
-        if ($this->isColumnModified(CommentTableMap::COL_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'user_id';
+        if ($this->isColumnModified(ThreadTableMap::COL_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = 'description';
         }
-        if ($this->isColumnModified(CommentTableMap::COL_THEME_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'theme_id';
+        if ($this->isColumnModified(ThreadTableMap::COL_CHANNEL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'channel_id';
         }
-        if ($this->isColumnModified(CommentTableMap::COL_THREAD_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'thread_id';
+        if ($this->isColumnModified(ThreadTableMap::COL_OWNER_USER_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'owner_user_id';
         }
 
         $sql = sprintf(
-            'INSERT INTO comment (%s) VALUES (%s)',
+            'INSERT INTO thread (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1010,23 +991,23 @@ abstract class Comment implements ActiveRecordInterface
                     case 'id':                        
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'created_date':                        
-                        $stmt->bindValue($identifier, $this->created_date ? $this->created_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'creation_date':                        
+                        $stmt->bindValue($identifier, $this->creation_date ? $this->creation_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case 'updated_date':                        
                         $stmt->bindValue($identifier, $this->updated_date ? $this->updated_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'user_comment':                        
-                        $stmt->bindValue($identifier, $this->user_comment, PDO::PARAM_STR);
+                    case 'title':                        
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
-                    case 'user_id':                        
-                        $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
+                    case 'description':                        
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
-                    case 'theme_id':                        
-                        $stmt->bindValue($identifier, $this->theme_id, PDO::PARAM_INT);
+                    case 'channel_id':                        
+                        $stmt->bindValue($identifier, $this->channel_id, PDO::PARAM_INT);
                         break;
-                    case 'thread_id':                        
-                        $stmt->bindValue($identifier, $this->thread_id, PDO::PARAM_INT);
+                    case 'owner_user_id':                        
+                        $stmt->bindValue($identifier, $this->owner_user_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1074,7 +1055,7 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = CommentTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ThreadTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1094,22 +1075,22 @@ abstract class Comment implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getCreatedDate();
+                return $this->getCreationDate();
                 break;
             case 2:
                 return $this->getUpdatedDate();
                 break;
             case 3:
-                return $this->getUserComment();
+                return $this->getTitle();
                 break;
             case 4:
-                return $this->getUserId();
+                return $this->getDescription();
                 break;
             case 5:
-                return $this->getThemeId();
+                return $this->getChannelId();
                 break;
             case 6:
-                return $this->getThreadId();
+                return $this->getOwnerUserId();
                 break;
             default:
                 return null;
@@ -1135,19 +1116,19 @@ abstract class Comment implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Comment'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Thread'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Comment'][$this->hashCode()] = true;
-        $keys = CommentTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Thread'][$this->hashCode()] = true;
+        $keys = ThreadTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getCreatedDate(),
+            $keys[1] => $this->getCreationDate(),
             $keys[2] => $this->getUpdatedDate(),
-            $keys[3] => $this->getUserComment(),
-            $keys[4] => $this->getUserId(),
-            $keys[5] => $this->getThemeId(),
-            $keys[6] => $this->getThreadId(),
+            $keys[3] => $this->getTitle(),
+            $keys[4] => $this->getDescription(),
+            $keys[5] => $this->getChannelId(),
+            $keys[6] => $this->getOwnerUserId(),
         );
 
         $utc = new \DateTimeZone('utc');
@@ -1169,35 +1150,20 @@ abstract class Comment implements ActiveRecordInterface
         }
         
         if ($includeForeignObjects) {
-            if (null !== $this->aCommentRelatedByThreadId) {
+            if (null !== $this->aChannel) {
                 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'comment';
+                        $key = 'channel';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'comment';
+                        $key = 'channel';
                         break;
                     default:
-                        $key = 'Comment';
+                        $key = 'Channel';
                 }
         
-                $result[$key] = $this->aCommentRelatedByThreadId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aThread) {
-                
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'thread';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'thread';
-                        break;
-                    default:
-                        $key = 'Thread';
-                }
-        
-                $result[$key] = $this->aThread->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aChannel->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aUser) {
                 
@@ -1214,7 +1180,7 @@ abstract class Comment implements ActiveRecordInterface
         
                 $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collCommentsRelatedById) {
+            if (null !== $this->collComments) {
                 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1227,22 +1193,22 @@ abstract class Comment implements ActiveRecordInterface
                         $key = 'Comments';
                 }
         
-                $result[$key] = $this->collCommentsRelatedById->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collComments->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collCommentUserEntries) {
+            if (null !== $this->collThreadUserEntries) {
                 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'commentUserEntries';
+                        $key = 'threadUserEntries';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'comment_user_entries';
+                        $key = 'thread_user_entries';
                         break;
                     default:
-                        $key = 'CommentUserEntries';
+                        $key = 'ThreadUserEntries';
                 }
         
-                $result[$key] = $this->collCommentUserEntries->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collThreadUserEntries->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1258,11 +1224,11 @@ abstract class Comment implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Comment
+     * @return $this|\Thread
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = CommentTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ThreadTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1273,7 +1239,7 @@ abstract class Comment implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Comment
+     * @return $this|\Thread
      */
     public function setByPosition($pos, $value)
     {
@@ -1282,22 +1248,22 @@ abstract class Comment implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setCreatedDate($value);
+                $this->setCreationDate($value);
                 break;
             case 2:
                 $this->setUpdatedDate($value);
                 break;
             case 3:
-                $this->setUserComment($value);
+                $this->setTitle($value);
                 break;
             case 4:
-                $this->setUserId($value);
+                $this->setDescription($value);
                 break;
             case 5:
-                $this->setThemeId($value);
+                $this->setChannelId($value);
                 break;
             case 6:
-                $this->setThreadId($value);
+                $this->setOwnerUserId($value);
                 break;
         } // switch()
 
@@ -1323,28 +1289,28 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = CommentTableMap::getFieldNames($keyType);
+        $keys = ThreadTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCreatedDate($arr[$keys[1]]);
+            $this->setCreationDate($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setUpdatedDate($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setUserComment($arr[$keys[3]]);
+            $this->setTitle($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUserId($arr[$keys[4]]);
+            $this->setDescription($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setThemeId($arr[$keys[5]]);
+            $this->setChannelId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setThreadId($arr[$keys[6]]);
+            $this->setOwnerUserId($arr[$keys[6]]);
         }
     }
 
@@ -1365,7 +1331,7 @@ abstract class Comment implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Comment The current object, for fluid interface
+     * @return $this|\Thread The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1385,28 +1351,28 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(CommentTableMap::DATABASE_NAME);
+        $criteria = new Criteria(ThreadTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(CommentTableMap::COL_ID)) {
-            $criteria->add(CommentTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(ThreadTableMap::COL_ID)) {
+            $criteria->add(ThreadTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(CommentTableMap::COL_CREATED_DATE)) {
-            $criteria->add(CommentTableMap::COL_CREATED_DATE, $this->created_date);
+        if ($this->isColumnModified(ThreadTableMap::COL_CREATION_DATE)) {
+            $criteria->add(ThreadTableMap::COL_CREATION_DATE, $this->creation_date);
         }
-        if ($this->isColumnModified(CommentTableMap::COL_UPDATED_DATE)) {
-            $criteria->add(CommentTableMap::COL_UPDATED_DATE, $this->updated_date);
+        if ($this->isColumnModified(ThreadTableMap::COL_UPDATED_DATE)) {
+            $criteria->add(ThreadTableMap::COL_UPDATED_DATE, $this->updated_date);
         }
-        if ($this->isColumnModified(CommentTableMap::COL_USER_COMMENT)) {
-            $criteria->add(CommentTableMap::COL_USER_COMMENT, $this->user_comment);
+        if ($this->isColumnModified(ThreadTableMap::COL_TITLE)) {
+            $criteria->add(ThreadTableMap::COL_TITLE, $this->title);
         }
-        if ($this->isColumnModified(CommentTableMap::COL_USER_ID)) {
-            $criteria->add(CommentTableMap::COL_USER_ID, $this->user_id);
+        if ($this->isColumnModified(ThreadTableMap::COL_DESCRIPTION)) {
+            $criteria->add(ThreadTableMap::COL_DESCRIPTION, $this->description);
         }
-        if ($this->isColumnModified(CommentTableMap::COL_THEME_ID)) {
-            $criteria->add(CommentTableMap::COL_THEME_ID, $this->theme_id);
+        if ($this->isColumnModified(ThreadTableMap::COL_CHANNEL_ID)) {
+            $criteria->add(ThreadTableMap::COL_CHANNEL_ID, $this->channel_id);
         }
-        if ($this->isColumnModified(CommentTableMap::COL_THREAD_ID)) {
-            $criteria->add(CommentTableMap::COL_THREAD_ID, $this->thread_id);
+        if ($this->isColumnModified(ThreadTableMap::COL_OWNER_USER_ID)) {
+            $criteria->add(ThreadTableMap::COL_OWNER_USER_ID, $this->owner_user_id);
         }
 
         return $criteria;
@@ -1424,8 +1390,8 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildCommentQuery::create();
-        $criteria->add(CommentTableMap::COL_ID, $this->id);
+        $criteria = ChildThreadQuery::create();
+        $criteria->add(ThreadTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1487,34 +1453,34 @@ abstract class Comment implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Comment (or compatible) type.
+     * @param      object $copyObj An object of \Thread (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setCreatedDate($this->getCreatedDate());
+        $copyObj->setCreationDate($this->getCreationDate());
         $copyObj->setUpdatedDate($this->getUpdatedDate());
-        $copyObj->setUserComment($this->getUserComment());
-        $copyObj->setUserId($this->getUserId());
-        $copyObj->setThemeId($this->getThemeId());
-        $copyObj->setThreadId($this->getThreadId());
+        $copyObj->setTitle($this->getTitle());
+        $copyObj->setDescription($this->getDescription());
+        $copyObj->setChannelId($this->getChannelId());
+        $copyObj->setOwnerUserId($this->getOwnerUserId());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getCommentsRelatedById() as $relObj) {
+            foreach ($this->getComments() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCommentRelatedById($relObj->copy($deepCopy));
+                    $copyObj->addComment($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getCommentUserEntries() as $relObj) {
+            foreach ($this->getThreadUserEntries() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCommentUserEntry($relObj->copy($deepCopy));
+                    $copyObj->addThreadUserEntry($relObj->copy($deepCopy));
                 }
             }
 
@@ -1535,7 +1501,7 @@ abstract class Comment implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Comment Clone of current object.
+     * @return \Thread Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1549,26 +1515,26 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildComment object.
+     * Declares an association between this object and a ChildChannel object.
      *
-     * @param  ChildComment $v
-     * @return $this|\Comment The current object (for fluent API support)
+     * @param  ChildChannel $v
+     * @return $this|\Thread The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCommentRelatedByThreadId(ChildComment $v = null)
+    public function setChannel(ChildChannel $v = null)
     {
         if ($v === null) {
-            $this->setThreadId(NULL);
+            $this->setChannelId(NULL);
         } else {
-            $this->setThreadId($v->getId());
+            $this->setChannelId($v->getId());
         }
 
-        $this->aCommentRelatedByThreadId = $v;
+        $this->aChannel = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildComment object, it will not be re-added.
+        // If this object has already been added to the ChildChannel object, it will not be re-added.
         if ($v !== null) {
-            $v->addCommentRelatedById($this);
+            $v->addThread($this);
         }
 
 
@@ -1577,92 +1543,41 @@ abstract class Comment implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildComment object
+     * Get the associated ChildChannel object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildComment The associated ChildComment object.
+     * @return ChildChannel The associated ChildChannel object.
      * @throws PropelException
      */
-    public function getCommentRelatedByThreadId(ConnectionInterface $con = null)
+    public function getChannel(ConnectionInterface $con = null)
     {
-        if ($this->aCommentRelatedByThreadId === null && ($this->thread_id !== null)) {
-            $this->aCommentRelatedByThreadId = ChildCommentQuery::create()->findPk($this->thread_id, $con);
+        if ($this->aChannel === null && ($this->channel_id !== null)) {
+            $this->aChannel = ChildChannelQuery::create()->findPk($this->channel_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCommentRelatedByThreadId->addCommentsRelatedById($this);
+                $this->aChannel->addThreads($this);
              */
         }
 
-        return $this->aCommentRelatedByThreadId;
-    }
-
-    /**
-     * Declares an association between this object and a ChildThread object.
-     *
-     * @param  ChildThread $v
-     * @return $this|\Comment The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setThread(ChildThread $v = null)
-    {
-        if ($v === null) {
-            $this->setThemeId(NULL);
-        } else {
-            $this->setThemeId($v->getId());
-        }
-
-        $this->aThread = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildThread object, it will not be re-added.
-        if ($v !== null) {
-            $v->addComment($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildThread object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildThread The associated ChildThread object.
-     * @throws PropelException
-     */
-    public function getThread(ConnectionInterface $con = null)
-    {
-        if ($this->aThread === null && ($this->theme_id !== null)) {
-            $this->aThread = ChildThreadQuery::create()->findPk($this->theme_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aThread->addComments($this);
-             */
-        }
-
-        return $this->aThread;
+        return $this->aChannel;
     }
 
     /**
      * Declares an association between this object and a ChildUser object.
      *
      * @param  ChildUser $v
-     * @return $this|\Comment The current object (for fluent API support)
+     * @return $this|\Thread The current object (for fluent API support)
      * @throws PropelException
      */
     public function setUser(ChildUser $v = null)
     {
         if ($v === null) {
-            $this->setUserId(NULL);
+            $this->setOwnerUserId(NULL);
         } else {
-            $this->setUserId($v->getId());
+            $this->setOwnerUserId($v->getId());
         }
 
         $this->aUser = $v;
@@ -1670,7 +1585,7 @@ abstract class Comment implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildUser object, it will not be re-added.
         if ($v !== null) {
-            $v->addComment($this);
+            $v->addThread($this);
         }
 
 
@@ -1687,14 +1602,14 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function getUser(ConnectionInterface $con = null)
     {
-        if ($this->aUser === null && ($this->user_id !== null)) {
-            $this->aUser = ChildUserQuery::create()->findPk($this->user_id, $con);
+        if ($this->aUser === null && ($this->owner_user_id !== null)) {
+            $this->aUser = ChildUserQuery::create()->findPk($this->owner_user_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUser->addComments($this);
+                $this->aUser->addThreads($this);
              */
         }
 
@@ -1712,40 +1627,40 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('CommentRelatedById' == $relationName) {
-            return $this->initCommentsRelatedById();
+        if ('Comment' == $relationName) {
+            return $this->initComments();
         }
-        if ('CommentUserEntry' == $relationName) {
-            return $this->initCommentUserEntries();
+        if ('ThreadUserEntry' == $relationName) {
+            return $this->initThreadUserEntries();
         }
     }
 
     /**
-     * Clears out the collCommentsRelatedById collection
+     * Clears out the collComments collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addCommentsRelatedById()
+     * @see        addComments()
      */
-    public function clearCommentsRelatedById()
+    public function clearComments()
     {
-        $this->collCommentsRelatedById = null; // important to set this to NULL since that means it is uninitialized
+        $this->collComments = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collCommentsRelatedById collection loaded partially.
+     * Reset is the collComments collection loaded partially.
      */
-    public function resetPartialCommentsRelatedById($v = true)
+    public function resetPartialComments($v = true)
     {
-        $this->collCommentsRelatedByIdPartial = $v;
+        $this->collCommentsPartial = $v;
     }
 
     /**
-     * Initializes the collCommentsRelatedById collection.
+     * Initializes the collComments collection.
      *
-     * By default this just sets the collCommentsRelatedById collection to an empty array (like clearcollCommentsRelatedById());
+     * By default this just sets the collComments collection to an empty array (like clearcollComments());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1754,13 +1669,13 @@ abstract class Comment implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initCommentsRelatedById($overrideExisting = true)
+    public function initComments($overrideExisting = true)
     {
-        if (null !== $this->collCommentsRelatedById && !$overrideExisting) {
+        if (null !== $this->collComments && !$overrideExisting) {
             return;
         }
-        $this->collCommentsRelatedById = new ObjectCollection();
-        $this->collCommentsRelatedById->setModel('\Comment');
+        $this->collComments = new ObjectCollection();
+        $this->collComments->setModel('\Comment');
     }
 
     /**
@@ -1769,7 +1684,7 @@ abstract class Comment implements ActiveRecordInterface
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildComment is new, it will return
+     * If this ChildThread is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
@@ -1777,48 +1692,48 @@ abstract class Comment implements ActiveRecordInterface
      * @return ObjectCollection|ChildComment[] List of ChildComment objects
      * @throws PropelException
      */
-    public function getCommentsRelatedById(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getComments(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collCommentsRelatedByIdPartial && !$this->isNew();
-        if (null === $this->collCommentsRelatedById || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collCommentsRelatedById) {
+        $partial = $this->collCommentsPartial && !$this->isNew();
+        if (null === $this->collComments || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collComments) {
                 // return empty collection
-                $this->initCommentsRelatedById();
+                $this->initComments();
             } else {
-                $collCommentsRelatedById = ChildCommentQuery::create(null, $criteria)
-                    ->filterByCommentRelatedByThreadId($this)
+                $collComments = ChildCommentQuery::create(null, $criteria)
+                    ->filterByThread($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collCommentsRelatedByIdPartial && count($collCommentsRelatedById)) {
-                        $this->initCommentsRelatedById(false);
+                    if (false !== $this->collCommentsPartial && count($collComments)) {
+                        $this->initComments(false);
 
-                        foreach ($collCommentsRelatedById as $obj) {
-                            if (false == $this->collCommentsRelatedById->contains($obj)) {
-                                $this->collCommentsRelatedById->append($obj);
+                        foreach ($collComments as $obj) {
+                            if (false == $this->collComments->contains($obj)) {
+                                $this->collComments->append($obj);
                             }
                         }
 
-                        $this->collCommentsRelatedByIdPartial = true;
+                        $this->collCommentsPartial = true;
                     }
 
-                    return $collCommentsRelatedById;
+                    return $collComments;
                 }
 
-                if ($partial && $this->collCommentsRelatedById) {
-                    foreach ($this->collCommentsRelatedById as $obj) {
+                if ($partial && $this->collComments) {
+                    foreach ($this->collComments as $obj) {
                         if ($obj->isNew()) {
-                            $collCommentsRelatedById[] = $obj;
+                            $collComments[] = $obj;
                         }
                     }
                 }
 
-                $this->collCommentsRelatedById = $collCommentsRelatedById;
-                $this->collCommentsRelatedByIdPartial = false;
+                $this->collComments = $collComments;
+                $this->collCommentsPartial = false;
             }
         }
 
-        return $this->collCommentsRelatedById;
+        return $this->collComments;
     }
 
     /**
@@ -1827,29 +1742,29 @@ abstract class Comment implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $commentsRelatedById A Propel collection.
+     * @param      Collection $comments A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildComment The current object (for fluent API support)
+     * @return $this|ChildThread The current object (for fluent API support)
      */
-    public function setCommentsRelatedById(Collection $commentsRelatedById, ConnectionInterface $con = null)
+    public function setComments(Collection $comments, ConnectionInterface $con = null)
     {
-        /** @var ChildComment[] $commentsRelatedByIdToDelete */
-        $commentsRelatedByIdToDelete = $this->getCommentsRelatedById(new Criteria(), $con)->diff($commentsRelatedById);
+        /** @var ChildComment[] $commentsToDelete */
+        $commentsToDelete = $this->getComments(new Criteria(), $con)->diff($comments);
 
         
-        $this->commentsRelatedByIdScheduledForDeletion = $commentsRelatedByIdToDelete;
+        $this->commentsScheduledForDeletion = $commentsToDelete;
 
-        foreach ($commentsRelatedByIdToDelete as $commentRelatedByIdRemoved) {
-            $commentRelatedByIdRemoved->setCommentRelatedByThreadId(null);
+        foreach ($commentsToDelete as $commentRemoved) {
+            $commentRemoved->setThread(null);
         }
 
-        $this->collCommentsRelatedById = null;
-        foreach ($commentsRelatedById as $commentRelatedById) {
-            $this->addCommentRelatedById($commentRelatedById);
+        $this->collComments = null;
+        foreach ($comments as $comment) {
+            $this->addComment($comment);
         }
 
-        $this->collCommentsRelatedById = $commentsRelatedById;
-        $this->collCommentsRelatedByIdPartial = false;
+        $this->collComments = $comments;
+        $this->collCommentsPartial = false;
 
         return $this;
     }
@@ -1863,16 +1778,16 @@ abstract class Comment implements ActiveRecordInterface
      * @return int             Count of related Comment objects.
      * @throws PropelException
      */
-    public function countCommentsRelatedById(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countComments(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collCommentsRelatedByIdPartial && !$this->isNew();
-        if (null === $this->collCommentsRelatedById || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCommentsRelatedById) {
+        $partial = $this->collCommentsPartial && !$this->isNew();
+        if (null === $this->collComments || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collComments) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getCommentsRelatedById());
+                return count($this->getComments());
             }
 
             $query = ChildCommentQuery::create(null, $criteria);
@@ -1881,11 +1796,11 @@ abstract class Comment implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByCommentRelatedByThreadId($this)
+                ->filterByThread($this)
                 ->count($con);
         }
 
-        return count($this->collCommentsRelatedById);
+        return count($this->collComments);
     }
 
     /**
@@ -1893,46 +1808,46 @@ abstract class Comment implements ActiveRecordInterface
      * through the ChildComment foreign key attribute.
      *
      * @param  ChildComment $l ChildComment
-     * @return $this|\Comment The current object (for fluent API support)
+     * @return $this|\Thread The current object (for fluent API support)
      */
-    public function addCommentRelatedById(ChildComment $l)
+    public function addComment(ChildComment $l)
     {
-        if ($this->collCommentsRelatedById === null) {
-            $this->initCommentsRelatedById();
-            $this->collCommentsRelatedByIdPartial = true;
+        if ($this->collComments === null) {
+            $this->initComments();
+            $this->collCommentsPartial = true;
         }
 
-        if (!$this->collCommentsRelatedById->contains($l)) {
-            $this->doAddCommentRelatedById($l);
+        if (!$this->collComments->contains($l)) {
+            $this->doAddComment($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildComment $commentRelatedById The ChildComment object to add.
+     * @param ChildComment $comment The ChildComment object to add.
      */
-    protected function doAddCommentRelatedById(ChildComment $commentRelatedById)
+    protected function doAddComment(ChildComment $comment)
     {
-        $this->collCommentsRelatedById[]= $commentRelatedById;
-        $commentRelatedById->setCommentRelatedByThreadId($this);
+        $this->collComments[]= $comment;
+        $comment->setThread($this);
     }
 
     /**
-     * @param  ChildComment $commentRelatedById The ChildComment object to remove.
-     * @return $this|ChildComment The current object (for fluent API support)
+     * @param  ChildComment $comment The ChildComment object to remove.
+     * @return $this|ChildThread The current object (for fluent API support)
      */
-    public function removeCommentRelatedById(ChildComment $commentRelatedById)
+    public function removeComment(ChildComment $comment)
     {
-        if ($this->getCommentsRelatedById()->contains($commentRelatedById)) {
-            $pos = $this->collCommentsRelatedById->search($commentRelatedById);
-            $this->collCommentsRelatedById->remove($pos);
-            if (null === $this->commentsRelatedByIdScheduledForDeletion) {
-                $this->commentsRelatedByIdScheduledForDeletion = clone $this->collCommentsRelatedById;
-                $this->commentsRelatedByIdScheduledForDeletion->clear();
+        if ($this->getComments()->contains($comment)) {
+            $pos = $this->collComments->search($comment);
+            $this->collComments->remove($pos);
+            if (null === $this->commentsScheduledForDeletion) {
+                $this->commentsScheduledForDeletion = clone $this->collComments;
+                $this->commentsScheduledForDeletion->clear();
             }
-            $this->commentsRelatedByIdScheduledForDeletion[]= $commentRelatedById;
-            $commentRelatedById->setCommentRelatedByThreadId(null);
+            $this->commentsScheduledForDeletion[]= clone $comment;
+            $comment->setThread(null);
         }
 
         return $this;
@@ -1942,78 +1857,78 @@ abstract class Comment implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Comment is new, it will return
-     * an empty collection; or if this Comment has previously
-     * been saved, it will retrieve related CommentsRelatedById from storage.
+     * Otherwise if this Thread is new, it will return
+     * an empty collection; or if this Thread has previously
+     * been saved, it will retrieve related Comments from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Comment.
+     * actually need in Thread.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildComment[] List of ChildComment objects
      */
-    public function getCommentsRelatedByIdJoinThread(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCommentsJoinCommentRelatedByThreadId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCommentQuery::create(null, $criteria);
-        $query->joinWith('Thread', $joinBehavior);
+        $query->joinWith('CommentRelatedByThreadId', $joinBehavior);
 
-        return $this->getCommentsRelatedById($query, $con);
+        return $this->getComments($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Comment is new, it will return
-     * an empty collection; or if this Comment has previously
-     * been saved, it will retrieve related CommentsRelatedById from storage.
+     * Otherwise if this Thread is new, it will return
+     * an empty collection; or if this Thread has previously
+     * been saved, it will retrieve related Comments from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Comment.
+     * actually need in Thread.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildComment[] List of ChildComment objects
      */
-    public function getCommentsRelatedByIdJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCommentsJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCommentQuery::create(null, $criteria);
         $query->joinWith('User', $joinBehavior);
 
-        return $this->getCommentsRelatedById($query, $con);
+        return $this->getComments($query, $con);
     }
 
     /**
-     * Clears out the collCommentUserEntries collection
+     * Clears out the collThreadUserEntries collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addCommentUserEntries()
+     * @see        addThreadUserEntries()
      */
-    public function clearCommentUserEntries()
+    public function clearThreadUserEntries()
     {
-        $this->collCommentUserEntries = null; // important to set this to NULL since that means it is uninitialized
+        $this->collThreadUserEntries = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collCommentUserEntries collection loaded partially.
+     * Reset is the collThreadUserEntries collection loaded partially.
      */
-    public function resetPartialCommentUserEntries($v = true)
+    public function resetPartialThreadUserEntries($v = true)
     {
-        $this->collCommentUserEntriesPartial = $v;
+        $this->collThreadUserEntriesPartial = $v;
     }
 
     /**
-     * Initializes the collCommentUserEntries collection.
+     * Initializes the collThreadUserEntries collection.
      *
-     * By default this just sets the collCommentUserEntries collection to an empty array (like clearcollCommentUserEntries());
+     * By default this just sets the collThreadUserEntries collection to an empty array (like clearcollThreadUserEntries());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2022,188 +1937,188 @@ abstract class Comment implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initCommentUserEntries($overrideExisting = true)
+    public function initThreadUserEntries($overrideExisting = true)
     {
-        if (null !== $this->collCommentUserEntries && !$overrideExisting) {
+        if (null !== $this->collThreadUserEntries && !$overrideExisting) {
             return;
         }
-        $this->collCommentUserEntries = new ObjectCollection();
-        $this->collCommentUserEntries->setModel('\CommentUserEntry');
+        $this->collThreadUserEntries = new ObjectCollection();
+        $this->collThreadUserEntries->setModel('\ThreadUserEntry');
     }
 
     /**
-     * Gets an array of ChildCommentUserEntry objects which contain a foreign key that references this object.
+     * Gets an array of ChildThreadUserEntry objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildComment is new, it will return
+     * If this ChildThread is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildCommentUserEntry[] List of ChildCommentUserEntry objects
+     * @return ObjectCollection|ChildThreadUserEntry[] List of ChildThreadUserEntry objects
      * @throws PropelException
      */
-    public function getCommentUserEntries(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getThreadUserEntries(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collCommentUserEntriesPartial && !$this->isNew();
-        if (null === $this->collCommentUserEntries || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collCommentUserEntries) {
+        $partial = $this->collThreadUserEntriesPartial && !$this->isNew();
+        if (null === $this->collThreadUserEntries || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collThreadUserEntries) {
                 // return empty collection
-                $this->initCommentUserEntries();
+                $this->initThreadUserEntries();
             } else {
-                $collCommentUserEntries = ChildCommentUserEntryQuery::create(null, $criteria)
-                    ->filterByComment($this)
+                $collThreadUserEntries = ChildThreadUserEntryQuery::create(null, $criteria)
+                    ->filterByThread($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collCommentUserEntriesPartial && count($collCommentUserEntries)) {
-                        $this->initCommentUserEntries(false);
+                    if (false !== $this->collThreadUserEntriesPartial && count($collThreadUserEntries)) {
+                        $this->initThreadUserEntries(false);
 
-                        foreach ($collCommentUserEntries as $obj) {
-                            if (false == $this->collCommentUserEntries->contains($obj)) {
-                                $this->collCommentUserEntries->append($obj);
+                        foreach ($collThreadUserEntries as $obj) {
+                            if (false == $this->collThreadUserEntries->contains($obj)) {
+                                $this->collThreadUserEntries->append($obj);
                             }
                         }
 
-                        $this->collCommentUserEntriesPartial = true;
+                        $this->collThreadUserEntriesPartial = true;
                     }
 
-                    return $collCommentUserEntries;
+                    return $collThreadUserEntries;
                 }
 
-                if ($partial && $this->collCommentUserEntries) {
-                    foreach ($this->collCommentUserEntries as $obj) {
+                if ($partial && $this->collThreadUserEntries) {
+                    foreach ($this->collThreadUserEntries as $obj) {
                         if ($obj->isNew()) {
-                            $collCommentUserEntries[] = $obj;
+                            $collThreadUserEntries[] = $obj;
                         }
                     }
                 }
 
-                $this->collCommentUserEntries = $collCommentUserEntries;
-                $this->collCommentUserEntriesPartial = false;
+                $this->collThreadUserEntries = $collThreadUserEntries;
+                $this->collThreadUserEntriesPartial = false;
             }
         }
 
-        return $this->collCommentUserEntries;
+        return $this->collThreadUserEntries;
     }
 
     /**
-     * Sets a collection of ChildCommentUserEntry objects related by a one-to-many relationship
+     * Sets a collection of ChildThreadUserEntry objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $commentUserEntries A Propel collection.
+     * @param      Collection $threadUserEntries A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildComment The current object (for fluent API support)
+     * @return $this|ChildThread The current object (for fluent API support)
      */
-    public function setCommentUserEntries(Collection $commentUserEntries, ConnectionInterface $con = null)
+    public function setThreadUserEntries(Collection $threadUserEntries, ConnectionInterface $con = null)
     {
-        /** @var ChildCommentUserEntry[] $commentUserEntriesToDelete */
-        $commentUserEntriesToDelete = $this->getCommentUserEntries(new Criteria(), $con)->diff($commentUserEntries);
+        /** @var ChildThreadUserEntry[] $threadUserEntriesToDelete */
+        $threadUserEntriesToDelete = $this->getThreadUserEntries(new Criteria(), $con)->diff($threadUserEntries);
 
         
         //since at least one column in the foreign key is at the same time a PK
         //we can not just set a PK to NULL in the lines below. We have to store
         //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->commentUserEntriesScheduledForDeletion = clone $commentUserEntriesToDelete;
+        $this->threadUserEntriesScheduledForDeletion = clone $threadUserEntriesToDelete;
 
-        foreach ($commentUserEntriesToDelete as $commentUserEntryRemoved) {
-            $commentUserEntryRemoved->setComment(null);
+        foreach ($threadUserEntriesToDelete as $threadUserEntryRemoved) {
+            $threadUserEntryRemoved->setThread(null);
         }
 
-        $this->collCommentUserEntries = null;
-        foreach ($commentUserEntries as $commentUserEntry) {
-            $this->addCommentUserEntry($commentUserEntry);
+        $this->collThreadUserEntries = null;
+        foreach ($threadUserEntries as $threadUserEntry) {
+            $this->addThreadUserEntry($threadUserEntry);
         }
 
-        $this->collCommentUserEntries = $commentUserEntries;
-        $this->collCommentUserEntriesPartial = false;
+        $this->collThreadUserEntries = $threadUserEntries;
+        $this->collThreadUserEntriesPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related CommentUserEntry objects.
+     * Returns the number of related ThreadUserEntry objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related CommentUserEntry objects.
+     * @return int             Count of related ThreadUserEntry objects.
      * @throws PropelException
      */
-    public function countCommentUserEntries(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countThreadUserEntries(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collCommentUserEntriesPartial && !$this->isNew();
-        if (null === $this->collCommentUserEntries || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCommentUserEntries) {
+        $partial = $this->collThreadUserEntriesPartial && !$this->isNew();
+        if (null === $this->collThreadUserEntries || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collThreadUserEntries) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getCommentUserEntries());
+                return count($this->getThreadUserEntries());
             }
 
-            $query = ChildCommentUserEntryQuery::create(null, $criteria);
+            $query = ChildThreadUserEntryQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByComment($this)
+                ->filterByThread($this)
                 ->count($con);
         }
 
-        return count($this->collCommentUserEntries);
+        return count($this->collThreadUserEntries);
     }
 
     /**
-     * Method called to associate a ChildCommentUserEntry object to this object
-     * through the ChildCommentUserEntry foreign key attribute.
+     * Method called to associate a ChildThreadUserEntry object to this object
+     * through the ChildThreadUserEntry foreign key attribute.
      *
-     * @param  ChildCommentUserEntry $l ChildCommentUserEntry
-     * @return $this|\Comment The current object (for fluent API support)
+     * @param  ChildThreadUserEntry $l ChildThreadUserEntry
+     * @return $this|\Thread The current object (for fluent API support)
      */
-    public function addCommentUserEntry(ChildCommentUserEntry $l)
+    public function addThreadUserEntry(ChildThreadUserEntry $l)
     {
-        if ($this->collCommentUserEntries === null) {
-            $this->initCommentUserEntries();
-            $this->collCommentUserEntriesPartial = true;
+        if ($this->collThreadUserEntries === null) {
+            $this->initThreadUserEntries();
+            $this->collThreadUserEntriesPartial = true;
         }
 
-        if (!$this->collCommentUserEntries->contains($l)) {
-            $this->doAddCommentUserEntry($l);
+        if (!$this->collThreadUserEntries->contains($l)) {
+            $this->doAddThreadUserEntry($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildCommentUserEntry $commentUserEntry The ChildCommentUserEntry object to add.
+     * @param ChildThreadUserEntry $threadUserEntry The ChildThreadUserEntry object to add.
      */
-    protected function doAddCommentUserEntry(ChildCommentUserEntry $commentUserEntry)
+    protected function doAddThreadUserEntry(ChildThreadUserEntry $threadUserEntry)
     {
-        $this->collCommentUserEntries[]= $commentUserEntry;
-        $commentUserEntry->setComment($this);
+        $this->collThreadUserEntries[]= $threadUserEntry;
+        $threadUserEntry->setThread($this);
     }
 
     /**
-     * @param  ChildCommentUserEntry $commentUserEntry The ChildCommentUserEntry object to remove.
-     * @return $this|ChildComment The current object (for fluent API support)
+     * @param  ChildThreadUserEntry $threadUserEntry The ChildThreadUserEntry object to remove.
+     * @return $this|ChildThread The current object (for fluent API support)
      */
-    public function removeCommentUserEntry(ChildCommentUserEntry $commentUserEntry)
+    public function removeThreadUserEntry(ChildThreadUserEntry $threadUserEntry)
     {
-        if ($this->getCommentUserEntries()->contains($commentUserEntry)) {
-            $pos = $this->collCommentUserEntries->search($commentUserEntry);
-            $this->collCommentUserEntries->remove($pos);
-            if (null === $this->commentUserEntriesScheduledForDeletion) {
-                $this->commentUserEntriesScheduledForDeletion = clone $this->collCommentUserEntries;
-                $this->commentUserEntriesScheduledForDeletion->clear();
+        if ($this->getThreadUserEntries()->contains($threadUserEntry)) {
+            $pos = $this->collThreadUserEntries->search($threadUserEntry);
+            $this->collThreadUserEntries->remove($pos);
+            if (null === $this->threadUserEntriesScheduledForDeletion) {
+                $this->threadUserEntriesScheduledForDeletion = clone $this->collThreadUserEntries;
+                $this->threadUserEntriesScheduledForDeletion->clear();
             }
-            $this->commentUserEntriesScheduledForDeletion[]= clone $commentUserEntry;
-            $commentUserEntry->setComment(null);
+            $this->threadUserEntriesScheduledForDeletion[]= clone $threadUserEntry;
+            $threadUserEntry->setThread(null);
         }
 
         return $this;
@@ -2213,25 +2128,25 @@ abstract class Comment implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Comment is new, it will return
-     * an empty collection; or if this Comment has previously
-     * been saved, it will retrieve related CommentUserEntries from storage.
+     * Otherwise if this Thread is new, it will return
+     * an empty collection; or if this Thread has previously
+     * been saved, it will retrieve related ThreadUserEntries from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Comment.
+     * actually need in Thread.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildCommentUserEntry[] List of ChildCommentUserEntry objects
+     * @return ObjectCollection|ChildThreadUserEntry[] List of ChildThreadUserEntry objects
      */
-    public function getCommentUserEntriesJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getThreadUserEntriesJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildCommentUserEntryQuery::create(null, $criteria);
+        $query = ChildThreadUserEntryQuery::create(null, $criteria);
         $query->joinWith('User', $joinBehavior);
 
-        return $this->getCommentUserEntries($query, $con);
+        return $this->getThreadUserEntries($query, $con);
     }
 
     /**
@@ -2241,22 +2156,19 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aCommentRelatedByThreadId) {
-            $this->aCommentRelatedByThreadId->removeCommentRelatedById($this);
-        }
-        if (null !== $this->aThread) {
-            $this->aThread->removeComment($this);
+        if (null !== $this->aChannel) {
+            $this->aChannel->removeThread($this);
         }
         if (null !== $this->aUser) {
-            $this->aUser->removeComment($this);
+            $this->aUser->removeThread($this);
         }
         $this->id = null;
-        $this->created_date = null;
+        $this->creation_date = null;
         $this->updated_date = null;
-        $this->user_comment = null;
-        $this->user_id = null;
-        $this->theme_id = null;
-        $this->thread_id = null;
+        $this->title = null;
+        $this->description = null;
+        $this->channel_id = null;
+        $this->owner_user_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2266,7 +2178,7 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
-     * Resets all references and back-references to other model objects or collections of model objects.
+     * Resets all references and back-references to other model_propel objects or collections of model_propel objects.
      *
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
@@ -2276,22 +2188,21 @@ abstract class Comment implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collCommentsRelatedById) {
-                foreach ($this->collCommentsRelatedById as $o) {
+            if ($this->collComments) {
+                foreach ($this->collComments as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collCommentUserEntries) {
-                foreach ($this->collCommentUserEntries as $o) {
+            if ($this->collThreadUserEntries) {
+                foreach ($this->collThreadUserEntries as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collCommentsRelatedById = null;
-        $this->collCommentUserEntries = null;
-        $this->aCommentRelatedByThreadId = null;
-        $this->aThread = null;
+        $this->collComments = null;
+        $this->collThreadUserEntries = null;
+        $this->aChannel = null;
         $this->aUser = null;
     }
 
@@ -2302,7 +2213,7 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(CommentTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(ThreadTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

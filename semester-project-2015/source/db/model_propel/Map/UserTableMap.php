@@ -2,8 +2,8 @@
 
 namespace Map;
 
-use \Locale;
-use \LocaleQuery;
+use \User;
+use \UserQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'locale' table.
+ * This class defines the structure of the 'user' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class LocaleTableMap extends TableMap
+class UserTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class LocaleTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.LocaleTableMap';
+    const CLASS_NAME = '.Map.UserTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class LocaleTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'locale';
+    const TABLE_NAME = 'user';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Locale';
+    const OM_CLASS = '\\User';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Locale';
+    const CLASS_DEFAULT = 'User';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 14;
 
     /**
      * The number of lazy-loaded columns
@@ -69,30 +69,80 @@ class LocaleTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'locale.id';
+    const COL_ID = 'user.id';
 
     /**
-     * the column name for the created_date field
+     * the column name for the creation_date field
      */
-    const COL_CREATED_DATE = 'locale.created_date';
+    const COL_CREATION_DATE = 'user.creation_date';
 
     /**
      * the column name for the updated_date field
      */
-    const COL_UPDATED_DATE = 'locale.updated_date';
+    const COL_UPDATED_DATE = 'user.updated_date';
 
     /**
-     * the column name for the resource_key field
+     * the column name for the deleted_date field
      */
-    const COL_RESOURCE_KEY = 'locale.resource_key';
+    const COL_DELETED_DATE = 'user.deleted_date';
 
     /**
-     * The default string format for model objects of the related table
+     * the column name for the blocked_date field
+     */
+    const COL_BLOCKED_DATE = 'user.blocked_date';
+
+    /**
+     * the column name for the firstname field
+     */
+    const COL_FIRSTNAME = 'user.firstname';
+
+    /**
+     * the column name for the lastname field
+     */
+    const COL_LASTNAME = 'user.lastname';
+
+    /**
+     * the column name for the email field
+     */
+    const COL_EMAIL = 'user.email';
+
+    /**
+     * the column name for the username field
+     */
+    const COL_USERNAME = 'user.username';
+
+    /**
+     * the column name for the password field
+     */
+    const COL_PASSWORD = 'user.password';
+
+    /**
+     * the column name for the deleted_flag field
+     */
+    const COL_DELETED_FLAG = 'user.deleted_flag';
+
+    /**
+     * the column name for the blocked_flag field
+     */
+    const COL_BLOCKED_FLAG = 'user.blocked_flag';
+
+    /**
+     * the column name for the locale_id field
+     */
+    const COL_LOCALE_ID = 'user.locale_id';
+
+    /**
+     * the column name for the user_type_id field
+     */
+    const COL_USER_TYPE_ID = 'user.user_type_id';
+
+    /**
+     * The default string format for model_propel objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -103,11 +153,11 @@ class LocaleTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'CreatedDate', 'UpdatedDate', 'ResourceKey', ),
-        self::TYPE_CAMELNAME     => array('id', 'createdDate', 'updatedDate', 'resourceKey', ),
-        self::TYPE_COLNAME       => array(LocaleTableMap::COL_ID, LocaleTableMap::COL_CREATED_DATE, LocaleTableMap::COL_UPDATED_DATE, LocaleTableMap::COL_RESOURCE_KEY, ),
-        self::TYPE_FIELDNAME     => array('id', 'created_date', 'updated_date', 'resource_key', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'CreationDate', 'UpdatedDate', 'DeletedDate', 'BlockedDate', 'Firstname', 'Lastname', 'Email', 'Username', 'Password', 'DeletedFlag', 'BlockedFlag', 'LocaleId', 'UserTypeId', ),
+        self::TYPE_CAMELNAME     => array('id', 'creationDate', 'updatedDate', 'deletedDate', 'blockedDate', 'firstname', 'lastname', 'email', 'username', 'password', 'deletedFlag', 'blockedFlag', 'localeId', 'userTypeId', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_CREATION_DATE, UserTableMap::COL_UPDATED_DATE, UserTableMap::COL_DELETED_DATE, UserTableMap::COL_BLOCKED_DATE, UserTableMap::COL_FIRSTNAME, UserTableMap::COL_LASTNAME, UserTableMap::COL_EMAIL, UserTableMap::COL_USERNAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_DELETED_FLAG, UserTableMap::COL_BLOCKED_FLAG, UserTableMap::COL_LOCALE_ID, UserTableMap::COL_USER_TYPE_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'creation_date', 'updated_date', 'deleted_date', 'blocked_date', 'firstname', 'lastname', 'email', 'username', 'password', 'deleted_flag', 'blocked_flag', 'locale_id', 'user_type_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -117,11 +167,11 @@ class LocaleTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'CreatedDate' => 1, 'UpdatedDate' => 2, 'ResourceKey' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'createdDate' => 1, 'updatedDate' => 2, 'resourceKey' => 3, ),
-        self::TYPE_COLNAME       => array(LocaleTableMap::COL_ID => 0, LocaleTableMap::COL_CREATED_DATE => 1, LocaleTableMap::COL_UPDATED_DATE => 2, LocaleTableMap::COL_RESOURCE_KEY => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'created_date' => 1, 'updated_date' => 2, 'resource_key' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'CreationDate' => 1, 'UpdatedDate' => 2, 'DeletedDate' => 3, 'BlockedDate' => 4, 'Firstname' => 5, 'Lastname' => 6, 'Email' => 7, 'Username' => 8, 'Password' => 9, 'DeletedFlag' => 10, 'BlockedFlag' => 11, 'LocaleId' => 12, 'UserTypeId' => 13, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'creationDate' => 1, 'updatedDate' => 2, 'deletedDate' => 3, 'blockedDate' => 4, 'firstname' => 5, 'lastname' => 6, 'email' => 7, 'username' => 8, 'password' => 9, 'deletedFlag' => 10, 'blockedFlag' => 11, 'localeId' => 12, 'userTypeId' => 13, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_CREATION_DATE => 1, UserTableMap::COL_UPDATED_DATE => 2, UserTableMap::COL_DELETED_DATE => 3, UserTableMap::COL_BLOCKED_DATE => 4, UserTableMap::COL_FIRSTNAME => 5, UserTableMap::COL_LASTNAME => 6, UserTableMap::COL_EMAIL => 7, UserTableMap::COL_USERNAME => 8, UserTableMap::COL_PASSWORD => 9, UserTableMap::COL_DELETED_FLAG => 10, UserTableMap::COL_BLOCKED_FLAG => 11, UserTableMap::COL_LOCALE_ID => 12, UserTableMap::COL_USER_TYPE_ID => 13, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'creation_date' => 1, 'updated_date' => 2, 'deleted_date' => 3, 'blocked_date' => 4, 'firstname' => 5, 'lastname' => 6, 'email' => 7, 'username' => 8, 'password' => 9, 'deleted_flag' => 10, 'blocked_flag' => 11, 'locale_id' => 12, 'user_type_id' => 13, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -134,17 +184,27 @@ class LocaleTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('locale');
-        $this->setPhpName('Locale');
+        $this->setName('user');
+        $this->setPhpName('User');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Locale');
+        $this->setClassName('\\User');
         $this->setPackage('');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'VARCHAR', true, 5, null);
-        $this->addColumn('created_date', 'CreatedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('creation_date', 'CreationDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('updated_date', 'UpdatedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
-        $this->addColumn('resource_key', 'ResourceKey', 'VARCHAR', true, 50, null);
+        $this->addColumn('deleted_date', 'DeletedDate', 'TIMESTAMP', false, null, null);
+        $this->addColumn('blocked_date', 'BlockedDate', 'TIMESTAMP', false, null, null);
+        $this->addColumn('firstname', 'Firstname', 'VARCHAR', true, 20, null);
+        $this->addColumn('lastname', 'Lastname', 'VARCHAR', true, 20, null);
+        $this->addColumn('email', 'Email', 'VARCHAR', true, 100, null);
+        $this->addColumn('username', 'Username', 'VARCHAR', true, 50, null);
+        $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
+        $this->addColumn('deleted_flag', 'DeletedFlag', 'BOOLEAN', true, 1, false);
+        $this->addColumn('blocked_flag', 'BlockedFlag', 'BOOLEAN', true, 1, false);
+        $this->addForeignKey('locale_id', 'LocaleId', 'VARCHAR', 'locale', 'id', true, 5, null);
+        $this->addForeignKey('user_type_id', 'UserTypeId', 'VARCHAR', 'user_type', 'id', true, 20, null);
     } // initialize()
 
     /**
@@ -152,13 +212,55 @@ class LocaleTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('User', '\\User', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Locale', '\\Locale', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':locale_id',
     1 => ':id',
   ),
-), null, null, 'Users', false);
+), null, null, null, false);
+        $this->addRelation('UserType', '\\UserType', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':user_type_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('ChannelUserEntry', '\\ChannelUserEntry', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, 'ChannelUserEntries', false);
+        $this->addRelation('Comment', '\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, 'Comments', false);
+        $this->addRelation('CommentUserEntry', '\\CommentUserEntry', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, 'CommentUserEntries', false);
+        $this->addRelation('Thread', '\\Thread', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':owner_user_id',
+    1 => ':id',
+  ),
+), null, null, 'Threads', false);
+        $this->addRelation('ThreadUserEntry', '\\ThreadUserEntry', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), null, null, 'ThreadUserEntries', false);
     } // buildRelations()
 
     /**
@@ -198,7 +300,7 @@ class LocaleTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return (string) $row[
+        return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
@@ -218,7 +320,7 @@ class LocaleTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? LocaleTableMap::CLASS_DEFAULT : LocaleTableMap::OM_CLASS;
+        return $withPrefix ? UserTableMap::CLASS_DEFAULT : UserTableMap::OM_CLASS;
     }
 
     /**
@@ -232,22 +334,22 @@ class LocaleTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Locale object, last column rank)
+     * @return array           (User object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = LocaleTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = LocaleTableMap::getInstanceFromPool($key))) {
+        $key = UserTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = UserTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + LocaleTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + UserTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = LocaleTableMap::OM_CLASS;
-            /** @var Locale $obj */
+            $cls = UserTableMap::OM_CLASS;
+            /** @var User $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            LocaleTableMap::addInstanceToPool($obj, $key);
+            UserTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -270,18 +372,18 @@ class LocaleTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = LocaleTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = LocaleTableMap::getInstanceFromPool($key))) {
+            $key = UserTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = UserTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Locale $obj */
+                /** @var User $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                LocaleTableMap::addInstanceToPool($obj, $key);
+                UserTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -302,15 +404,35 @@ class LocaleTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(LocaleTableMap::COL_ID);
-            $criteria->addSelectColumn(LocaleTableMap::COL_CREATED_DATE);
-            $criteria->addSelectColumn(LocaleTableMap::COL_UPDATED_DATE);
-            $criteria->addSelectColumn(LocaleTableMap::COL_RESOURCE_KEY);
+            $criteria->addSelectColumn(UserTableMap::COL_ID);
+            $criteria->addSelectColumn(UserTableMap::COL_CREATION_DATE);
+            $criteria->addSelectColumn(UserTableMap::COL_UPDATED_DATE);
+            $criteria->addSelectColumn(UserTableMap::COL_DELETED_DATE);
+            $criteria->addSelectColumn(UserTableMap::COL_BLOCKED_DATE);
+            $criteria->addSelectColumn(UserTableMap::COL_FIRSTNAME);
+            $criteria->addSelectColumn(UserTableMap::COL_LASTNAME);
+            $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
+            $criteria->addSelectColumn(UserTableMap::COL_USERNAME);
+            $criteria->addSelectColumn(UserTableMap::COL_PASSWORD);
+            $criteria->addSelectColumn(UserTableMap::COL_DELETED_FLAG);
+            $criteria->addSelectColumn(UserTableMap::COL_BLOCKED_FLAG);
+            $criteria->addSelectColumn(UserTableMap::COL_LOCALE_ID);
+            $criteria->addSelectColumn(UserTableMap::COL_USER_TYPE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.created_date');
+            $criteria->addSelectColumn($alias . '.creation_date');
             $criteria->addSelectColumn($alias . '.updated_date');
-            $criteria->addSelectColumn($alias . '.resource_key');
+            $criteria->addSelectColumn($alias . '.deleted_date');
+            $criteria->addSelectColumn($alias . '.blocked_date');
+            $criteria->addSelectColumn($alias . '.firstname');
+            $criteria->addSelectColumn($alias . '.lastname');
+            $criteria->addSelectColumn($alias . '.email');
+            $criteria->addSelectColumn($alias . '.username');
+            $criteria->addSelectColumn($alias . '.password');
+            $criteria->addSelectColumn($alias . '.deleted_flag');
+            $criteria->addSelectColumn($alias . '.blocked_flag');
+            $criteria->addSelectColumn($alias . '.locale_id');
+            $criteria->addSelectColumn($alias . '.user_type_id');
         }
     }
 
@@ -323,7 +445,7 @@ class LocaleTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(LocaleTableMap::DATABASE_NAME)->getTable(LocaleTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(UserTableMap::DATABASE_NAME)->getTable(UserTableMap::TABLE_NAME);
     }
 
     /**
@@ -331,16 +453,16 @@ class LocaleTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(LocaleTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(LocaleTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new LocaleTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(UserTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(UserTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new UserTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Locale or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a User or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Locale object or primary key or array of primary keys
+     * @param mixed               $values Criteria or User object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -351,27 +473,27 @@ class LocaleTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(LocaleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Locale) { // it's a model object
+        } elseif ($values instanceof \User) { // it's a model_propel object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(LocaleTableMap::DATABASE_NAME);
-            $criteria->add(LocaleTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(UserTableMap::DATABASE_NAME);
+            $criteria->add(UserTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = LocaleQuery::create()->mergeWith($criteria);
+        $query = UserQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            LocaleTableMap::clearInstancePool();
+            UserTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                LocaleTableMap::removeInstanceFromPool($singleval);
+                UserTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -379,20 +501,20 @@ class LocaleTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the locale table.
+     * Deletes all rows from the user table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return LocaleQuery::create()->doDeleteAll($con);
+        return UserQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Locale or Criteria object.
+     * Performs an INSERT on the database, given a User or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Locale object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or User object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -401,18 +523,22 @@ class LocaleTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(LocaleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Locale object
+            $criteria = $criteria->buildCriteria(); // build Criteria from User object
+        }
+
+        if ($criteria->containsKey(UserTableMap::COL_ID) && $criteria->keyContainsValue(UserTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.UserTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = LocaleQuery::create()->mergeWith($criteria);
+        $query = UserQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -421,7 +547,7 @@ class LocaleTableMap extends TableMap
         });
     }
 
-} // LocaleTableMap
+} // UserTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-LocaleTableMap::buildTableMap();
+UserTableMap::buildTableMap();
