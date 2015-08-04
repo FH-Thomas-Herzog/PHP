@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{cssRoot}}/bootstrap.min.css">
+    <link rel="stylesheet" href="{{cssRoot}}/bootstrap-theme.min.css">
+    <script type="text/javascript" src="{{jsRoot}}/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="{{jsRoot}}/bootstrap-3.3.5.min.js"></script>
+
+    {%block header%}
+    {%endblock%}
+
+    <script type="text/javascript">
+        var setAction = function (actionId) {
+            $('#actionId').val(actionId);
+        }
+    </script>
+    <title>{%block title%} {%endblock%}</title>
+</head>
+<body>
+{% block content %}{% endblock %}
+<div id="footer">
+    {% block footer %}
+    &copy; Copyright 2015 by Ing. Thomas Herzog</a>.
+    {% endblock %}
+</div>
+</body>
+</html>

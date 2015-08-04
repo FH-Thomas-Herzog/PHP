@@ -9,22 +9,6 @@
 namespace source\view\controller;
 
 use \source\common\SingletonObject;
-use \source\common\SecurityException;
-use \source\view\model\UserSessionModel;
-
-/**
- * This class holds the security error codes for security related exceptions.
- * Class SecurityErrorCodes
- * @package SCM4\View\Controller
- */
-class SecurityErrorCodes
-{
-    public static $LOGIN_REFUSED = 201;
-    public static $NO_ACTIVE_SESSION = 202;
-    public static $ALREADY_ACTIVE_SESSION = 203;
-    public static $USER_NOT_LOGGED = 204;
-    public static $INSUFFICIENT_ARGS = 205;
-}
 
 /**
  * This class is implemented as an singleton and handles the security related
@@ -34,6 +18,8 @@ class SecurityErrorCodes
  */
 class SecurityController extends SingletonObject
 {
+    private static $SESSION_USER_ID = "SESSION_USER_ID";
+
     private $sessionController;
 
     private static $instance = null;
@@ -62,27 +48,32 @@ class SecurityController extends SingletonObject
     /**
      * Logs the user with given username and password in.
      *
-     * @param stdClass user the suer to be logged in
+     * @param string $password the input password
+     * @param stdClass $user the user from teh database
      * @throws SecurityException if the login fails
+     * @return true if the login was successfull
      * @see SecurityErrorCodes for the relevant error codes
      */
-    public function loginUser($user)
+    public function loginUser($password, $user)
     {
-        $this->sessionController->startSession();
-        $this->sessionController->setAttribute(SessionController::$USER_MODEL, new UserSessionModel($user));
+        if ((isset($password)) && (isset($user)) && (password_verify((string)$password, (string)$user->password))) {
+            $this->sessionController->startSession();
+            $this->sessionController->setAttribute(self::$SESSION_USER_ID, $user->id);
+            return true;
+        }
+        return false;
     }
 
     /**
      * Logs the user with the given id out.
      * @param integer $userId the user id
-     * @throws SecurityException if no session exists, session not owned by this user
      * @see $this->getSession();
      * @see $this->destroySession();
      */
     public function logoutUser($userId = -666)
     {
         if (!$this->isUserLogged($userId)) {
-            throw new SecurityException("User not logged in", SecurityErrorCodes::$USER_NOT_LOGGED);
+            return false;
         }
         $this->sessionController->destroySession();
     }
@@ -93,12 +84,12 @@ class SecurityController extends SingletonObject
      */
     public function isUserLogged()
     {
-        if ((!isset($userId)) || (!$this->sessionController->isSessionActive())) {
+        if (!$this->sessionController->isSessionActive()) {
             return false;
         }
-        $userModel = $this->sessionController->getAttribute(SessionController::$USER_MODEL);
+        $userId = $this->sessionController->getAttribute(SessionController::$USER_MODEL);
         // TODO: Check db for this user
-        return isset($userModel);
+        return isset($userId);
     }
 
     /**

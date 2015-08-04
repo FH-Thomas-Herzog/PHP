@@ -13,9 +13,14 @@ use \source\common\AbstractRequestController;
 use \source\common\InternalErrorException;
 use \source\db\controller\UserController;
 use \source\view\controller\SecurityController;
+use source\view\model\RequestControllerResult;
 
 class LoginRequestController extends AbstractRequestController
 {
+    public static $ACTION_TO_LOGIN = "ACTION_TO_LOGIN";
+
+    public static $ACTION_REGISTRATION = "ACTION_TO_REGISTRATION";
+
     public static $ACTION_LOGIN = "ACTION_LOGIN";
 
     public static $ACTION_LOGOUT = "ACTION_LOGOUT";
@@ -32,13 +37,19 @@ class LoginRequestController extends AbstractRequestController
         parent::handleRequest();
 
         switch ($this->actionId) {
-            case ActionController::$ACTION_LOGIN:
+            // goes to login page
+            case self::$ACTION_TO_LOGIN:
+                return new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
+            // goes to registration page
+            case self::$ACTION_REGISTRATION:
+                return new RequestControllerResult(true, ViewController::$VIEW_REGISTRATION);
+            // logs user in and goes to start
+            case self::$ACTION_LOGIN:
                 return $this->handleLogin();
+            // handle unknown action
             default:
                 throw new InternalErrorException("Action: '" . $this->actionId . "' cannot be handled by: '" . __CLASS__ . "''");
         }
-
-        // TODO: Login user
     }
 
     private function handleLogin()
@@ -47,18 +58,16 @@ class LoginRequestController extends AbstractRequestController
         $password = parent::getParameter("password");
 
         if (!isset($username) || (!isset($password))) {
-            return false;
+            return new RequestControllerResult();
         }
 
         $userCtrl = new UserController();
         $user = $userCtrl->getByUsername($username);
-        if (!isset($user)) {
-            return false;
-        } else if (password_verify($password, $user->password)) {
-            SecurityController::getInstance()->loginUser($user);
-            return true;
+        if (isset($user)) {
+            $valid = SecurityController::getInstance()->loginUser($password, $user);
+            return new RequestControllerResult($valid, ViewController::$VIEW_START, null);
         }
-        return false;
+        return new RequestControllerResult();
     }
 
     private function handleLogout()

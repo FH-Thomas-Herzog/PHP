@@ -77,7 +77,7 @@ class TemplateController extends BaseObject
      * @return the rendered view
      * @throws InternalErrorException if the view id does not map to a valid view.
      */
-    public function renderView($viewId, $cache = false, $recreate = false, array $args = array())
+    public function renderView($viewId, $cache = false, $recreate = false, $args = null)
     {
         if (!isset($args)) {
             $args = array();
