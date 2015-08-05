@@ -48,34 +48,79 @@ class RegistrationRequestController extends AbstractRequestController
     private function handleRegister()
     {
         $args = array();
+        $valid = true;
+        $success = false;
 
         $firstname = parent::getParameter("firstname");
         $lastname = parent::getParameter("lastname");
         $username = parent::getParameter("username");
+        $email = parent::getParameter("email");
         $password = parent::getParameter("password");
 
         if (empty($firstname)) {
             $args["firstnameError"] = "Firstname must be given";
+            $valid = false;
         } else {
             $args["firstname"] = $firstname;
         }
         if (empty($lastname)) {
             $args["lastnameError"] = "Lastname must be given";
+            $valid = false;
         } else {
             $args["lastname"] = $lastname;
         }
         if (empty($username)) {
             $args["usernameError"] = "Username must be given";
+            $valid = false;
         } else {
             $args["username"] = $username;
         }
+        if (empty($email)) {
+            $args["emailError"] = "Email must be given";
+            $valid = false;
+        } else {
+            $args["email"] = $email;
+        }
         if (empty($password)) {
             $args["passwordError"] = "Password must be given";
+            $valid = false;
         } else {
             $args["password"] = $password;
         }
 
-        // TODO: Check for already user email, username and valid password
-        return new RequestControllerResult(false, ViewController::$VIEW_REGISTRATION, $args);
+        $userCtrl = new UserController();
+        if ($valid) {
+            // check for already used username
+            $user = $userCtrl->getActiveUserByUsername($username);
+            if (isset($user)) {
+                $args["usernameError"] = "Username already in use";
+            } else {
+                $user = $userCtrl->getActiveUserByEmail($email);
+                if (isset($user)) {
+                    $args["usernameError"] = "Email already in use";
+                } else {
+                    $user = $userCtrl->persist(array(
+                        "firstname" => $firstname,
+                        "lastname" => $lastname,
+                        "email" => $lastname,
+                        "username" => $username,
+                        "password" => $password
+                    ));
+                    if (!isset($user)) {
+                        $args["message"] = "Sorry could not save user, please try again";
+                    } else {
+                        $success = true;
+                    }
+                }
+            }
+        }
+
+        // Keep on current page is save wasn't successful
+        if ($success) {
+            return new RequestControllerResult(false, ViewController::$VIEW_LOGIN, $args);
+        } // Goe to login page is successful
+        else {
+            return new RequestControllerResult(true, ViewController::$VIEW_REGISTRATION, $args);
+        }
     }
 }

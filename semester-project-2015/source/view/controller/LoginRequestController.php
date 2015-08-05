@@ -62,7 +62,7 @@ class LoginRequestController extends AbstractRequestController
         }
 
         $userCtrl = new UserController();
-        $user = $userCtrl->getByUsername($username);
+        $user = $userCtrl->getActiveUserByUsername($username);
         if (isset($user)) {
             $valid = SecurityController::getInstance()->loginUser($password, $user);
             return new RequestControllerResult($valid, ViewController::$VIEW_START, null);
