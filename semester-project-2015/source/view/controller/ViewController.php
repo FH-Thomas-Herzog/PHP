@@ -21,22 +21,30 @@ class ViewController extends AbstractRequestController
 
     public static $VIEW_LOGIN = "login";
 
-    public static $VIEW_START = "start";
+    public static $VIEW_START = "main";
 
     public static $VIEW_REGISTRATION = "registration";
+
+    public static $VIEW_REGISTRATION_SUCCESS = "registrationSuccess";
+
+    public static $PARTIAL_VIEW_CHANNEL = "channel";
+
+    public static $PARTIAL_VIEW_NEW_CHANNEL = "newChannel";
+
+    public static $PARTIAL_VIEW_PROFILE = "profile";
 
     public static $VIEW_ID = "viewId";
 
     private $pool;
 
-    private $sesionCtrl;
+    private $sessionCtrl;
 
     private $actionCtrl;
 
     public function __construct(Pool $pool)
     {
         parent::__construct();
-        $this->sesionCtrl = SessionController::getInstance();
+        $this->sessionCtrl = SessionController::getInstance();
         $this->actionCtrl = new ActionController();
         if (!isset($pool)) {
             throw new InternalErrorException("Pool null but needed");
@@ -65,21 +73,36 @@ class ViewController extends AbstractRequestController
 
         // render next view
         $resArgs = (isset($result->args)) ? $result->args : array();
+        $html = "";
         switch ($result->nextView) {
             case self::$VIEW_LOGIN:
                 $args = array(
                     "actionLogin" => LoginRequestController::$ACTION_LOGIN,
                     "actionRegister" => LoginRequestController::$ACTION_REGISTRATION
                 );
-                return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($resArgs, $args));
+                break;
             case self::$VIEW_REGISTRATION:
                 $args = array(
-                    "viewId" => ViewController::$VIEW_LOGIN,
+                    "viewId" => $result->nextView,
                     "actionRegister" => RegistrationRequestController::$ACTION_REGISTER,
-                    "actionCancel" => RegistrationRequestController::$ACTION_CANCEL
+                    "actionToLogin" => RegistrationRequestController::$ACTION_TO_LOGIN
                 );
-                return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($resArgs, $args));
+                break;
+            case self::$VIEW_REGISTRATION_SUCCESS:
+                $args = array(
+                    "viewId" => $result->nextView,
+                    "actionToLogin" => RegistrationRequestController::$ACTION_TO_LOGIN
+                );
+                break;
+            case self::$VIEW_START:
+                break;
         }
+
+        // register the former and next view
+        $this->sessionCtrl->setAttribute("formerView", $this->viewId);
+        $this->sessionCtrl->setAttribute("currentView", $result->nextView);
+
+        return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($resArgs, (isset($args)) ? $args : array()));
     }
 
     private function getTemplateController()

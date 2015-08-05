@@ -37,11 +37,8 @@
 
 <script type="text/javascript">
     var toRegistration = function (actionId) {
-        console.log("in to register");
         setAction(actionId);
-        console.log("set action id");
         $("#loginForm").validator('destroy');
-        console.log("validator destroyed");
         $("#loginForm").submit();
     }
 </script>

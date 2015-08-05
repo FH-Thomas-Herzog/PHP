@@ -20,7 +20,7 @@ class RegistrationRequestController extends AbstractRequestController
 
     public static $ACTION_REGISTER = "ACTION_REGISTER";
 
-    public static $ACTION_CANCEL = "ACTION_CANCEL";
+    public static $ACTION_TO_LOGIN = "ACTION_CANCEL";
 
     private $viewController;
 
@@ -34,8 +34,12 @@ class RegistrationRequestController extends AbstractRequestController
         parent::handleRequest();
 
         switch ($this->actionId) {
-            case self::$ACTION_CANCEL:
-                return new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
+            // Action to go to login view from registration view
+            case self::$ACTION_TO_LOGIN:
+                return new RequestControllerResult(true, ViewController::$VIEW_LOGIN, array(
+                    "success" => false
+                ));
+            // Registers the user
             case self::$ACTION_REGISTER:
                 return $this->handleRegister();
             default:
@@ -45,6 +49,12 @@ class RegistrationRequestController extends AbstractRequestController
         // TODO: Login user
     }
 
+    /**
+     * Handles the register action which registers an user on the platform.
+     *
+     * @return RequestControllerResult the result of this action
+     * @throws InternalErrorException
+     */
     private function handleRegister()
     {
         $args = array();
@@ -116,11 +126,12 @@ class RegistrationRequestController extends AbstractRequestController
         }
 
         // Keep on current page is save wasn't successful
-        if ($success) {
-            return new RequestControllerResult(false, ViewController::$VIEW_LOGIN, $args);
+        if (!$success) {
+            return new RequestControllerResult(false, ViewController::$VIEW_REGISTRATION, $args);
         } // Goe to login page is successful
         else {
-            return new RequestControllerResult(true, ViewController::$VIEW_REGISTRATION, $args);
+            $args["message"] = "Login successful";
+            return new RequestControllerResult(true, ViewController::$VIEW_REGISTRATION_SUCCESS, $args);
         }
     }
 }

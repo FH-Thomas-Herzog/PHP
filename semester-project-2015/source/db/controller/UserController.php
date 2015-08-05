@@ -34,6 +34,12 @@ class UserController extends AbstractEntityController
 
     }
 
+    /**
+     * Gets the active user by his username.
+     *
+     * @param $username the username to get suer for
+     * @return the retrieved user
+     */
     public function getActiveUserByUsername($username)
     {
         $stmt = parent::prepareStatement(self::$SQL_ACTIVE_USER_BY_USERNAME);
@@ -44,6 +50,12 @@ class UserController extends AbstractEntityController
         return $res;
     }
 
+    /**
+     * Gets the active user by its email.
+     *
+     * @param $email the users email
+     * @return mixed the retrieved user
+     */
     public function getActiveUserByEmail($email)
     {
         $stmt = parent::prepareStatement(self::$SQL_ACTIVE_USER_BY_EMAIL);
@@ -71,7 +83,9 @@ class UserController extends AbstractEntityController
         $p4 = (string)$args["username"];
         $p5 = password_hash((string)$args["password"], PASSWORD_BCRYPT);
         $stmt->bind_param("sssss", $p1, $p2, $p3, $p4, $p5);
+        parent::startTx(true);
         $res = $stmt->execute();
+        parent::commit();
         $stmt->close();
         return $res;
     }

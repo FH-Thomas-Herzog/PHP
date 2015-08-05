@@ -1,0 +1,68 @@
+{% extends "root-template.html" %}
+{% block header %}
+<script type="text/javascript">
+    var postRequest = function (params) {
+        $.ajax({
+            type: "POST",
+            url: "index.php",
+            data: params,
+            success: function (data) {
+                $("#content").html(data);
+            },
+            error: function (xhr, status, error) {
+                // TODO: Handle error here
+            }
+        });
+    }
+</script>
+{%endblock%}
+{%block title%}Start{%endblock%}
+
+{%block content%}
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Team Channel</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <!-- Channel selection -->
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Channels <span
+                    class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Available channels</li>
+                    {% for channel in navModel.channels %}
+                    <li>
+                        <a href="#"
+                           onclick="postRequest('actionId={{actionSelectChannel}}&viewId={{viewId}}&id={{channel.id}}');">#
+                            {{channel.name}}</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="#">No channel available</a>
+                    </li>
+                    {% endfor %}
+                    <!-- Iterate over already existing channels -->
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Actions</li>
+                    <li><a href="#" onclick="postRequest('actionId={{actionToNewChannel}}&viewId={{viewId}}');">New
+                        Channel</a></li>
+                </ul>
+            </li>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration <span
+                    class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" onclick="postRequest('actionId={{actionToProfile}}&viewId={{viewId}}');">Profile</a>
+                    </li>
+                    <li><a href="#"
+                           onclick="postRequest({actionId: '{{actionLogout}}', viewId: '{{viewId}}'});">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<section id="content" style="margin-top: 60px;">
+    <div class="container">hello</div>
+</section>
+{%endblock%}
