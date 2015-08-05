@@ -1,26 +1,26 @@
 {% extends "root-template.html" %}
 {% block header %}
-    <style type="text/css">
-        html, body {
-            height: 100%
-        }
+<style type="text/css">
+    html, body {
+        height: 100%
+    }
 
-        .parent {
-            display: table;
-            height: 70%;
-            width: 100%;
-        }
+    .parent {
+        display: table;
+        height: 70%;
+        width: 100%;
+    }
 
-        .child {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-        }
+    .child {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+    }
 
-        .row-buffer {
-            margin: 10px;
-        }
-    </style>
+    .row-buffer {
+        margin: 10px;
+    }
+</style>
 {%endblock%}
 {%block title%}Login{%endblock%}
 {%block content%}
@@ -42,38 +42,27 @@
             {% endif %}
             <div class="row row-buffer">
                 <div class="col-sm-4 col-sm-offset-4">
-                    <form id="loginForm" enctype="application/x-www-form-urlencoded" method="post">
+                    <form id="loginForm" enctype="application/x-www-form-urlencoded" method="post" class="form-inline">
                         <input id='actionId' name='actionId' value="" type='hidden'/>
                         <input id='viewId' name='viewId' value="{{viewId}}" type='hidden'/>
 
-                        <div id="container" class="row">
-                            <div class="col-sm-12">
-                                <div class="row row-buffer">
-                                    <div class="col-sm-4"><label id="usernameLabel">Username:</label></div>
-                                    <div class="col-sm-4"><input id="username" name="username" value="" type="text"
-                                                                 placeholder="Enter your username"/>
-                                    </div>
-                                    <div class="col-sm-4"><span id="usernameError"></span></div>
-                                </div>
-                                <div class="row row-buffer">
-                                    <div class="col-sm-4"><label id="passwordLabel">Password:</label></div>
-                                    <div class="col-sm-4"><input id="password" name="password" value="" type="password"
-                                                                 placeholder="Enter your password"/>
-                                    </div>
-                                    <div class="col-sm-4"><span id="passwordError"></span></div>
-                                </div>
-                                <div class="row row-buffer">
-                                    <div class="col-sm-12">
-                                        <div class="text-center">
-                                            <button type="submit" class="btn btn-default" style="margin: 5px;"
-                                                    onclick="setAction('{{actionLogin}}')">Login
-                                            </button>
-                                            <button type="submit" class="btn btn-default" style="margin: 5px;"
-                                                    onclick="setAction('{{actionRegister}}')">Register
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="form-group {{usernameState}}">
+                            <label id="usernameLabel">Username:</label>
+                            <input id="username" name="username" value="" type="text"
+                                   placeholder="Enter your username" class="form-control"/>
+                        </div>
+                        <div class="form-group {{passwordState}}"><label id="passwordLabel">Password:</label>
+                            <input id="password" name="password" value="" type="password"
+                                   placeholder="Enter your password" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-default" style="margin: 5px;"
+                                        onclick="setAction('{{actionLogin}}')">Login
+                                </button>
+                                <button type="submit" class="btn btn-default" style="margin: 5px;"
+                                        onclick="setAction('{{actionRegister}}')">Register
+                                </button>
                             </div>
                         </div>
                     </form>
