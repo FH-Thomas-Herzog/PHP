@@ -32,14 +32,6 @@
         margin-right: 10px;
     }
 </style>
-
-<script type="text/javascript">
-    var cancel = function (actionId) {
-        setAction(actionId);
-        $("#registrationForm").validator('destroy');
-        $("#registrationForm").submit();
-    }
-</script>
 {%endblock%}
 {%block title%}Registration{%endblock%}
 {%block content%}
@@ -90,7 +82,7 @@
                                     onclick="setAction('{{actionRegister}}')">Save
                             </button>
                             <button type="button" class="btn btn-default" style="margin: 5px;"
-                                    onclick="cancel('{{actionToLogin}}')">Cancel
+                                    onclick="submitCancelWithValidation('registrationForm', '{{actionToLogin}}')">Cancel
                             </button>
                         </div>
                     </form>

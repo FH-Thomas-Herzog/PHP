@@ -27,7 +27,7 @@ abstract class Object
      */
     public function __call($name, $args)
     {
-        throw new InternalErrorException("Undefined function '" . $name . "(" . implode(",", $args) . ")'called", 2);
+        throw new InternalErrorException("Undefined function '" . get_class($this) . "->" . $name . "(" . implode(",", $args) . ")'called", 2);
     }
 
     /**

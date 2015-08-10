@@ -65,10 +65,10 @@ class SecurityController extends SingletonObject
     }
 
     /**
-     * Logs the user with the given id out.
-     * @param integer $userId the user id
-     * @see $this->getSession();
-     * @see $this->destroySession();
+     * Logs the user out by destroying the backed user session.
+     *
+     * @param int $userId the users id
+     * @return bool true if the user has been logged out false otherwise
      */
     public function logoutUser($userId = -666)
     {
@@ -87,9 +87,18 @@ class SecurityController extends SingletonObject
         if (!$this->sessionController->isSessionActive()) {
             return false;
         }
-        $userId = $this->sessionController->getAttribute(SessionController::$USER_MODEL);
-        // TODO: Check db for this user
-        return isset($userId);
+
+        $usrId = $this->getLoggedUser();
+        return isset($usrId);
+    }
+
+    /**
+     * Answers the question if the current active session holds an user.
+     * @return bool true if the current active has an valid active user set.
+     */
+    public function getLoggedUser()
+    {
+        return $this->sessionController->getAttribute(self::$SESSION_USER_ID);
     }
 
     /**

@@ -3,6 +3,7 @@
 <script type="text/javascript">
     var postRequest = function (params) {
         $.ajax({
+            async: true,
             type: "POST",
             url: "index.php",
             data: params,
@@ -13,6 +14,9 @@
                 // TODO: Handle error here
             }
         });
+    }
+    window.onload = function () {
+        postRequest("actionId={{actionToDefault}}&viewId={{viewId}}");
     }
 </script>
 {%endblock%}
@@ -34,11 +38,11 @@
                     {% for channel in navModel.channels %}
                     <li>
                         <a href="#"
-                           onclick="postRequest('actionId={{actionSelectChannel}}&viewId={{viewId}}&id={{channel.id}}');">#
+                           onclick="postRequest('actionId={{actionToSelectedChannel}}&id={{channel.id}}&viewId={{viewId}}');">#
                             {{channel.name}}</a>
                     </li>
                     {% else %}
-                    <li>
+                    <li class="disabled">
                         <a href="#">No channel available</a>
                     </li>
                     {% endfor %}
@@ -55,7 +59,7 @@
                     <li><a href="#" onclick="postRequest('actionId={{actionToProfile}}&viewId={{viewId}}');">Profile</a>
                     </li>
                     <li><a href="#"
-                           onclick="postRequest({actionId: '{{actionLogout}}', viewId: '{{viewId}}'});">Logout</a></li>
+                           onclick="postRequest('actionId={{actionLogout}}&viewId={{viewId}}');">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -63,6 +67,5 @@
 </nav>
 
 <section id="content" style="margin-top: 60px;">
-    <div class="container">hello</div>
 </section>
 {%endblock%}

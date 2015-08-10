@@ -9,11 +9,15 @@
 namespace source\common;
 
 use source\view\controller\ActionController;
+use source\view\controller\SecurityController;
+use source\view\controller\SessionController;
 use source\view\controller\ViewController;
 
 abstract class AbstractRequestController extends BaseObject
 {
 
+    protected $sessionCtrl;
+    protected $securityCtrl;
     protected $postRequest;
     protected $viewId;
     protected $actionId;
@@ -27,6 +31,8 @@ abstract class AbstractRequestController extends BaseObject
         }
         $this->viewId = $this->getParameter(ViewController::$VIEW_ID);
         $this->actionId = $this->getParameter(ActionController::$ACTION_ID);
+        $this->sessionCtrl = SessionController::getInstance();
+        $this->securityCtrl = SecurityController::getInstance();
     }
 
     protected function getParameter($name)

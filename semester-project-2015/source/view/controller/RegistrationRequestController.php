@@ -11,7 +11,7 @@ namespace source\view\controller;
 
 use \source\common\AbstractRequestController;
 use \source\common\InternalErrorException;
-use \source\db\controller\UserController;
+use \source\db\controller\UserEntityController;
 use \source\view\controller\SecurityController;
 use source\view\model\RequestControllerResult;
 
@@ -57,70 +57,29 @@ class RegistrationRequestController extends AbstractRequestController
      */
     private function handleRegister()
     {
-        $args = array();
+        $userCtrl = new UserEntityController();
         $valid = true;
         $success = false;
+        $args = array(
+            "firstname" => parent::getParameter("firstname"),
+            "lastname" => parent::getParameter("lastname"),
+            "email" => parent::getParameter("email"),
+            "username" => parent::getParameter("username"),
+            "password" => parent::getParameter("password")
+        );
 
-        $firstname = parent::getParameter("firstname");
-        $lastname = parent::getParameter("lastname");
-        $username = parent::getParameter("username");
-        $email = parent::getParameter("email");
-        $password = parent::getParameter("password");
 
-        if (empty($firstname)) {
-            $args["firstnameError"] = "Firstname must be given";
-            $valid = false;
-        } else {
-            $args["firstname"] = $firstname;
-        }
-        if (empty($lastname)) {
-            $args["lastnameError"] = "Lastname must be given";
-            $valid = false;
-        } else {
-            $args["lastname"] = $lastname;
-        }
-        if (empty($username)) {
-            $args["usernameError"] = "Username must be given";
-            $valid = false;
-        } else {
-            $args["username"] = $username;
-        }
-        if (empty($email)) {
-            $args["emailError"] = "Email must be given";
-            $valid = false;
-        } else {
-            $args["email"] = $email;
-        }
-        if (empty($password)) {
-            $args["passwordError"] = "Password must be given";
-            $valid = false;
-        } else {
-            $args["password"] = $password;
-        }
-
-        $userCtrl = new UserController();
         if ($valid) {
-            // check for already used username
-            $user = $userCtrl->getActiveUserByUsername($username);
-            if (isset($user)) {
+            if ($userCtrl->isActiveUserExistingWithUsername($args["username"])) {
                 $args["usernameError"] = "Username already in use";
+            } else if ($userCtrl->isActiveUserExistingWithEmail($args["email"])) {
+                $args["usernameError"] = "Email already in use";
             } else {
-                $user = $userCtrl->getActiveUserByEmail($email);
-                if (isset($user)) {
-                    $args["usernameError"] = "Email already in use";
+                $user = $userCtrl->persist($args);
+                if (!isset($user)) {
+                    $args["message"] = "Sorry could not save user, please try again";
                 } else {
-                    $user = $userCtrl->persist(array(
-                        "firstname" => $firstname,
-                        "lastname" => $lastname,
-                        "email" => $lastname,
-                        "username" => $username,
-                        "password" => $password
-                    ));
-                    if (!isset($user)) {
-                        $args["message"] = "Sorry could not save user, please try again";
-                    } else {
-                        $success = true;
-                    }
+                    $success = true;
                 }
             }
         }

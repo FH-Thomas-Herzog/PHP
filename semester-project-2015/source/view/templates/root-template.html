@@ -11,19 +11,32 @@
     {%block header%}
     {%endblock%}
 
+    <style type="text/css">
+        footer {
+            display: block;
+        }
+    </style>
     <script type="text/javascript">
         var setAction = function (actionId) {
             $('#actionId').val(actionId);
         }
+        var destroyValidation = function (formId) {
+            $("#" + formId).validator('destroy');
+        }
+        var submitCancelWithValidation = function (formId, actionId) {
+            destroyValidation(formId);
+            setAction(actionId);
+            $("#" + formId).submit();
+        }
     </script>
+
     <title>{%block title%} {%endblock%}</title>
 </head>
 <body>
 {% block content %}{% endblock %}
-<div id="footer">
-    {% block footer %}
+<footer>
     &copy; Copyright 2015 by Ing. Thomas Herzog</a>.
-    {% endblock %}
-</div>
+</footer>
+
 </body>
 </html>

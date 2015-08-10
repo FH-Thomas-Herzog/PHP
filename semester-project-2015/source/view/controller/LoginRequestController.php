@@ -11,7 +11,7 @@ namespace source\view\controller;
 
 use \source\common\AbstractRequestController;
 use \source\common\InternalErrorException;
-use \source\db\controller\UserController;
+use \source\db\controller\UserEntityController;
 use \source\view\controller\SecurityController;
 use source\view\model\RequestControllerResult;
 
@@ -24,8 +24,6 @@ class LoginRequestController extends AbstractRequestController
     public static $ACTION_LOGIN = "ACTION_LOGIN";
 
     public static $ACTION_LOGOUT = "ACTION_LOGOUT";
-
-    private $viewController;
 
     public function __construct()
     {
@@ -61,11 +59,11 @@ class LoginRequestController extends AbstractRequestController
             return new RequestControllerResult();
         }
 
-        $userCtrl = new UserController();
+        $userCtrl = new UserEntityController();
         $user = $userCtrl->getActiveUserByUsername($username);
         if (isset($user)) {
             $valid = SecurityController::getInstance()->loginUser($password, $user);
-            return new RequestControllerResult($valid, ViewController::$VIEW_START, null);
+            return new RequestControllerResult($valid, ViewController::$VIEW_MAIN, null);
         }
         return new RequestControllerResult();
     }
