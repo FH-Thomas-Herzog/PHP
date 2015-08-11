@@ -119,7 +119,7 @@ class SecurityException extends BaseException
  * Class EntityNotFoundException
  * @package SCM4\Common\Exception
  */
-class EntityNotFoundException extends BaseException
+class DbException extends BaseException
 {
 
     public function __construct($message = "Entity could not be found", $code = 300, Exception $previous = null)

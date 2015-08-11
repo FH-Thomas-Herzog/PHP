@@ -70,9 +70,9 @@ class SecurityController extends SingletonObject
      * @param int $userId the users id
      * @return bool true if the user has been logged out false otherwise
      */
-    public function logoutUser($userId = -666)
+    public function logoutUser()
     {
-        if (!$this->isUserLogged($userId)) {
+        if (!$this->isUserLogged()) {
             return false;
         }
         $this->sessionController->destroySession();

@@ -19,29 +19,37 @@ use \source\view\controller\ViewController;
 use \source\view\controller\PoolController;
 use \source\view\controller\SecurityController;
 use \source\view\controller\LoginRequestController;
+use \source\view\controller\SessionController;
 
 // register loaders
 Autoloader::register();
 
 $securityCtrl = SecurityController::getInstance();
+$sessionCtrl = SessionController::getInstance();
+
 // handle initial call with not logged user
 if (!$securityCtrl->isUserLogged()) {
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
         if (!isset($_GET['viewId'])) {
             $_GET['viewId'] = ViewController::$VIEW_LOGIN;
-            $_GET['actionId'] = LoginRequestController::$ACTION_TO_LOGIN;
+            $_GET['actionId'] = ViewController::$REFRESH_ACTION;
         }
-    } else  if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (!isset($_POST['viewId'])) {
             $_POST['viewId'] = ViewController::$VIEW_LOGIN;
-            $_POST['actionId'] = LoginRequestController::$ACTION_TO_LOGIN;
+            $_POST['actionId'] = ViewController::$REFRESH_ACTION;
         }
     }
+
+    $pool = PoolController::createFileSystemPool(TemplateController::$POOL_NAMESPACE, array("path" => ROOT_PATH . "/stash"));
+    $viewCtrl = new ViewController($pool);
+    echo $viewCtrl->handleRequest();
+} // redirect user to main page
+else {
+    header('Location: start.php');
+    return "";
 }
 
-$pool = PoolController::createFileSystemPool(TemplateController::$POOL_NAMESPACE, array("path" => ROOT_PATH . "/stash"));
-$viewCtrl = new ViewController($pool);
-echo $viewCtrl->handleRequest();
 
 
 

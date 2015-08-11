@@ -9,6 +9,7 @@
 namespace source\db\controller;
 
 
+use source\common\DbException;
 use source\common\InternalErrorException;
 
 class UserEntityController extends AbstractEntityController
@@ -21,9 +22,9 @@ class UserEntityController extends AbstractEntityController
 
     private static $SQL_INSERT_USER = "INSERT INTO user (firstname, lastname, email, username, password) VALUES (?,?,?,?,?)";
 
-    public function __construct()
+    public function __construct($mysqli = null)
     {
-        parent::__construct();
+        parent::__construct($mysqli);
     }
 
     public function getById($id)
@@ -41,6 +42,7 @@ class UserEntityController extends AbstractEntityController
      *
      * @param string $username the username to get user for
      * @return boolean true if a user exists with this username, false otherwise
+     * @throws DbException if an error occurs
      */
     public function isActiveUserExistingWithUsername($username)
     {
@@ -57,7 +59,7 @@ class UserEntityController extends AbstractEntityController
             $stmtRes = $stmt->get_result();
             $res = ($stmtRes->num_rows != 0);
         } catch (\Exception $e) {
-            // TODO: Handle error here
+            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
             if (isset($stmt)) {
                 $stmt->free_result();
@@ -74,6 +76,7 @@ class UserEntityController extends AbstractEntityController
      *
      * @param string $email the users email
      * @return boolean true if a user already exists with this email, false otherwise
+     * @throws DbException if an error occurs
      */
     public function isActiveUserExistingWithEmail($email)
     {
@@ -89,7 +92,7 @@ class UserEntityController extends AbstractEntityController
             $stmtRes = $stmt->get_result();
             $res = ($stmtRes->num_rows != 0);
         } catch (\Exception $e) {
-            // TODO: Handle error here
+            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_EMAIL . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
             if (isset($stmt)) {
                 $stmt->free_result();
@@ -106,6 +109,7 @@ class UserEntityController extends AbstractEntityController
      *
      * @param $username the username to get suer for
      * @return the retrieved user
+     * @throws DbException if an error occurs
      */
     public function getActiveUserByUsername($username)
     {
@@ -121,9 +125,10 @@ class UserEntityController extends AbstractEntityController
             $stmt->execute();
             $res = $stmt->get_result()->fetch_object();
         } catch (\Exception $e) {
-            // TODO: Handle error here
+            throw new DbException("Error on executing query: '" . self::$SQL_GET_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
             if (isset($stmt)) {
+                $stmt->free_result();
                 $stmt->close();
             }
             parent::close();
@@ -138,6 +143,13 @@ class UserEntityController extends AbstractEntityController
         // TODO: Implement deleteById() method.
     }
 
+    /**
+     * Persists the user defined by given parameters
+     * @param array $args the array containing the user attributes
+     * @return stdClass the persisted user
+     * @throws DbException if an error occurs
+     * @throws InternalErrorException if the array is not set
+     */
     public function persist(array $args)
     {
         if (empty($args)) {
@@ -156,17 +168,17 @@ class UserEntityController extends AbstractEntityController
             $p5 = password_hash((string)$args["password"], PASSWORD_BCRYPT);
             $stmt->bind_param("sssss", $p1, $p2, $p3, $p4, $p5);
             parent::startTx(true);
-            $res = $stmt->execute();
+            $stmt->execute();
             parent::commit();
         } catch (\Exception $e) {
-            // TODO: Handle error here
+            parent::rollback();
+            throw new DbException("Error on executing query: '" . self::$SQL_INSERT_USER . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
             if (isset($stmt)) {
                 $stmt->close();
             }
             parent::close();
         }
-        return $res;
     }
 
 

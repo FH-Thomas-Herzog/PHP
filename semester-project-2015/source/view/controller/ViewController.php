@@ -11,7 +11,8 @@ namespace source\view\controller;
 
 use source\common\AbstractRequestController;
 use source\common\InternalErrorException;
-use source\view\model\RequestControllerResult;
+use source\common\utils\StringUtil;
+use source\db\controller\ChannelEntityController;
 use \Stash\Pool;
 
 class ViewController extends AbstractRequestController
@@ -27,15 +28,13 @@ class ViewController extends AbstractRequestController
 
     public static $VIEW_REGISTRATION_SUCCESS = "registrationSuccess";
 
-    public static $PARTIAL_VIEW_CHANNELS = "channels";
+    public static $PARTIAL_VIEW_CHANNELS = "partialChannels";
 
-    public static $PARTIAL_VIEW_NEW_CHANNEL = "newChannel";
-
-    public static $PARTIAL_DEFAULT = "defaultMain";
-
-    public static $PARTIAL_VIEW_PROFILE = "profile";
+    public static $PARTIAL_VIEW_NEW_CHANNEL = "partialNewChannel";
 
     public static $VIEW_ID = "viewId";
+
+    public static $REFRESH_ACTION = "refreshAction";
 
     private $pool;
 
@@ -119,24 +118,43 @@ class ViewController extends AbstractRequestController
                 );
                 break;
             case self::$VIEW_MAIN:
-                $args = array(
-                    "actionToSelectedChannel" => MainController::$ACTION_TO_SELECTED_CHANNEL,
-                    "actionToNewChannel" => MainController::$ACTION_TO_NEW_CHANNEL,
-                    "actionToProfile" => MainController::$ACTION_TO_PROFILE,
-                    "actionToDefault" => MainController::$ACTION_TO_DEFAULT,
-                );
+                if (self::$VIEW_LOGIN === $this->viewId) {
+                    header('Location: start.php');
+                    return "";
+                } else {
+                    $args = array(
+                        "actionToNewChannel" => MainController::$ACTION_TO_NEW_CHANNEL,
+                        "actionToChannels" => MainController::$ACTION_TO_CHANNELS,
+                        "actionLogout" => MainController::$ACTION_LOGOUT
+                    );
+                }
                 break;
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
                 $args = array(
                     "actionSaveChannel" => ChannelController::$ACTION_SAVE_CHANNEL,
-                    "actionToMain" => ChannelController::$ACTION_TO_MAIN
+                    "actionToMain" => MainController::$ACTION_TO_CHANNELS
                 );
+                break;
+            case self::$PARTIAL_VIEW_CHANNELS:
+                $args = array(
+                    "actionToSelectedChannel" => ChannelController::$ACTION_SAVE_CHANNEL
+                );
+                $channels = $this->prepareChannelsView($args);
+                break;
         }
         $args["viewId"] = $result->nextView;
 
         // register the former and next view
-        $this->sessionCtrl->setAttribute("formerView", $this->viewId);
-        $this->sessionCtrl->setAttribute("currentView", $result->nextView);
+        if (!StringUtil::startWith($this->viewId, "partial")) {
+            $this->sessionCtrl->setAttribute("formerView", $this->viewId);
+        } else {
+            $this->sessionCtrl->setAttribute("formerPartialView", $this->viewId);
+        }
+        if (!StringUtil::startWith($result->nextView, "partial")) {
+            $this->sessionCtrl->setAttribute("currentView", $result->nextView);
+        } else {
+            $this->sessionCtrl->setAttribute("currentPartialView", $result->nextView);
+        }
 
         return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($resArgs, $args));
     }
@@ -150,5 +168,21 @@ class ViewController extends AbstractRequestController
             $item->set($templateCtrl);
         }
         return $item->get();
+    }
+
+    private function prepareChannelsView(array &$args = array())
+    {
+        $channelCtrl = new ChannelEntityController();
+        if (!isset($args)) {
+            $args = array();
+        }
+        try {
+            $assigned = $channelCtrl->getAssignedChannelsWithMsgCount($this->securityCtrl->getLoggedUser());
+            $unassigned = $channelCtrl->getUnassignedChannels($this->securityCtrl->getLoggedUser());
+            $args["assignedChannels"] = $assigned;
+            $args["availableChannels"] = $unassigned;
+        } catch (DbException $e) {
+            var_dump($e);
+        }
     }
 }

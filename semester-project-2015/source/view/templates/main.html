@@ -1,11 +1,43 @@
 {% extends "root-template.html" %}
 {% block header %}
+<style type="text/css">
+    html, body {
+        height: 100%
+    }
+
+    .parent {
+        display: table;
+        height: 70%;
+        width: 100%;
+    }
+
+    .child {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    div.row-buffer {
+        margin: 10px;
+    }
+
+    div.form-group {
+        margin: 10px;
+    }
+
+    div.text-center {
+        margin: 10px;
+    }
+
+    label {
+        margin-right: 10px;
+    }
+</style>
 <script type="text/javascript">
     var postRequest = function (params) {
         $.ajax({
             async: true,
             type: "POST",
-            url: "index.php",
+            url: "start.php",
             data: params,
             success: function (data) {
                 $("#content").html(data);
@@ -16,14 +48,14 @@
         });
     }
     window.onload = function () {
-        postRequest("actionId={{actionToDefault}}&viewId={{viewId}}");
+        postRequest("actionId={{actionToChannels}}&viewId={{viewId}}");
     }
 </script>
 {%endblock%}
 {%block title%}Start{%endblock%}
 
 {%block content%}
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Team Channel</a>
@@ -33,39 +65,31 @@
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Channels <span
                     class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Available channels</li>
-                    {% for channel in navModel.channels %}
-                    <li>
-                        <a href="#"
-                           onclick="postRequest('actionId={{actionToSelectedChannel}}&id={{channel.id}}&viewId={{viewId}}');">#
-                            {{channel.name}}</a>
-                    </li>
-                    {% else %}
-                    <li class="disabled">
-                        <a href="#">No channel available</a>
-                    </li>
-                    {% endfor %}
                     <!-- Iterate over already existing channels -->
                     <li class="divider"></li>
                     <li class="dropdown-header">Actions</li>
                     <li><a href="#" onclick="postRequest('actionId={{actionToNewChannel}}&viewId={{viewId}}');">New
                         Channel</a></li>
+                    <li>
+                        <a href="#" onclick="postRequest('actionId={{actionToChannels}}&viewId={{viewId}}')">List
+                            Channels</a>
+                    </li>
                 </ul>
             </li>
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration <span
                     class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#" onclick="postRequest('actionId={{actionToProfile}}&viewId={{viewId}}');">Profile</a>
-                    </li>
-                    <li><a href="#"
-                           onclick="postRequest('actionId={{actionLogout}}&viewId={{viewId}}');">Logout</a></li>
+                    <li><a href="start.php?viewId={{viewId}}&actionId={{actionLogout}}">Logout</a></li>
                 </ul>
             </li>
         </ul>
     </div>
 </nav>
 
-<section id="content" style="margin-top: 60px;">
+<section>
+    <div class="parent">
+        <div id="content" class="child">
+        </div>
+    </div>
 </section>
 {%endblock%}

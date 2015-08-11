@@ -19,20 +19,35 @@ use \source\view\controller\ViewController;
 use \source\view\controller\PoolController;
 use \source\view\controller\SecurityController;
 use \source\view\controller\LoginRequestController;
-use \source\common\InternalErrorException;
+use \source\view\controller\SessionController;
 
 // register loaders
 Autoloader::register();
 
 $securityCtrl = SecurityController::getInstance();
+$sessionCtrl = SessionController::getInstance();
+
 // handle initial call with not logged user
 if (!$securityCtrl->isUserLogged()) {
-    throw new InternalErrorException("Start not available when user not logged");
+    header('Location: index.php');
+    return "";
+} else {
+    if ($_SERVER["REQUEST_METHOD"] === "GET") {
+        if (!isset($_GET['viewId'])) {
+            $_GET['viewId'] = ViewController::$VIEW_MAIN;
+            $_GET['actionId'] = ViewController::$REFRESH_ACTION;
+        }
+    } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        if (!isset($_POST['viewId'])) {
+            $_POST['viewId'] = ViewController::$VIEW_MAIN;
+            $_POST['actionId'] = ViewController::$REFRESH_ACTION;
+        }
+    }
+    $pool = PoolController::createFileSystemPool(TemplateController::$POOL_NAMESPACE, array("path" => ROOT_PATH . "/stash"));
+    $viewCtrl = new ViewController($pool);
+    echo $viewCtrl->handleRequest();
 }
 
-$pool = PoolController::createFileSystemPool(TemplateController::$POOL_NAMESPACE, array("path" => ROOT_PATH . "/stash"));
-$viewCtrl = new ViewController($pool);
-echo $viewCtrl->handleRequest();
 
 
 

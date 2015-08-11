@@ -1,0 +1,57 @@
+<!-- Table -->
+<div class="panel panel-default">
+    <div class="panel-heading">Assigned Channels</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Messages</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for channel in assignedChannels %}
+            <tr>
+                <td>{{channel.title}}</td>
+                <td>{{channel.description}}</td>
+                <td>{{channel.msgCount}}</td>
+                <td>action</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" align="center">No channels available yet</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Available Channels</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for channel in availableChannels %}
+            <tr>
+                <td>{{channel.title}}</td>
+                <td>{{channel.description}}</td>
+                <td>action</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" align="center">You are assigned to all channels</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -9,7 +9,7 @@
 namespace source\db\controller;
 
 
-use source\common\InternalErrorException;
+use source\common\DbException;
 
 class ChannelEntityController extends AbstractEntityController
 {
@@ -17,11 +17,23 @@ class ChannelEntityController extends AbstractEntityController
 
     private static $SQL_INSERT_CHANNEL = "INSERT INTO channel (title, description) VALUES (?,?)";
 
-    private static $SQL_INSERT_CHANNEL_USER_ENTRY = "INSERT INTO channel_user_entry (user_id, channel_id, favorite_flag) VALUES (?,?,?)";
+    private static $SQL_DELETE_CHANNEL = "DELETE FROM channel WHERE channel_id = ?";
 
-    private static $SQL_UPDATE_RESET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=0 WHERE favorite_flag=1 AND user_id=?";
+    private static $SQL_SELECT_ASSIGNED_CHANNELS_WITH_MSG_COUNT =
+        "SELECT COUNT(cm.id) AS msgCount, c.title, c.description FROM channel c " .
+        " LEFT OUTER JOIN channel_message cm ON cm.channel_id = c.id " .
+        " INNER JOIN channel_user_entry cue ON cue.channel_id = c.id " .
+        " WHERE cue.user_id = ?" .
+        " GROUP BY c.id, c.title, c.description" .
+        " ORDER BY cue.favorite_flag DESC, c.creation_date desc";
 
-    private static $SQL_UPDATE_SET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=1 WHERE channel_id=? AND user_id=?";
+    private static $SQL_SELECT_UNASSIGNED_CHANNELS_WITH_MSG_COUNT =
+        "SELECT c.title, c.description FROM channel c " .
+        " LEFT OUTER JOIN channel_message cm ON cm.channel_id = c.id " .
+        " LEFT JOIN channel_user_entry cue ON cue.channel_id = c.id " .
+        " WHERE ((cue.user_id IS NULL) OR (cue.user_id != ?)) " .
+        " GROUP BY c.title, c.description" .
+        " ORDER BY c.creation_date desc";
 
     public function __construct()
     {
@@ -38,14 +50,76 @@ class ChannelEntityController extends AbstractEntityController
 
     }
 
+    public function getAssignedChannelsWithMsgCount($userId)
+    {
+        parent::open();
+
+        $res = array();
+        $stmt = null;
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_SELECT_ASSIGNED_CHANNELS_WITH_MSG_COUNT);
+            $p1 = (integer)$userId;
+            $stmt->bind_param("s", $p1);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $data = null;
+            while ($data = $result->fetch_object()) {
+                $res[] = $data;
+            }
+        } catch (\Exception $e) {
+            throw new DbException("Error on executing query: '" . self::$SQL_SELECT_ASSIGNED_CHANNELS_WITH_MSG_COUNT . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->free_result();
+                $stmt->close();
+            }
+            parent::close();
+        }
+
+        return $res;
+    }
+
+    public function getUnassignedChannels($userId)
+    {
+        parent::open();
+
+        $res = array();
+        $stmt = null;
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_SELECT_UNASSIGNED_CHANNELS_WITH_MSG_COUNT);
+            $p1 = (integer)$userId;
+            $stmt->bind_param("s", $p1);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $data = null;
+            while ($data = $result->fetch_object()) {
+                $res[] = $data;
+            }
+        } catch (\Exception $e) {
+            throw new DbException("Error on executing query: '" . self::$SQL_SELECT_UNASSIGNED_CHANNELS_WITH_MSG_COUNT . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->free_result();
+                $stmt->close();
+            }
+            parent::close();
+        }
+
+        return $res;
+    }
+
     /**
      * Answers the question if a channel with the given title already exists.
      *
      * @param string $title the channel title
      * @return boolean true if a channel with this title exists false otherwise
+     * @throws DbException if an error occurs
      */
     public function isChannelExistingWithTitle($title)
     {
+
         parent::open();
 
         $res = false;
@@ -57,13 +131,10 @@ class ChannelEntityController extends AbstractEntityController
             $p1 = (string)$title;
             $stmt->bind_param("s", $p1);
             $success = $stmt->execute();
-            if (!$success) {
-                throw new \Exception("Could not check for already existing channel");
-            }
             $stmtRes = $stmt->get_result();
             $res = ($stmtRes->num_rows != 0);
         } catch (\Exception $e) {
-
+            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_CHANNEL_BY_TITLE . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
             if (isset($stmt)) {
                 $stmt->free_result();
@@ -80,114 +151,33 @@ class ChannelEntityController extends AbstractEntityController
         // TODO: Implement deleteById() method.
     }
 
-    public function setFavoriteChannel($userId = null, $channelId = null, $favorite = false, $joinedTx = false)
-    {
-        $joinTx = (boolean)$joinedTx;
-        $setFavorite = (boolean)$favorite;
-        if (!$joinTx) {
-            parent::startTx();
-        }
-
-        $stmtReset = null;
-        $stmtSet = null;
-        $res = false;
-
-        try {
-            $stmtReset = parent::prepareStatement(self::$SQL_UPDATE_RESET_FAVORITE_CHANNEL);
-            $p1 = (integer)$userId;
-            $stmtReset->bind_param("s", $p1);
-            $res = $stmtReset->execute();
-            if (!$res) {
-                throw new \Exception("Could not reset channel user entries favorite flags");
-            }
-            if ($setFavorite) {
-                $stmtSet = parent::prepareStatement(self::$SQL_UPDATE_SET_FAVORITE_CHANNEL);
-                $p1 = (integer)$userId;
-                $p2 = (integer)$channelId;
-                $stmtSet->bind_param("ss", $p1, $p2);
-                $res = $stmtSet->execute();
-                if (!$res) {
-                    throw new \Exception("Could not set favorite flag on channel user entries");
-                }
-            }
-            if (!$joinedTx) {
-                parent::commit();
-            }
-        } catch (\Exception $e) {
-
-        } finally {
-            if (isset($stmtReset)) {
-                $stmtReset->close();
-            }
-            if (isset($stmtSet)) {
-                $stmtSet->close();
-            }
-            if (!$joinTx) {
-                parent::close();
-            }
-        }
-
-        return $res;
-    }
-
     public function persist(array $args)
     {
 
         parent::open();
 
-        $stmtChannel = null;
-        $stmtChannelEntry = null;
-        $stmtResetChannelEntry = null;
-        $res = false;
+        $stmt = null;
+        $res = null;
 
         try {
-            $stmtChannel = parent::prepareStatement(self::$SQL_INSERT_CHANNEL);
-            $stmtChannelEntry = parent::prepareStatement(self::$SQL_INSERT_CHANNEL_USER_ENTRY);
-
+            $stmt = parent::prepareStatement(self::$SQL_INSERT_CHANNEL);
             $p1 = $args["title"];
             $p2 = $args["description"];
-            $stmtChannel->bind_param("ss", $p1, $p2);
+            $stmt->bind_param("ss", $p1, $p2);
+
             parent::startTx();
-            $res = $stmtChannel->execute();
-            if (!$res) {
-                throw new \Exception("Could not save channel! ");
-            }
-
-            $p3 = $args["userId"];
-            $p4 = $stmtChannel->insert_id;
-            $p5 = (integer)$args["favorite"];
-
-            $stmtChannelEntry->bind_param("ssi", $p3, $p4, $p5);
-            $res = $stmtChannelEntry->execute();
-            if (!$res) {
-                throw new \Exception("Could not save channel user entry");
-            }
-            // reset all other user entries and set favorite true on the current one
-            if ($p5 === 1) {
-                $stmtResetChannelEntry = parent::prepareStatement(self::$SQL_UPDATE_RESET_FAVORITE_CHANNEL);
-                $p1 = (integer)$args["userId"];
-                $stmtResetChannelEntry->bind_param("s", $p1);
-                $res = $stmtResetChannelEntry->execute();
-                if (!$res) {
-                    throw new \Exception("Could not reset channel user entries favorite flags");
-                }
-            }
+            $stmt->execute();
             parent::commit();
+            $res = $stmt->insert_id;
         } catch (\Exception $e) {
             parent::rollback();
+            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
-            if (isset($stmtChannel)) {
-                $stmtChannel->close();
-            }
-            if (isset($stmtChannelEntry)) {
-                $stmtChannelEntry->close();
-            }
-            if (isset($stmtResetChannelEntry)) {
-                $stmtResetChannelEntry->close();
+            if (isset($stmt)) {
+                $stmt->close();
             }
             parent::close();
         }
-
         return $res;
     }
 
@@ -199,9 +189,32 @@ class ChannelEntityController extends AbstractEntityController
     }
 
     public
-    function delete($entity)
+    function delete($id)
     {
-        // TODO: Implement delete() method.
+        parent::open();
+
+        $stmt = null;
+        $res = 0;
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_DELETE_CHANNEL);
+            $p1 = $id;
+            $stmt->bind_param("i", $p1);
+
+            parent::startTx();
+            $stmt->execute();
+            parent::commit();
+            $res = $stmt->affected_rows;
+        } catch (\Exception $e) {
+            parent::rollback();
+            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->close();
+            }
+            parent::close();
+        }
+        return $res;
     }
 
 }

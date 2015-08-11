@@ -10,6 +10,7 @@ namespace source\view\controller;
 
 
 use \source\common\AbstractRequestController;
+use source\common\DbException;
 use \source\common\InternalErrorException;
 use \source\db\controller\UserEntityController;
 use \source\view\controller\SecurityController;
@@ -70,17 +71,20 @@ class RegistrationRequestController extends AbstractRequestController
 
 
         if ($valid) {
-            if ($userCtrl->isActiveUserExistingWithUsername($args["username"])) {
-                $args["usernameError"] = "Username already in use";
-            } else if ($userCtrl->isActiveUserExistingWithEmail($args["email"])) {
-                $args["usernameError"] = "Email already in use";
-            } else {
-                $user = $userCtrl->persist($args);
-                if (!isset($user)) {
-                    $args["message"] = "Sorry could not save user, please try again";
+            try {
+                if ($userCtrl->isActiveUserExistingWithUsername($args["username"])) {
+                    $args["message"] = "Username already in use";
+                    $args["messageType"] = "warning";
+                } else if ($userCtrl->isActiveUserExistingWithEmail($args["email"])) {
+                    $args["message"] = "Email already in use";
+                    $args["messageType"] = "warning";
                 } else {
+                    $userCtrl->persist($args);
                     $success = true;
                 }
+            } catch (DbException $e) {
+                $args["message"] = "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator";
+                $args["messageType"] = "danger";
             }
         }
 
@@ -89,7 +93,7 @@ class RegistrationRequestController extends AbstractRequestController
             return new RequestControllerResult(false, ViewController::$VIEW_REGISTRATION, $args);
         } // Goe to login page is successful
         else {
-            $args["message"] = "Login successful";
+            $args["message"] = "Registration successful";
             return new RequestControllerResult(true, ViewController::$VIEW_REGISTRATION_SUCCESS, $args);
         }
     }

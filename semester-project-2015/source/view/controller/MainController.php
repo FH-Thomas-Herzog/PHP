@@ -17,13 +17,13 @@ use source\view\model\RequestControllerResult;
 class MainController extends AbstractRequestController
 {
 
-    public static $ACTION_TO_DEFAULT = "actionToDefault";
+    public static $ACTION_TO_CHANNELS = "actionToChannels";
 
     public static $ACTION_TO_PROFILE = "actionToProfile";
 
     public static $ACTION_TO_NEW_CHANNEL = "actionToNewChannel";
 
-    public static $ACTION_TO_SELECTED_CHANNEL = "actionSelectChannel";
+    public static $ACTION_LOGOUT = "ACTION_LOGOUT";
 
     public function __construct()
     {
@@ -35,15 +35,15 @@ class MainController extends AbstractRequestController
         parent::handleRequest();
 
         switch ($this->actionId) {
-            case self::$ACTION_TO_PROFILE:
-                return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_PROFILE);
             case self::$ACTION_TO_NEW_CHANNEL:
                 return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_NEW_CHANNEL);
-            case self::$ACTION_TO_SELECTED_CHANNEL:
-                // TODO: Select the channel and then goe to it
+            case self::$ACTION_TO_CHANNELS:
                 return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
-            case self::$ACTION_TO_DEFAULT:
-                return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
+            case ViewController::$REFRESH_ACTION:
+                return new RequestControllerResult(true, ViewController::$VIEW_MAIN);
+            case self::$ACTION_LOGOUT:
+                $this->securityCtrl->logoutUser();
+                return new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
             default:
                 throw new InternalErrorException("Action with id: '" . $this->actionId . "' not supported by this handler: '" . __CLASS__ . "''");
         }
