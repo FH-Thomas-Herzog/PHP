@@ -32,6 +32,8 @@ class ChannelController extends AbstractRequestController
 
     public static $ACTION_TO_SELECTED_CHANNEL = "actionToSelectedChannel";
 
+    public static $ACTION_POST_MESSAGE = "actionPostMessage";
+
     public function __construct()
     {
         parent::__construct();
@@ -56,6 +58,9 @@ class ChannelController extends AbstractRequestController
             case self::$ACTION_ASSIGN_CHANNEL:
                 $result = $this->handleAssignChannel();
                 break;
+            case self::$ACTION_TO_SELECTED_CHANNEL:
+                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
+                break;
             default:
                 throw new InternalErrorException("Action with id: '" . $this->actionId . "' not supported by this handler: '" . __CLASS__ . "''");
         }
@@ -77,6 +82,9 @@ class ChannelController extends AbstractRequestController
                     "actionToMain" => MainController::$ACTION_TO_CHANNELS
                 );
                 break;
+            case ViewController::$PARTIAL_VIEW_CHANNEL:
+                $args = $this->prepareChannelView();
+                break;
             default:
                 throw new InternalErrorException("View: '" . $nextView . " not supported by this controller: '" . __CLASS__ . "'");
         }
@@ -97,6 +105,21 @@ class ChannelController extends AbstractRequestController
                 "actionAssignChannel" => self::$ACTION_ASSIGN_CHANNEL,
                 "assignedChannels" => $assigned,
                 "availableChannels" => $unassigned
+            );
+        } catch (DbException $e) {
+            var_dump($e);
+        }
+    }
+
+    private function prepareChannelView()
+    {
+        $channelCtrl = new ChannelEntityController();
+        try {
+            $channel = $channelCtrl->getById((integer)parent::getParameter("channelId"));
+            // TODO: load channel messages
+            return array(
+                "actionPostMessage" => self::$ACTION_POST_MESSAGE,
+                "channel" => $channel
             );
         } catch (DbException $e) {
             var_dump($e);

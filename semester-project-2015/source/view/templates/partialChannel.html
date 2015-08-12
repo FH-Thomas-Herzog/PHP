@@ -1,0 +1,151 @@
+<style type="text/css">
+    div.list-group-item-text {
+        margin-top: 10px;
+    }
+
+    span.channel-message {
+        display: block;
+        margin-top: 5px;
+    }
+
+    span.channel-message-label {
+        display: inline-block;
+    }
+
+    hr {
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    hr.message-divider {
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    hr.message-group-divider-first {
+        margin-bottom: 15px;
+    }
+
+    div.list-group {
+        padding: 10px;
+    }
+
+    div.list-group {
+        max-width: 500px;
+    }
+
+    div.channel-message {
+        margin-top: 5px;
+    }
+
+    div.message-actions {
+        display: inline-block;
+        width: 70px;
+    }
+
+    div.message-actions * {
+        float: left;
+        margin: 0px 5px 0px 0px;
+    }
+
+    div.list-group {
+        overflow-y: auto;
+        min-height: 200px;
+        max-height: 600px;
+    }
+
+    a.favorite {
+    }
+
+    a.favorite-selected {
+    }
+
+    .center-horizontal-align {
+        display: table margin-left : auto;
+        margin-right: auto;
+    }
+</style>
+<div id="channelContent" class="child" style="width: 400px; min-height: 150px; max-height: 400px; overflow-y: auto;">
+    <div>
+        <h4 title="hello">#{{channel.title}}</h4>
+        <span style="margin-left: 10px">{{channel.description}}</span>
+    </div>
+    <div>
+        <button onclick="postRequest('viewId=partialChannels&actionId=actionToSelectedChannel')">update
+        </button>
+        <div class="list-group">
+            <hr class="message-group-divider-first">
+            <h4 class="list-group-item-heading">24.12.0001</h4>
+
+            <div class="list-group-item-text">
+                <hr class="message-divider">
+                <span class="channel-message-label">(cchet) 14:30:25</span>
+
+                <div class="channel-message">
+                    <div class="message-actions">
+                        <a href="#" onclick="" aria-label="Open channel"
+                           title="Open channel">
+                                    <span class="glyphicon glyphicon-star-empty"
+                                          style="color:gold; vertical-align:middle;"/>
+                        </a>
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </div>
+                    <div style="display: inline-block">
+                        <span>hello</span></div>
+                </div>
+                <span class="channel-message">again</span>
+                <hr class="message-divider">
+                <span class="channel-message-label">14:30:25</span>
+                <span class="channel-message">hello</span>
+                <span class="channel-message">again</span>
+            </div>
+
+            <hr class="message-group-divider-first">
+            <h4 class="list-group-item-heading">24.12.0001</h4>
+
+            <div class="list-group-item-text">
+                <hr class="message-divider">
+                <span class="channel-message-label">(cchet) 14:30:25</span>
+
+                <div class="channel-message">
+                    <div class="message-actions">
+                        <a href="#" onclick="" aria-label="Open channel"
+                           title="Open channel">
+                                    <span class="glyphicon glyphicon-star-empty"
+                                          style="color:gold; vertical-align:middle;"/>
+                        </a>
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </div>
+                    <div style="display: inline-block">
+                        <span>hello</span></div>
+                </div>
+                <hr class="message-divider">
+                <span class="channel-message-label">14:30:25</span>
+                <span class="channel-message">hello</span>
+                <span class="channel-message">again</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="messageBox" class="child" style="width: 400px">
+    <div class="input-group">
+        <ul class="dropdown-menu dropdown-menu-top" aria-labelledby="dLabel" style="top: -75px; ">
+            <li>save me</li>
+            <li role="separator" class="divider"></li>
+            <li>clear me</li>
+        </ul>
+        <a class="input-group-addon" id="messageLabel" data-toggle="dropdown" aria-haspopup="true"
+           aria-expanded="false">
+            <span class="glyphicon glyphicon-text-background" aria-hidden="true"/>
+        </a>
+        <textarea id="messageTextArea" rows="3" class="form-control"></textarea>
+    </div>
+</div>
+<script type="text/javascript">
+    //$('#messageTextArea').onkeyup(function (evt) {
+    //    if ((evt.keyCode == 13) && (!evt.shiftKey)) {
+    //        var msg = $('#messageTextArea').value();
+    //        postUpdateTarget('channelContent', 'actionId={{actionPostMessage}}&viewId={{viewId}}&channelId{{channel.id}}&message=' + msg);
+    //    }
+    //});
+</script>

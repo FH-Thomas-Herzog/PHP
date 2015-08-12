@@ -35,6 +35,10 @@ class ChannelEntityController extends AbstractEntityController
         " GROUP BY c.title, c.description" .
         " ORDER BY c.creation_date desc";
 
+    private static $SQL_SELECT_CHANNEL_BY_ID =
+        "SELECT * FROM channel " .
+        "WHERE id = ?";
+
     public function __construct()
     {
         parent::__construct();
@@ -42,7 +46,28 @@ class ChannelEntityController extends AbstractEntityController
 
     public function getById($id)
     {
-        // TODO: Implement getById() method.
+        parent::open();
+
+        $res = array();
+        $stmt = null;
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_SELECT_CHANNEL_BY_ID);
+            $p1 = (integer)$id;
+            $stmt->bind_param("s", $p1);
+            $stmt->execute();
+            $res = $stmt->get_result()->fetch_object();
+        } catch (\Exception $e) {
+            throw new DbException("Error on executing query: '" . self::$SQL_SELECT_ASSIGNED_CHANNELS_WITH_MSG_COUNT . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->free_result();
+                $stmt->close();
+            }
+            parent::close();
+        }
+
+        return $res;
     }
 
     public function getAll()
@@ -148,7 +173,30 @@ class ChannelEntityController extends AbstractEntityController
 
     public function deleteById($id)
     {
-        // TODO: Implement deleteById() method.
+        parent::open();
+
+        $stmt = null;
+        $res = 0;
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_DELETE_CHANNEL);
+            $p1 = $id;
+            $stmt->bind_param("i", $p1);
+
+            parent::startTx();
+            $stmt->execute();
+            parent::commit();
+            $res = $stmt->affected_rows;
+        } catch (\Exception $e) {
+            parent::rollback();
+            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->close();
+            }
+            parent::close();
+        }
+        return $res;
     }
 
     public function persist(array $args)
@@ -191,30 +239,6 @@ class ChannelEntityController extends AbstractEntityController
     public
     function delete($id)
     {
-        parent::open();
-
-        $stmt = null;
-        $res = 0;
-
-        try {
-            $stmt = parent::prepareStatement(self::$SQL_DELETE_CHANNEL);
-            $p1 = $id;
-            $stmt->bind_param("i", $p1);
-
-            parent::startTx();
-            $stmt->execute();
-            parent::commit();
-            $res = $stmt->affected_rows;
-        } catch (\Exception $e) {
-            parent::rollback();
-            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
-        } finally {
-            if (isset($stmt)) {
-                $stmt->close();
-            }
-            parent::close();
-        }
-        return $res;
     }
 
 }

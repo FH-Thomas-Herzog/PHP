@@ -34,6 +34,9 @@ class ViewController extends AbstractRequestController
 
     public static $PARTIAL_VIEW_NEW_CHANNEL = "partialNewChannel";
 
+    public static $PARTIAL_VIEW_CHANNEL = "partialChannel";
+
+
     public static $VIEW_ID = "viewId";
 
     public static $REFRESH_ACTION = "refreshAction";
@@ -97,6 +100,10 @@ class ViewController extends AbstractRequestController
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
                 $controller = new ChannelController();
                 break;
+            // the selected channel view actions
+            case self::$PARTIAL_VIEW_CHANNEL:
+                $controller = new ChannelController();
+                break;
             default:
                 throw new InternalErrorException("Unknown view with id: '" . $this->viewId . "' detected'");
         }
@@ -133,6 +140,9 @@ class ViewController extends AbstractRequestController
                 $controller = new ChannelController();
                 break;
             case self::$PARTIAL_VIEW_CHANNELS:
+                $controller = new ChannelController();
+                break;
+            case self::$PARTIAL_VIEW_CHANNEL:
                 $controller = new ChannelController();
                 break;
             default:

@@ -1,33 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/source/view/templates/main.html" line="54" mnemonic="7" />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="e7f548c1-6e11-4ab2-93b9-62494bf86448" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/ajax-loader.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/fonts/glyphicons-halflings-regular.eot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/fonts/glyphicons-halflings-regular.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/fonts/glyphicons-halflings-regular.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/fonts/glyphicons-halflings-regular.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/fonts/glyphicons-halflings-regular.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/loading-overlay.min.js" />
-      <change type="DELETED" beforePath="D:\repositories\Github\PHP\semester-project-2015\source\view\controller\ProfileController.php" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/common/AbstractRequestController.php" afterPath="$PROJECT_DIR$/source/common/AbstractRequestController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/controller/ActionController.php" afterPath="$PROJECT_DIR$/source/view/controller/ActionController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/view/templates/partialChannel.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/controller/ChannelController.php" afterPath="$PROJECT_DIR$/source/view/controller/ChannelController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/db/controller/ChannelEntityController.php" afterPath="$PROJECT_DIR$/source/db/controller/ChannelEntityController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/db/controller/ChannelUserEntryEntityController.php" afterPath="$PROJECT_DIR$/source/db/controller/ChannelUserEntryEntityController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/controller/LoginRequestController.php" afterPath="$PROJECT_DIR$/source/view/controller/LoginRequestController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/controller/MainController.php" afterPath="$PROJECT_DIR$/source/view/controller/MainController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/common/Objects.php" afterPath="$PROJECT_DIR$/source/common/Objects.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/controller/RegistrationRequestController.php" afterPath="$PROJECT_DIR$/source/view/controller/RegistrationRequestController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/model/RequestControllerResult.php" afterPath="$PROJECT_DIR$/source/view/model/RequestControllerResult.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/controller/ViewController.php" afterPath="$PROJECT_DIR$/source/view/controller/ViewController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/public/css/bootstrap.min.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/templates/main.html" afterPath="$PROJECT_DIR$/source/view/templates/main.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/templates/partialChannels.html" afterPath="$PROJECT_DIR$/source/view/templates/partialChannels.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/templates/root-template.html" afterPath="$PROJECT_DIR$/source/view/templates/root-template.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="semester-project-2015.iws" />
@@ -53,7 +33,123 @@
     <favorites_list name="semester-project-2015" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="ChannelController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/view/controller/ChannelController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="7.6538463">
+              <caret line="85" column="52" selection-start-line="85" selection-start-column="52" selection-end-line="85" selection-end-column="52" />
+              <folding>
+                <element signature="e#126#170#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ChannelEntityController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelEntityController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.884615">
+              <caret line="57" column="29" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
+              <folding>
+                <marker date="1439396920235" expanded="true" signature="270:343" placeholder="SELECT id FR..channel..." />
+                <marker date="1439396920235" expanded="true" signature="389:442" placeholder="INSERT INTO ..." />
+                <marker date="1439396920235" expanded="true" signature="488:528" placeholder="DELETE FROM ..." />
+                <marker date="1439396920235" expanded="true" signature="607:1014" placeholder="SELECT COUNT..channel..." />
+                <marker date="1439396920235" expanded="true" signature="1095:1445" placeholder="SELECT c.id,..channel..." />
+                <marker date="1439396920235" expanded="true" signature="1505:1526" placeholder="SELECT * FRO..channel..." />
+                <marker date="1439396920235" expanded="true" signature="1505:1552" placeholder="SELECT * FRO..channel..." />
+                <marker date="1439396920235" expanded="true" signature="1505:1553" placeholder="SELECT * FRO..channel..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/view/templates/main.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-24.384615">
+              <caret line="110" column="31" selection-start-line="110" selection-start-column="31" selection-end-line="110" selection-end-column="31" />
+              <folding>
+                <element signature="n#style#0;n#section#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ViewController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/view/controller/ViewController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-19.615385">
+              <caret line="143" column="22" selection-start-line="143" selection-start-column="22" selection-end-line="143" selection-end-column="22" />
+              <folding>
+                <element signature="e#125#169#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="partialChannels.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannels.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-16.346153">
+              <caret line="49" column="114" selection-start-line="49" selection-start-column="71" selection-end-line="49" selection-end-column="114" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#div#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="partialChannel.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannel.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.48065174">
+              <caret line="71" column="10" selection-start-line="71" selection-start-column="10" selection-end-line="71" selection-end-column="10" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#ul#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="root-template.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/view/templates/root-template.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-13.076923">
+              <caret line="20" column="9" selection-start-line="15" selection-start-column="8" selection-end-line="20" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/view/templates/login.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.846154">
+              <caret line="54" column="23" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -69,7 +165,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/source/common/BaseObject.php" />
         <option value="$PROJECT_DIR$/source/common/SingletonObject.php" />
         <option value="$PROJECT_DIR$/source/common/Object.php" />
         <option value="$PROJECT_DIR$/source/common/ObjectUtil.php" />
@@ -88,7 +183,6 @@
         <option value="$PROJECT_DIR$/source/view/model/MainNavModel.php" />
         <option value="$PROJECT_DIR$/source/view/controller/ProfileHandler.php" />
         <option value="$PROJECT_DIR$/source/view/controller/ProfileController.php" />
-        <option value="$PROJECT_DIR$/source/view/templates/login.html" />
         <option value="$PROJECT_DIR$/source/view/templates/channels.html" />
         <option value="$PROJECT_DIR$/source/db/controller/ChannelController.php" />
         <option value="$PROJECT_DIR$/source/view/controller/SessionController.php" />
@@ -105,7 +199,6 @@
         <option value="$PROJECT_DIR$/public/js/loading-overlay.min.js" />
         <option value="$PROJECT_DIR$/public/css/loading-overlay.css" />
         <option value="$PROJECT_DIR$/source/view/templates/root-template.html" />
-        <option value="$PROJECT_DIR$/source/view/templates/main.html" />
         <option value="$PROJECT_DIR$/source/common/AbstractRequestController.php" />
         <option value="$PROJECT_DIR$/source/view/controller/ActionController.php" />
         <option value="$PROJECT_DIR$/source/view/controller/RegistrationRequestController.php" />
@@ -115,11 +208,14 @@
         <option value="$PROJECT_DIR$/source/view/controller/LoginRequestController.php" />
         <option value="$PROJECT_DIR$/source/view/controller/MainController.php" />
         <option value="$PROJECT_DIR$/public/start.php" />
-        <option value="$PROJECT_DIR$/source/db/controller/ChannelEntityController.php" />
         <option value="$PROJECT_DIR$/source/db/controller/ChannelUserEntryEntityController.php" />
-        <option value="$PROJECT_DIR$/source/view/templates/partialChannels.html" />
-        <option value="$PROJECT_DIR$/source/view/controller/ChannelController.php" />
         <option value="$PROJECT_DIR$/source/view/controller/ViewController.php" />
+        <option value="$PROJECT_DIR$/source/view/templates/partialChannels.html" />
+        <option value="$PROJECT_DIR$/source/view/templates/login.html" />
+        <option value="$PROJECT_DIR$/source/view/templates/main.html" />
+        <option value="$PROJECT_DIR$/source/db/controller/ChannelEntityController.php" />
+        <option value="$PROJECT_DIR$/source/view/controller/ChannelController.php" />
+        <option value="$PROJECT_DIR$/source/view/templates/partialChannel.html" />
       </list>
     </option>
   </component>
@@ -447,11 +543,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\repositories\Github\PHP\semester-project-2015\source\view\templates" />
       <recent name="D:\repositories\Github\PHP\semester-project-2015\public\images" />
       <recent name="D:\repositories\Github\PHP\semester-project-2015\public\fonts" />
       <recent name="D:\repositories\Github\PHP\semester-project-2015\public\css" />
       <recent name="D:\repositories\Github\PHP\semester-project-2015\public\js" />
-      <recent name="D:\repositories\Github\PHP\semester-project-2015\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\repositories\Github\PHP\semester-project-2015\source\common\utils" />
@@ -609,7 +705,13 @@
       <option name="project" value="LOCAL" />
       <updated>1439292051861</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="- added glyphonics icons&#10;- added refactored AbstractRequestController and added function prepareView which provides the parameters for the templates by the actual controller implementation. Renamed handleRequest to handleAction because got split to handleAction and prepareView&#10;- Refactored VireController which delegates to the controller on handleAction and prepareView. Added function handleRequest which is unique for this controller type&#10;- Assign, remove assigned channel and set favorite are working now on channels view&#10;- added ajax status on ajax requests for main view">
+      <created>1439380599809</created>
+      <option name="number" value="00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1439380599809</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TodoView">
@@ -634,12 +736,12 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32936507" sideWeight="0.4943128" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18550107" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19936034" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22692725" sideWeight="0.5078125" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2489339" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.0" sideWeight="0.47916666" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.025612472" sideWeight="0.47916666" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -676,7 +778,8 @@
     <MESSAGE value="- further development on channel &#10;- some restructuring of view controller stuff and how actions are handled&#10;- some client side stuff&#10;- save of new channel almost finished" />
     <MESSAGE value="- login and logout are working now properly&#10;- redirect to login page if user not logged anymore on start page&#10;- redirect user to start page is already logged in&#10;- channels retrieval working now. Actions are missing&#10;- creation of channels works now" />
     <MESSAGE value="- added glyphonics icons&#10;- added refactored AbstractRequestController and added function prepareView which provides the parameters for the templates by the actual controller implementation. Renamed handleRequest to handleAction because got split to handleAction and prepareView&#10;- Refactored VireController which delegates to the controller on handleAction and prepareView. Added function handleRequest which is unique for this controller type&#10;- Assign, remove assigned channel and set favorite are working now on channels view&#10;- added ajax status on ajax requests for main view" />
-    <option name="LAST_COMMIT_MESSAGE" value="- added glyphonics icons&#10;- added refactored AbstractRequestController and added function prepareView which provides the parameters for the templates by the actual controller implementation. Renamed handleRequest to handleAction because got split to handleAction and prepareView&#10;- Refactored VireController which delegates to the controller on handleAction and prepareView. Added function handleRequest which is unique for this controller type&#10;- Assign, remove assigned channel and set favorite are working now on channels view&#10;- added ajax status on ajax requests for main view" />
+    <MESSAGE value="- started development of channel view which holds the messages within a channel.&#10;- switching to this view works, but message load is missing" />
+    <option name="LAST_COMMIT_MESSAGE" value="- started development of channel view which holds the messages within a channel.&#10;- switching to this view works, but message load is missing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -687,7 +790,7 @@
           <option name="timeStamp" value="56" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="131" />
+      <option name="time" value="132" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -805,7 +908,7 @@
         <state vertical-scroll-proportion="-13.730769">
           <caret line="26" column="37" selection-start-line="26" selection-start-column="37" selection-end-line="26" selection-end-column="37" />
           <folding>
-            <element signature="e#123#153#0#PHP" expanded="true" />
+            <element signature="e#123#153#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -846,32 +949,6 @@
         <state vertical-scroll-proportion="0.1159618">
           <caret line="7" column="44" selection-start-line="7" selection-start-column="44" selection-end-line="7" selection-end-column="44" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/view/templates/root-template.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.10608204">
-          <caret line="5" column="70" selection-start-line="5" selection-start-column="70" selection-end-line="5" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/view/templates/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4936351">
-          <caret line="41" column="24" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/view/templates/main.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.34653464">
-          <caret line="63" column="45" selection-start-line="63" selection-start-column="45" selection-end-line="63" selection-end-column="45" />
-          <folding>
-            <element signature="n#style#0;n#section#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -994,7 +1071,7 @@
         <state vertical-scroll-proportion="-22.884615">
           <caret line="56" column="45" selection-start-line="56" selection-start-column="45" selection-end-line="56" selection-end-column="45" />
           <folding>
-            <element signature="e#125#169#0#PHP" expanded="true" />
+            <element signature="e#125#169#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1012,7 +1089,7 @@
         <state vertical-scroll-proportion="-6.3076925">
           <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
           <folding>
-            <element signature="e#126#170#0#PHP" expanded="true" />
+            <element signature="e#126#170#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1022,39 +1099,7 @@
         <state vertical-scroll-proportion="0.33333334">
           <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding>
-            <element signature="e#450#480#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelEntityController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5035545">
-          <caret line="30" column="22" selection-start-line="30" selection-start-column="22" selection-end-line="30" selection-end-column="22" />
-          <folding>
-            <marker date="1439379020700" expanded="true" signature="-1:-1" placeholder="SELECT id FR..channel..." />
-            <marker date="1439379020700" expanded="true" signature="-1:-1" placeholder="INSERT INTO ..." />
-            <marker date="1439379020700" expanded="true" signature="-1:-1" placeholder="DELETE FROM ..." />
-            <marker date="1439379020700" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..channel..." />
-            <marker date="1439379020700" expanded="true" signature="-1:-1" placeholder="SELECT c.id,..channel..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannels.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.5710901">
-          <caret line="78" column="17" selection-start-line="78" selection-start-column="17" selection-end-line="78" selection-end-column="17" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#!!top" expanded="true" />
+            <element signature="e#450#480#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1083,20 +1128,99 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/view/controller/ViewController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14099526">
-          <caret line="36" column="38" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
+        <state vertical-scroll-proportion="-19.615385">
+          <caret line="143" column="22" selection-start-line="143" selection-start-column="22" selection-end-line="143" selection-end-column="22" />
           <folding>
             <element signature="e#125#169#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/source/view/templates/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.846154">
+          <caret line="54" column="23" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/view/templates/root-template.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.076923">
+          <caret line="20" column="9" selection-start-line="15" selection-start-column="8" selection-end-line="20" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelEntityController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.884615">
+          <caret line="57" column="29" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
+          <folding>
+            <marker date="1439396920235" expanded="true" signature="270:343" placeholder="SELECT id FR..channel..." />
+            <marker date="1439396920235" expanded="true" signature="389:442" placeholder="INSERT INTO ..." />
+            <marker date="1439396920235" expanded="true" signature="488:528" placeholder="DELETE FROM ..." />
+            <marker date="1439396920235" expanded="true" signature="607:1014" placeholder="SELECT COUNT..channel..." />
+            <marker date="1439396920235" expanded="true" signature="1095:1445" placeholder="SELECT c.id,..channel..." />
+            <marker date="1439396920235" expanded="true" signature="1505:1526" placeholder="SELECT * FRO..channel..." />
+            <marker date="1439396920235" expanded="true" signature="1505:1552" placeholder="SELECT * FRO..channel..." />
+            <marker date="1439396920235" expanded="true" signature="1505:1553" placeholder="SELECT * FRO..channel..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/source/view/controller/ChannelController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.56398106">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        <state vertical-scroll-proportion="7.6538463">
+          <caret line="85" column="52" selection-start-line="85" selection-start-column="52" selection-end-line="85" selection-end-column="52" />
           <folding>
             <element signature="e#126#170#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannels.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.346153">
+          <caret line="49" column="114" selection-start-line="49" selection-start-column="71" selection-end-line="49" selection-end-column="114" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/view/templates/main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-24.384615">
+          <caret line="110" column="31" selection-start-line="110" selection-start-column="31" selection-end-line="110" selection-end-column="31" />
+          <folding>
+            <element signature="n#style#0;n#section#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannel.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48065174">
+          <caret line="71" column="10" selection-start-line="71" selection-start-column="10" selection-end-line="71" selection-end-column="10" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ul#0;n#div#0;n#div#1;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

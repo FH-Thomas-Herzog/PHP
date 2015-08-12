@@ -12,8 +12,8 @@
     }
 
     .child {
-        display: table-cell;
-        vertical-align: middle;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     div.row-buffer {
@@ -44,18 +44,19 @@
 <script type="text/javascript">
 
     $('#ajaxLoaderImage').hide();
-    var postRequest = function (params) {
+    var postUpdateTarget = function (targetId, params) {
+        var target = $('#' + + targetId);
         $.ajax({
             async: true,
             type: "POST",
             url: "start.php",
             data: params,
             beforeSend: function () {
-                $('#content').empty();
+                target.empty();
                 $('#ajaxLoaderImage').show();
             },
             success: function (data) {
-                $("#content").html(data);
+                target.html(data);
             },
             error: function (xhr, status, error) {
                 // TODO: Handle error here
@@ -64,6 +65,9 @@
                 $('#ajaxLoaderImage').hide();
             }
         });
+    }
+    var postRequest = function (params) {
+        postUpdateTarget('content', params);
     }
     window.onload = function () {
         postRequest("actionId={{actionToChannels}}&viewId={{viewId}}");
@@ -87,10 +91,10 @@
                     <li class="divider"></li>
                     <li class="dropdown-header">Actions</li>
                     <li><a href="#" onclick="postRequest('actionId={{actionToNewChannel}}&viewId={{viewId}}');">New
-                        Channel</a></li>
+                    </a></li>
                     <li>
-                        <a href="#" onclick="postRequest('actionId={{actionToChannels}}&viewId={{viewId}}')">List
-                            Channels</a>
+                        <a href="#" onclick="postRequest('actionId={{actionToChannels}}&viewId={{viewId}}')">Show all
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -105,10 +109,8 @@
 </nav>
 
 <section style="margin: 10px;">
-    <div class="parent">
-        <div id="content" class="child">
-        </div>
-        <img id="ajaxLoaderImage" src="images/ajax-loader.gif">
+    <div id="content" class="parent">
     </div>
+    <img id="ajaxLoaderImage" src="images/ajax-loader.gif">
 </section>
 {%endblock%}
