@@ -1,27 +1,66 @@
 <!-- Table -->
+<style>
+    .table-column-center {
+        text-align: center;
+    }
+</style>
+<div class="text-center">
+    <div class="alert alert-{{messageType}} alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <strong>{{message}}</strong>
+    </div>
+</div>
 <div class="panel panel-default">
     <div class="panel-heading">Assigned Channels</div>
     <div class="table-responsive">
         <table class="table">
             <thead>
             <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Messages</th>
-                <th>Actions</th>
+                <th class="table-column-center">Title</th>
+                <th class="table-column-center">Description</th>
+                <th class="table-column-center">Messages</th>
+                <th class="table-column-center">Actions</th>
             </tr>
             </thead>
             <tbody>
             {% for channel in assignedChannels %}
             <tr>
-                <td>{{channel.title}}</td>
-                <td>{{channel.description}}</td>
-                <td>{{channel.msgCount}}</td>
-                <td>action</td>
+                <td class="table-column-center">
+                    {% if channel.favorite == true %}
+                    <span class="glyphicon glyphicon-star" style="color:darkorange;"/>
+                    {% endif %}
+                    {{channel.title}}
+                </td>
+                <td class="table-column-center">{{channel.description}}</td>
+                <td class="table-column-center">{{channel.msgCount}}</td>
+                <td class="table-column-center">
+                    <a href="#" id="deleteAssignment_{{loop.index}}"
+                       onclick="postRequest('viewId={{viewId}}&actionId={{actionRemoveAssignedChannel}}&channelId={{channel.id}}')"
+                       aria-label="Remove assignment"
+                       title="Remove assignment" style="margin-right: 10px;">
+                        <span class="glyphicon glyphicon-remove" style="color:red; vertical-align:middle;"/>
+                    </a>
+                    <a href="#" id="openChannel_{{loop.index}}"
+                       onclick="postRequest('viewId={{viewId}}&actionId={{actionToSelectedChannel}}&channelId={{channel.id}}')"
+                       aria-label="Open channel"
+                       title="Open channel" style="margin-right: 10px;">
+                        <span class="glyphicon glyphicon-eye-open" style="color:green; vertical-align:middle;"/>
+                    </a>
+                    {% if channel.favorite == false %}
+                    <a href="#" id="setFavorite_{{loop.index}}"
+                       onclick="postRequest('viewId={{viewId}}&actionId={{actionSaveFavoriteChannel}}&channelId={{channel.id}}')"
+                       aria-label="Set favorite channel"
+                       title="Set favorite channel" style="margin-right: 10px;">
+                        <span class="glyphicon glyphicon-star-empty"
+                              style="color:darkorange; vertical-align:middle;"/>
+                    </a>
+                    {% endif %}
+                </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4" align="center">No channels available yet</td>
+                <td colspan="4" class="table-column-center">No channels available yet</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -34,21 +73,27 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Actions</th>
+                <th class="table-column-center">Title</th>
+                <th class="table-column-center">Description</th>
+                <th class="table-column-center">Actions</th>
             </tr>
             </thead>
             <tbody>
             {% for channel in availableChannels %}
             <tr>
-                <td>{{channel.title}}</td>
-                <td>{{channel.description}}</td>
-                <td>action</td>
+                <td class="table-column-center">{{channel.title}}</td>
+                <td class="table-column-center">{{channel.description}}</td>
+                <td class="table-column-center">
+                    <a href="#" id="assignChannel_{{loop.index}}"
+                       onclick="postRequest('viewId={{viewId}}&actionId={{actionAssignChannel}}&channelId={{channel.id}}')"
+                       aria-label="Open channel"
+                       title="Open channel" style="margin-right: 10px;">
+                        <span class="glyphicon glyphicon-plus" style="color:green; vertical-align:middle;"/>
+                    </a></td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4" align="center">You are assigned to all channels</td>
+                <td colspan="4" class="table-column-center">You are assigned to all channels</td>
             </tr>
             {% endfor %}
             </tbody>

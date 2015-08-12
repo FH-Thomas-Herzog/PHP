@@ -68,7 +68,7 @@ abstract class Object
      */
     public function __toString()
     {
-        return "No string representation defined (" . get_class($this) . ")";
+        return "No string representation defined '" . get_class($this) . "''";
     }
 }
 

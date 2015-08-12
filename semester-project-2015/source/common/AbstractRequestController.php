@@ -22,7 +22,7 @@ abstract class AbstractRequestController extends BaseObject
     protected $viewId;
     protected $actionId;
 
-    public function handleRequest()
+    public function __construct()
     {
         if ($_SERVER["REQUEST_METHOD"] === "GET") {
             $this->postRequest = false;
@@ -34,6 +34,10 @@ abstract class AbstractRequestController extends BaseObject
         $this->sessionCtrl = SessionController::getInstance();
         $this->securityCtrl = SecurityController::getInstance();
     }
+
+    public abstract function handleAction();
+
+    public abstract function prepareView($nextView);
 
     protected function getParameter($name)
     {

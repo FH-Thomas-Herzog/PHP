@@ -18,9 +18,9 @@ class ChannelUserEntryEntityController extends AbstractEntityController
 
     private static $SQL_UPDATE_RESET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=0 WHERE favorite_flag=1 AND user_id=?";
 
-    private static $SQL_UPDATE_SET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=1 WHERE channel_id=? AND user_id=?";
+    private static $SQL_UPDATE_SET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=1 WHERE user_id=? AND channel_id=?";
 
-    private static $SQL_DELETE_CHANNEL_USER_ENTRY = "DELETE FROM channel_user_entry WHERE channel_id = ? AND user_id = ?";
+    private static $SQL_DELETE_CHANNEL_USER_ENTRY = "DELETE FROM channel_user_entry WHERE user_id = ? AND channel_id = ?";
 
     public function __construct()
     {
@@ -37,25 +37,33 @@ class ChannelUserEntryEntityController extends AbstractEntityController
 
     }
 
-    public function resetUserEntryFavoriteFlags($userId)
+    public function setFavoriteChannel($userId, $channelId)
     {
 
         parent::open();
 
-        $stmt = null;
+        $stmtReset = null;
 
         try {
-            $stmt = parent::prepareStatement(self::$SQL_UPDATE_RESET_FAVORITE_CHANNEL);
+            $stmtReset = parent::prepareStatement(self::$SQL_UPDATE_RESET_FAVORITE_CHANNEL);
             $p1 = (integer)$userId;
-            $stmt->bind_param("ii", $p1);
-            $stmt->execute();
+            $stmtReset->bind_param("i", $p1);
+            $stmtSet = parent::prepareStatement(self::$SQL_UPDATE_SET_FAVORITE_CHANNEL);
+            $p2 = (integer)$channelId;
+            $stmtSet->bind_param("ii", $p1, $p2);
+            parent::startTx();
+            $stmtReset->execute();
+            $stmtSet->execute();
             parent::commit();
         } catch (\Exception $e) {
             parent::rollback();
-            throw new DbException("Error on executing query: '" . self::$SQL_INSERT_CHANNEL_USER_ENTRY . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+            throw new DbException("Error on executing " . __CLASS__ . "#setFavoriteChannel(userId, channelId)" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
-            if (isset($stmt)) {
-                $stmt->close();
+            if (isset($stmtReset)) {
+                $stmtReset->close();
+            }
+            if (isset($stmtSet)) {
+                $stmtSet->close();
             }
             parent::close();
         }
@@ -63,7 +71,30 @@ class ChannelUserEntryEntityController extends AbstractEntityController
 
     public function deleteById($id)
     {
-        // TODO: Implement deleteById() method.
+        parent::open();
+
+        $stmt = null;
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_DELETE_CHANNEL_USER_ENTRY);
+            $p1 = (integer)$id["userId"];
+            $p2 = (integer)$id["channelId"];
+            $stmt->bind_param("ii", $p1, $p2);
+            parent::startTx();
+            $stmt->execute();
+            parent::commit();
+        } catch (\Exception $e) {
+            parent::rollback();
+            throw new DbException("Error on executing query: '" . self::$SQL_DELETE_CHANNEL_USER_ENTRY . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->close();
+            }
+            if (isset($stmtSet)) {
+                $stmtSet->close();
+            }
+            parent::close();
+        }
     }
 
     public function persist(array $args)

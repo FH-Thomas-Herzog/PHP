@@ -26,23 +26,45 @@ class LoginRequestController extends AbstractRequestController
         parent::__construct();
     }
 
-    public function handleRequest()
+    public function handleAction()
     {
-        parent::handleRequest();
+        $result = null;
 
         switch ($this->actionId) {
             // goes to registration page
             case self::$ACTION_REGISTRATION:
-                return new RequestControllerResult(true, ViewController::$VIEW_REGISTRATION);
+                $result = new RequestControllerResult(true, ViewController::$VIEW_REGISTRATION);
+                break;
             // logs user in and goes to start
             case self::$ACTION_LOGIN:
-                return $this->handleLogin();
-            // handle unknown action
+                $result = $this->handleLogin();
+                break;// handle unknown action
             case ViewController::$REFRESH_ACTION:
-                return new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
+                $result = new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
+                break;
             default:
                 throw new InternalErrorException("Action: '" . $this->actionId . "' cannot be handled by: '" . __CLASS__ . "''");
         }
+
+        return $result;
+    }
+
+    public function prepareView($nextView)
+    {
+        $args = array();
+
+        switch ((string)$nextView) {
+            case ViewController::$VIEW_LOGIN:
+                $args = array(
+                    "actionLogin" => LoginRequestController::$ACTION_LOGIN,
+                    "actionRegister" => LoginRequestController::$ACTION_REGISTRATION
+                );
+                break;
+            default:
+                throw new InternalErrorException("View: '" . $nextView . " not supported by this controller: '" . __CLASS__ . "'");
+        }
+
+        return $args;
     }
 
     private function handleLogin()
@@ -51,7 +73,7 @@ class LoginRequestController extends AbstractRequestController
         $password = parent::getParameter("password");
 
         if (!isset($username) || (!isset($password))) {
-            return new RequestControllerResult();
+            return new RequestControllerResult(false, ViewController::$VIEW_LOGIN);
         }
 
         try {
@@ -66,7 +88,7 @@ class LoginRequestController extends AbstractRequestController
 
                     ));
                 }
-                return new RequestControllerResult($valid, ViewController::$VIEW_MAIN, null);
+                return new RequestControllerResult($valid, ViewController::$VIEW_START);
             } else {
                 return new RequestControllerResult(false, ViewController::$VIEW_LOGIN, array(
                     "message" => "Username or password wrong. Please try again",

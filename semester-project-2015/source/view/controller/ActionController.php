@@ -30,10 +30,8 @@ class ActionController extends AbstractRequestController
         $this->sesionCtrl = SessionController::getInstance();
     }
 
-    public function handleRequest()
+    public function handleAction()
     {
-        parent::handleRequest();
-
         $controller = null;
 
         try {
@@ -43,9 +41,16 @@ class ActionController extends AbstractRequestController
                 default:
                     break;
             }
-        }catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             // Handle error
             return false;
         }
+
     }
+
+    public function prepareView($nextView)
+    {
+
+    }
+
 }

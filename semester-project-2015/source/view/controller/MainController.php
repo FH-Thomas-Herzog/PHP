@@ -10,7 +10,6 @@ namespace source\view\controller;
 
 
 use source\common\AbstractRequestController;
-use source\common\BaseObject;
 use source\common\InternalErrorException;
 use source\view\model\RequestControllerResult;
 
@@ -30,22 +29,50 @@ class MainController extends AbstractRequestController
         parent::__construct();
     }
 
-    public function handleRequest()
+    public function handleAction()
     {
-        parent::handleRequest();
+        $result = null;
 
         switch ($this->actionId) {
             case self::$ACTION_TO_NEW_CHANNEL:
-                return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_NEW_CHANNEL);
+                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_NEW_CHANNEL);
+                break;
             case self::$ACTION_TO_CHANNELS:
-                return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
+                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
+                break;
             case ViewController::$REFRESH_ACTION:
-                return new RequestControllerResult(true, ViewController::$VIEW_MAIN);
+                $result = new RequestControllerResult(true, ViewController::$VIEW_MAIN);
+                break;
             case self::$ACTION_LOGOUT:
                 $this->securityCtrl->logoutUser();
-                return new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
+                $result = new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
+                break;
             default:
                 throw new InternalErrorException("Action with id: '" . $this->actionId . "' not supported by this handler: '" . __CLASS__ . "''");
         }
+
+        return $result;
     }
+
+    public function prepareView($nextView)
+    {
+        $args = array();
+        switch ((string)$nextView) {
+            case ViewController::$VIEW_START:
+                header('Location: start.php');
+                break;
+            case ViewController::$VIEW_MAIN:
+                $args = array(
+                    "actionToNewChannel" => MainController::$ACTION_TO_NEW_CHANNEL,
+                    "actionToChannels" => MainController::$ACTION_TO_CHANNELS,
+                    "actionLogout" => MainController::$ACTION_LOGOUT
+                );
+                break;
+            default:
+                throw new InternalErrorException("View: '" . $nextView . " not supported by this controller: '" . __CLASS__ . "'");
+        }
+
+        return $args;
+    }
+
 }

@@ -31,19 +31,37 @@
     label {
         margin-right: 10px;
     }
+
+    #ajaxLoaderImage {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
 </style>
 <script type="text/javascript">
+
+    $('#ajaxLoaderImage').hide();
     var postRequest = function (params) {
         $.ajax({
             async: true,
             type: "POST",
             url: "start.php",
             data: params,
+            beforeSend: function () {
+                $('#content').empty();
+                $('#ajaxLoaderImage').show();
+            },
             success: function (data) {
                 $("#content").html(data);
             },
             error: function (xhr, status, error) {
                 // TODO: Handle error here
+            },
+            complete: function () {
+                $('#ajaxLoaderImage').hide();
             }
         });
     }
@@ -86,10 +104,11 @@
     </div>
 </nav>
 
-<section>
+<section style="margin: 10px;">
     <div class="parent">
         <div id="content" class="child">
         </div>
+        <img id="ajaxLoaderImage" src="images/ajax-loader.gif">
     </div>
 </section>
 {%endblock%}

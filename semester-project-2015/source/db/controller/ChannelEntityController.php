@@ -20,7 +20,7 @@ class ChannelEntityController extends AbstractEntityController
     private static $SQL_DELETE_CHANNEL = "DELETE FROM channel WHERE channel_id = ?";
 
     private static $SQL_SELECT_ASSIGNED_CHANNELS_WITH_MSG_COUNT =
-        "SELECT COUNT(cm.id) AS msgCount, c.title, c.description FROM channel c " .
+        "SELECT COUNT(cm.id) AS msgCount, c.id, c.title, c.description, cue.favorite_flag AS favorite FROM channel c " .
         " LEFT OUTER JOIN channel_message cm ON cm.channel_id = c.id " .
         " INNER JOIN channel_user_entry cue ON cue.channel_id = c.id " .
         " WHERE cue.user_id = ?" .
@@ -28,7 +28,7 @@ class ChannelEntityController extends AbstractEntityController
         " ORDER BY cue.favorite_flag DESC, c.creation_date desc";
 
     private static $SQL_SELECT_UNASSIGNED_CHANNELS_WITH_MSG_COUNT =
-        "SELECT c.title, c.description FROM channel c " .
+        "SELECT c.id, c.title, c.description FROM channel c " .
         " LEFT OUTER JOIN channel_message cm ON cm.channel_id = c.id " .
         " LEFT JOIN channel_user_entry cue ON cue.channel_id = c.id " .
         " WHERE ((cue.user_id IS NULL) OR (cue.user_id != ?)) " .

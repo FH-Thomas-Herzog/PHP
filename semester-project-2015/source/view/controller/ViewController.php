@@ -22,6 +22,8 @@ class ViewController extends AbstractRequestController
 
     public static $VIEW_LOGIN = "login";
 
+    public static $VIEW_START = "start";
+
     public static $VIEW_MAIN = "main";
 
     public static $VIEW_REGISTRATION = "registration";
@@ -50,14 +52,20 @@ class ViewController extends AbstractRequestController
         $this->pool = $pool;
     }
 
-
     public function handleRequest()
     {
-        parent::handleRequest();
+        $result = $this->handleAction();
+        $args = $this->prepareView($result->nextView);
+        if (isset($args)) {
+            return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($result->args, $args));
+        } else {
+            return "";
+        }
+    }
 
+    public function handleAction()
+    {
         $controller = null;
-        $result = null;
-        $typedResult = null;
 
         // handle view specific action
         switch ($this->viewId) {
@@ -92,57 +100,44 @@ class ViewController extends AbstractRequestController
             default:
                 throw new InternalErrorException("Unknown view with id: '" . $this->viewId . "' detected'");
         }
-        if (isset($controller)) {
-            $result = $controller->handleRequest();
-        }
 
+        return $controller->handleAction();
+    }
+
+    public function prepareView($nextView)
+    {
         // render next view
-        $resArgs = (isset($result) && isset($result->args)) ? $result->args : array();
-        $args = array();
-        switch ($result->nextView) {
+        $controller = null;
+        $args = array(
+            "viewId" => $nextView
+        );
+
+        switch ($nextView) {
             case self::$VIEW_LOGIN:
-                $args = array(
-                    "actionLogin" => LoginRequestController::$ACTION_LOGIN,
-                    "actionRegister" => LoginRequestController::$ACTION_REGISTRATION
-                );
+                $controller = new LoginRequestController();
                 break;
             case self::$VIEW_REGISTRATION:
-                $args = array(
-                    "actionRegister" => RegistrationRequestController::$ACTION_REGISTER,
-                    "actionToLogin" => RegistrationRequestController::$ACTION_TO_LOGIN
-                );
+                $controller = new RegistrationRequestController();
                 break;
             case self::$VIEW_REGISTRATION_SUCCESS:
-                $args = array(
-                    "actionToLogin" => RegistrationRequestController::$ACTION_TO_LOGIN
-                );
+                $controller = new RegistrationRequestController();
+                break;
+            // the main view actions
+            case self::$VIEW_START:
+                $controller = new MainController();
                 break;
             case self::$VIEW_MAIN:
-                if (self::$VIEW_LOGIN === $this->viewId) {
-                    header('Location: start.php');
-                    return "";
-                } else {
-                    $args = array(
-                        "actionToNewChannel" => MainController::$ACTION_TO_NEW_CHANNEL,
-                        "actionToChannels" => MainController::$ACTION_TO_CHANNELS,
-                        "actionLogout" => MainController::$ACTION_LOGOUT
-                    );
-                }
+                $controller = new MainController();
                 break;
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
-                $args = array(
-                    "actionSaveChannel" => ChannelController::$ACTION_SAVE_CHANNEL,
-                    "actionToMain" => MainController::$ACTION_TO_CHANNELS
-                );
+                $controller = new ChannelController();
                 break;
             case self::$PARTIAL_VIEW_CHANNELS:
-                $args = array(
-                    "actionToSelectedChannel" => ChannelController::$ACTION_SAVE_CHANNEL
-                );
-                $channels = $this->prepareChannelsView($args);
+                $controller = new ChannelController();
                 break;
+            default:
+                throw new InternalErrorException("Next view: '" . $nextView . "' cannot be handled by '" . __CLASS__ . "'");
         }
-        $args["viewId"] = $result->nextView;
 
         // register the former and next view
         if (!StringUtil::startWith($this->viewId, "partial")) {
@@ -150,13 +145,19 @@ class ViewController extends AbstractRequestController
         } else {
             $this->sessionCtrl->setAttribute("formerPartialView", $this->viewId);
         }
-        if (!StringUtil::startWith($result->nextView, "partial")) {
-            $this->sessionCtrl->setAttribute("currentView", $result->nextView);
+        if (!StringUtil::startWith($nextView, "partial")) {
+            $this->sessionCtrl->setAttribute("currentView", $nextView);
         } else {
-            $this->sessionCtrl->setAttribute("currentPartialView", $result->nextView);
+            $this->sessionCtrl->setAttribute("currentPartialView", $nextView);
         }
 
-        return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($resArgs, $args));
+        $args = array_merge($args, $controller->prepareView($nextView));
+
+        if (StringUtil::compare($nextView, self::$VIEW_START)) {
+            return null;
+        }
+
+        return $args;
     }
 
     private function getTemplateController()
@@ -170,19 +171,4 @@ class ViewController extends AbstractRequestController
         return $item->get();
     }
 
-    private function prepareChannelsView(array &$args = array())
-    {
-        $channelCtrl = new ChannelEntityController();
-        if (!isset($args)) {
-            $args = array();
-        }
-        try {
-            $assigned = $channelCtrl->getAssignedChannelsWithMsgCount($this->securityCtrl->getLoggedUser());
-            $unassigned = $channelCtrl->getUnassignedChannels($this->securityCtrl->getLoggedUser());
-            $args["assignedChannels"] = $assigned;
-            $args["availableChannels"] = $unassigned;
-        } catch (DbException $e) {
-            var_dump($e);
-        }
-    }
 }

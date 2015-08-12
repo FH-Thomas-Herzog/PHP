@@ -20,11 +20,12 @@ class RequestControllerResult extends BaseObject
 
     public $args;
 
-    public function __construct($valid = false, $nextView = null, array $args = null){
+    public function __construct($valid = false, $nextView = null, array $args = array())
+    {
         parent::__construct();
 
-        $this->valid = (boolean) $valid;
-        $this->nextView = (string) $nextView;
+        $this->valid = (boolean)$valid;
+        $this->nextView = (string)$nextView;
         $this->args = $args;
     }
 }

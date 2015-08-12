@@ -9,11 +9,10 @@
 namespace source\view\controller;
 
 
-use \source\common\AbstractRequestController;
+use source\common\AbstractRequestController;
 use source\common\DbException;
-use \source\common\InternalErrorException;
-use \source\db\controller\UserEntityController;
-use \source\view\controller\SecurityController;
+use source\common\InternalErrorException;
+use source\db\controller\UserEntityController;
 use source\view\model\RequestControllerResult;
 
 class RegistrationRequestController extends AbstractRequestController
@@ -30,10 +29,8 @@ class RegistrationRequestController extends AbstractRequestController
         parent::__construct();
     }
 
-    public function handleRequest()
+    public function handleAction()
     {
-        parent::handleRequest();
-
         switch ($this->actionId) {
             // Action to go to login view from registration view
             case self::$ACTION_TO_LOGIN:
@@ -48,6 +45,23 @@ class RegistrationRequestController extends AbstractRequestController
         }
 
         // TODO: Login user
+    }
+
+    public function prepareView($nextView)
+    {
+        switch ((string)$nextView) {
+            case ViewController::$VIEW_REGISTRATION:
+                return array(
+                    "actionRegister" => RegistrationRequestController::$ACTION_REGISTER,
+                    "actionToLogin" => RegistrationRequestController::$ACTION_TO_LOGIN
+                );
+            case ViewController::$VIEW_REGISTRATION_SUCCESS:
+                return array(
+                    "actionToLogin" => RegistrationRequestController::$ACTION_TO_LOGIN
+                );
+            default:
+                throw new InternalErrorException("View: '" . $nextView . " not supported by this controller: '" . __CLASS__ . "'");
+        }
     }
 
     /**
