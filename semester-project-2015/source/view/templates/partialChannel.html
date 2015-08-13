@@ -40,7 +40,7 @@
 
     div.message-actions {
         display: inline-block;
-        width: 70px;
+        width: 100px;
     }
 
     div.message-actions * {
@@ -71,59 +71,48 @@
         <span style="margin-left: 10px">{{channel.description}}</span>
     </div>
     <div>
-        <button onclick="postRequest('viewId=partialChannels&actionId=actionToSelectedChannel')">update
+        <button onclick="postRequest('viewId=partialChannels&actionId=actionToSelectedChannel&channelId={{channel.id}}')">
+            update
         </button>
         <div class="list-group">
+            {% for key, value in messages %}
             <hr class="message-group-divider-first">
-            <h4 class="list-group-item-heading">24.12.0001</h4>
-
+            <h4 class="list-group-item-heading">{{ key }}</h4>
+            {% for mKey, mValue in value %}
             <div class="list-group-item-text">
+                {% for message in mValue %}
+                {% if loop.index0 == 0 %}
                 <hr class="message-divider">
-                <span class="channel-message-label">(cchet) 14:30:25</span>
-
+                <span class="channel-message-label">({{ mValue[loop.index0].username }}) {{ mKey }}</span>
+                {% endif %}
                 <div class="channel-message">
                     <div class="message-actions">
-                        <a href="#" onclick="" aria-label="Open channel"
-                           title="Open channel">
-                                    <span class="glyphicon glyphicon-star-empty"
-                                          style="color:gold; vertical-align:middle;"/>
+                        <a href="#" onclick="" aria-label="Important"
+                           {% if message.important_flag== 1 %}class="disabled" {% endif %}>
+                                        <span class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
+                                              style="color:gold; vertical-align:middle;"/>
                         </a>
-                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        {% if readFlags[mValue[loop.index0].id] == 1 %}
+                        <span class="glyphicon glyphicon-flag" aria-hidden="true" aria-label="New" title="New"></span>
+                        {% endif %}
+                        {% if (mValue[loop.index0].owned_flag == 1) and (loop.index == mValue|length) and (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index == messages|length ) %}
+                        <a href="#" onclick="" aria-label="Edit" title="Edit">
+                                        <span class="glyphicon glyphicon-edit"
+                                              style="color:green; vertical-align:middle;"/>
+                        </a>
+                        <a href="#" onclick="" aria-label="Remove" title="Remove">
+                                    <span class="glyphicon glyphicon-remove"
+                                          style="color:red; vertical-align:middle;"/>
+                        </a>
+                        {% endif %}
                     </div>
                     <div style="display: inline-block">
-                        <span>hello</span></div>
+                        <span>{{ mValue[loop.index0].message }}</span></div>
                 </div>
-                <span class="channel-message">again</span>
-                <hr class="message-divider">
-                <span class="channel-message-label">14:30:25</span>
-                <span class="channel-message">hello</span>
-                <span class="channel-message">again</span>
+                {% endfor %}
             </div>
-
-            <hr class="message-group-divider-first">
-            <h4 class="list-group-item-heading">24.12.0001</h4>
-
-            <div class="list-group-item-text">
-                <hr class="message-divider">
-                <span class="channel-message-label">(cchet) 14:30:25</span>
-
-                <div class="channel-message">
-                    <div class="message-actions">
-                        <a href="#" onclick="" aria-label="Open channel"
-                           title="Open channel">
-                                    <span class="glyphicon glyphicon-star-empty"
-                                          style="color:gold; vertical-align:middle;"/>
-                        </a>
-                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                    </div>
-                    <div style="display: inline-block">
-                        <span>hello</span></div>
-                </div>
-                <hr class="message-divider">
-                <span class="channel-message-label">14:30:25</span>
-                <span class="channel-message">hello</span>
-                <span class="channel-message">again</span>
-            </div>
+            {% endfor %}
+            {% endfor %}
         </div>
     </div>
 </div>

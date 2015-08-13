@@ -63,6 +63,6 @@ class StringUtil extends BaseObject
         if ((strlen($mainString) < abs($offset))) {
             throw new InternalErrorException("Offset overflows mainString");
         }
-        return substr_compare($mainString, $partialString, $offset, !$caseSensitive) == 0;
+        return substr_compare($mainString, $partialString, $offset, strlen($mainString), !$caseSensitive) == 0;
     }
 }

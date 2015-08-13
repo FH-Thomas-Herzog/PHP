@@ -70,10 +70,6 @@ class ChannelEntityController extends AbstractEntityController
         return $res;
     }
 
-    public function getAll()
-    {
-
-    }
 
     public function getAssignedChannelsWithMsgCount($userId)
     {
@@ -230,15 +226,9 @@ class ChannelEntityController extends AbstractEntityController
     }
 
 
-    public
-    function update($entity)
+    public function update(array $args)
     {
         // TODO: Implement update() method.
-    }
-
-    public
-    function delete($id)
-    {
     }
 
 }

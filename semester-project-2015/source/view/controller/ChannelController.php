@@ -12,7 +12,10 @@ namespace source\view\controller;
 use source\common\AbstractRequestController;
 use source\common\DbException;
 use source\common\InternalErrorException;
+use source\common\utils\StringUtil;
 use source\db\controller\ChannelEntityController;
+use source\db\controller\ChannelMessageEntityController;
+use source\db\controller\ChannelMessageUserEntrEntityController;
 use source\db\controller\ChannelUserEntryEntityController;
 use source\view\model\RequestControllerResult;
 
@@ -33,6 +36,10 @@ class ChannelController extends AbstractRequestController
     public static $ACTION_TO_SELECTED_CHANNEL = "actionToSelectedChannel";
 
     public static $ACTION_POST_MESSAGE = "actionPostMessage";
+
+    public static $ACTION_DELETE_MESSAGE = "actionDeleteMessage";
+
+    public static $ACTION_EDIT_MESSAGE = "actionEditMessage";
 
     public function __construct()
     {
@@ -113,17 +120,82 @@ class ChannelController extends AbstractRequestController
 
     private function prepareChannelView()
     {
+        $result = array();
+
+        $channelId = (integer)parent::getParameter("channelId");
         $channelCtrl = new ChannelEntityController();
+        $channelMessageCtrl = new ChannelMessageEntityController();
+        $channelMessageUserEntryCtrl = new ChannelMessageUserEntrEntityController();
         try {
-            $channel = $channelCtrl->getById((integer)parent::getParameter("channelId"));
-            // TODO: load channel messages
-            return array(
+            $channel = $channelCtrl->getById($channelId);
+            $messages = $channelMessageCtrl->getMessagesForChannel($channelId, $this->securityCtrl->getLoggedUser());
+            $messageReadFlags = $channelMessageUserEntryCtrl->getMessageReadFlagsForChannel($channelId);
+            $viewMessages = array();
+            $dateMessages = array();
+            $timeMessages = array();
+            $timeIdx = 0;
+            $oldTime = "";
+            $actualTime = "";
+            $oldDate = "";
+            $actualDate = "";
+            $upperBorder = (count($messages) - 1);
+            // only if messages are present
+            if ($upperBorder >= 0) {
+                // build map of date => array of messages on this date
+                for ($idx = 0; $idx <= $upperBorder; $idx++) {
+                    $message = $messages[$idx];
+                    // save old set date
+                    $oldDate = $actualDate;
+                    // get new date
+                    $actualDate = $message->creation_date_date;
+                    // save old time
+                    $oldTime = $actualTime;
+                    // get actual time
+                    $actualTime = $message->creation_date_time;
+                    // new date found after first item
+                    if (($idx != 0) && (!StringUtil::compare($oldDate, $actualDate))) {
+                        $dateMessages[$actualTime] = $timeMessages;
+                        $viewMessages[$oldDate] = $dateMessages;
+                        $timeMessages = array();
+                        $dateMessages = array();
+                        $timeIdx = 0;
+                        $timeMessages[$timeIdx] = $message;
+                        $timeIdx++;
+
+                    } // still on actual date
+                    else {
+                        if (($idx != 0) && (!StringUtil::compare($oldTime, $actualTime))) {
+                            $dateMessages[$oldTime] = $timeMessages;
+                            $timeIdx = 0;
+                            $timeMessages[$timeIdx] = $message;
+                            $timeIdx++;
+                        } else {
+                            $timeMessages[$timeIdx] = $message;
+                            $timeIdx++;
+                        }
+                    }
+
+                    // If last item reached
+                    if ($idx == $upperBorder) {
+                        $dateMessages[$actualTime] = $timeMessages;
+                        $viewMessages[$actualDate] = $dateMessages;
+                    }
+                }
+            }
+
+            $result = array(
                 "actionPostMessage" => self::$ACTION_POST_MESSAGE,
-                "channel" => $channel
+                "actionDeleteMessage" => self::$ACTION_DELETE_MESSAGE,
+                "actionEditMessage" => self::$ACTION_EDIT_MESSAGE,
+                "channel" => $channel,
+                "messages" => $viewMessages,
+                "readFlags" => $messageReadFlags
             );
         } catch (DbException $e) {
             var_dump($e);
         }
+
+        return $result;
     }
 
     private function handleSetFavoriteChannel()

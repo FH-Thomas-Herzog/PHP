@@ -32,10 +32,6 @@ class ChannelUserEntryEntityController extends AbstractEntityController
         // TODO: Implement getById() method.
     }
 
-    public function getAll()
-    {
-
-    }
 
     public function setFavoriteChannel($userId, $channelId)
     {
@@ -133,38 +129,8 @@ class ChannelUserEntryEntityController extends AbstractEntityController
         }
     }
 
-    function update($entity)
+    function update(array $args)
     {
         // TODO: Implement update() method.
-    }
-
-    public
-    function delete($id)
-    {
-        parent::open();
-
-        $stmt = null;
-        $res = 0;
-
-        try {
-            $stmt = parent::prepareStatement(self::$SQL_DELETE_CHANNEL_USER_ENTRY);
-            $p1 = $id["channelId"];
-            $p2 = $id["userId"];
-            $stmt->bind_param("ii", $p1, $p2);
-
-            parent::startTx();
-            $stmt->execute();
-            parent::commit();
-            $res = $stmt->affected_rows;
-        } catch (\Exception $e) {
-            parent::rollback();
-            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
-        } finally {
-            if (isset($stmt)) {
-                $stmt->close();
-            }
-            parent::close();
-        }
-        return $res;
     }
 }

@@ -45,18 +45,17 @@
 
     $('#ajaxLoaderImage').hide();
     var postUpdateTarget = function (targetId, params) {
-        var target = $('#' + + targetId);
         $.ajax({
             async: true,
             type: "POST",
             url: "start.php",
             data: params,
             beforeSend: function () {
-                target.empty();
+                $('#' + targetId).empty();
                 $('#ajaxLoaderImage').show();
             },
             success: function (data) {
-                target.html(data);
+                $('#' + targetId).html(data);
             },
             error: function (xhr, status, error) {
                 // TODO: Handle error here

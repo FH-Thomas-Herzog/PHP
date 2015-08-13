@@ -32,11 +32,6 @@ class UserEntityController extends AbstractEntityController
         // TODO: Implement getById() method.
     }
 
-    public function getAll()
-    {
-
-    }
-
     /**
      * Answers the question if an user already exists with the given username.
      *
@@ -182,16 +177,9 @@ class UserEntityController extends AbstractEntityController
     }
 
 
-    public
-    function update($entity)
+    public function update(array $args)
     {
         // TODO: Implement update() method.
-    }
-
-    public
-    function delete($entity)
-    {
-        // TODO: Implement delete() method.
     }
 
 }
