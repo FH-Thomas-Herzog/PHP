@@ -8,8 +8,13 @@
         margin-top: 5px;
     }
 
+    span.channel-message-text {
+        font-size: smaller;
+    }
+
     span.channel-message-label {
         display: inline-block;
+        font-size: x-small;
     }
 
     hr {
@@ -40,12 +45,12 @@
 
     div.message-actions {
         display: inline-block;
-        width: 100px;
+        width: 70px;
     }
 
     div.message-actions * {
         float: left;
-        margin: 0px 5px 0px 0px;
+        margin: 0px 2px 0px 0px;
     }
 
     div.list-group {
@@ -67,47 +72,58 @@
 </style>
 <div id="channelContent" class="child" style="width: 400px; min-height: 150px; max-height: 400px; overflow-y: auto;">
     <div>
-        <h4 title="hello">#{{channel.title}}</h4>
+        <h4><b>#{{channel.title}}</b></h4>
         <span style="margin-left: 10px">{{channel.description}}</span>
     </div>
     <div>
-        <button onclick="postRequest('viewId=partialChannels&actionId=actionToSelectedChannel&channelId={{channel.id}}')">
-            update
-        </button>
         <div class="list-group">
             {% for key, value in messages %}
             <hr class="message-group-divider-first">
-            <h4 class="list-group-item-heading">{{ key }}</h4>
+            <h5 class="list-group-item-heading"><b>{{ key }}</b></h5>
             {% for mKey, mValue in value %}
             <div class="list-group-item-text">
+                {% set oldUser = '' %}
+                {% set actualUser = '' %}
                 {% for message in mValue %}
-                {% if loop.index0 == 0 %}
+                {% set oldUser = actualUser %}
+                {% set actualUser = mValue[loop.index0].username %}
+                {% if (oldUser != actualUser) %}
                 <hr class="message-divider">
                 <span class="channel-message-label">({{ mValue[loop.index0].username }}) {{ mKey }}</span>
                 {% endif %}
                 <div class="channel-message">
                     <div class="message-actions">
-                        <a href="#" onclick="" aria-label="Important"
-                           {% if message.important_flag== 1 %}class="disabled" {% endif %}>
-                                        <span class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
-                                              style="color:gold; vertical-align:middle;"/>
+                        {% if message.important_flag== 0 %}
+                        <a href="#" onclick="" aria-label="Important">
+                            <small><span class="glyphicon glyphicon-star-empty"
+                                         style="color:gold; vertical-align:middle;"/></small>
                         </a>
-                        {% if readFlags[mValue[loop.index0].id] == 1 %}
-                        <span class="glyphicon glyphicon-flag" aria-hidden="true" aria-label="New" title="New"></span>
+                        {% else %}
+                        <small><span class="glyphicon glyphicon-star" style="color:gold; vertical-align:middle;"/>
+                        </small>
                         {% endif %}
-                        {% if (mValue[loop.index0].owned_flag == 1) and (loop.index == mValue|length) and (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index == messages|length ) %}
+                        {% if readFlags[mValue[loop.index0].id] == 1 %}
+                        <small><span class="glyphicon glyphicon-flag" aria-hidden="true" aria-label="New" title="New"/>
+                        </small>
+                        {% endif %}
+                        {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
+                        mValue|length) and
+                        (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
+                        messages|length ) %}
                         <a href="#" onclick="" aria-label="Edit" title="Edit">
-                                        <span class="glyphicon glyphicon-edit"
-                                              style="color:green; vertical-align:middle;"/>
+                            <small><span class="glyphicon glyphicon-edit"
+                                         style="color:green; vertical-align:middle;"/></small>
                         </a>
-                        <a href="#" onclick="" aria-label="Remove" title="Remove">
-                                    <span class="glyphicon glyphicon-remove"
-                                          style="color:red; vertical-align:middle;"/>
+                        <a href="#"
+                           onclick="postRequest('viewId={{viewId}}&actionId={{actionDeleteMessage}}&channelId={{channel.id}}&messageId={{mValue[loop.index0].id}}&creationDate={{mValue[loop.index0].creation_date}}')"
+                           aria-label="Remove" title="Remove">
+                            <small><span class="glyphicon glyphicon-remove"
+                                         style="color:red; vertical-align:middle;"/></small>
                         </a>
                         {% endif %}
                     </div>
                     <div style="display: inline-block">
-                        <span>{{ mValue[loop.index0].message }}</span></div>
+                        <span class="channel-message-text">{{ mValue[loop.index0].message }}</span></div>
                 </div>
                 {% endfor %}
             </div>
@@ -119,22 +135,42 @@
 <div id="messageBox" class="child" style="width: 400px">
     <div class="input-group">
         <ul class="dropdown-menu dropdown-menu-top" aria-labelledby="dLabel" style="top: -75px; ">
-            <li>save me</li>
-            <li role="separator" class="divider"></li>
-            <li>clear me</li>
+            <li>
+                <a href="#" onclick="">
+                    post
+                </a>
+            </li>
+            <li>
+                <a href="#"
+                   onclick="postRequest('viewId={{viewId}}&actionId={{actionToSelectedChannel}}&channelId={{channel.id}}&favoriteOnly={% if favoriteOnly == true %}1{% else %}0{% endif %}')">
+                    refresh
+                </a>
+            </li>
+            <li>
+                <a href="#"
+                   onclick="postRequest('viewId={{viewId}}&actionId={{actionToSelectedChannel}}&channelId={{channel.id}}&favoriteOnly={% if favoriteOnly == true %}0{% else %}1{% endif %}')">
+                    {% if favoriteOnly == true %}
+                    all
+                    {% else %}
+                    favorites
+                    {% endif %}
+                </a>
+            </li>
         </ul>
         <a class="input-group-addon" id="messageLabel" data-toggle="dropdown" aria-haspopup="true"
            aria-expanded="false">
             <span class="glyphicon glyphicon-text-background" aria-hidden="true"/>
         </a>
-        <textarea id="messageTextArea" rows="3" class="form-control"></textarea>
+        <textarea id="messageTextArea" rows="3" class="form-control"/>
     </div>
 </div>
 <script type="text/javascript">
-    //$('#messageTextArea').onkeyup(function (evt) {
-    //    if ((evt.keyCode == 13) && (!evt.shiftKey)) {
-    //        var msg = $('#messageTextArea').value();
-    //        postUpdateTarget('channelContent', 'actionId={{actionPostMessage}}&viewId={{viewId}}&channelId{{channel.id}}&message=' + msg);
-    //    }
-    //});
+    $('#messageTextArea').keyup(function (evt) {
+        if ((evt.keyCode == 13) && (!evt.shiftKey)) {
+            var msg = $('#messageTextArea').val();
+            postRequest('actionId={{actionPostMessage}}&viewId={{viewId}}&channelId={{channel.id}}&favoriteOnly=0&message=' + msg);
+        } else {
+            console.log("no post when shift enter is clicked ");
+        }
+    });
 </script>

@@ -10,11 +10,12 @@ namespace source\db\controller;
 
 
 use source\common\InternalErrorException;
+use source\common\DbException;
 
-class ChannelMessageUserEntrEntityController extends AbstractEntityController
+class ChannelMessageUserEntryEntityController extends AbstractEntityController
 {
 
-    private static $SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY = "INSERT INTO channel_message_user_entry (user_id, channel_id, read_flag) VALUES (?,?,?)";
+    private static $SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY = "INSERT INTO channel_message_user_entry (user_id, channel_message_id, read_flag, important_flag) VALUES (?,?,?,?)";
 
     private static $SQL_SELECT_MESSAGE_READ_FLAGS_FOR_CHANNEL =
         " SELECT DISTINCT cm.id AS channel_message_id, cme.read_flag AS read_flag FROM channel_message_user_entry cme " .
@@ -72,16 +73,17 @@ class ChannelMessageUserEntrEntityController extends AbstractEntityController
         parent::open();
 
         $stmt = null;
+        $result = null;
+        $p1 = (integer)$args["userId"];
+        $p2 = (integer)$args["channelMessageId"];
+        $p3 = (!empty($args["readFlag"])) ? ((boolean)$args["readFlag"]) : 0;
+        $p4 = (!empty($args["importantFlag"])) ? ((boolean)$args["importantFlag"]) : 0;
 
         try {
-            $p1 = (integer)$args["userId"];
-            $p2 = (integer)$args["channelId"];
-            $p3 = (boolean)$args["readFlag"];
-
             parent::startTx();
 
             $stmt = parent::prepareStatement(self::$SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY);
-            $stmt->bind_param("ii1", $p1, $p2, $p3);
+            $stmt->bind_param("iiii", $p1, $p2, $p3, $p4);
             parent::startTx();
             $stmt->execute();
             parent::commit();

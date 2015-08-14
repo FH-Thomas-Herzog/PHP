@@ -2,21 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e7f548c1-6e11-4ab2-93b9-62494bf86448" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/internal/db/model/mysql-workbench-er-model_v3.mwb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/internal/doc/scm4-2015-uebung01-communication-list.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/db/controller/AbstractEntityController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntrEntityController.php" />
-      <change type="DELETED" beforePath="D:\repositories\Github\PHP\semester-project-2015\internal\db\ddl\fh_2015_scm4_v0.1.sql" afterPath="" />
-      <change type="DELETED" beforePath="D:\repositories\Github\PHP\semester-project-2015\internal\db\ddl\setup_v0.1.sql" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/controller/ChannelController.php" afterPath="$PROJECT_DIR$/source/view/controller/ChannelController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/db/controller/ChannelEntityController.php" afterPath="$PROJECT_DIR$/source/db/controller/ChannelEntityController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/db/controller/ChannelUserEntryEntityController.php" afterPath="$PROJECT_DIR$/source/db/controller/ChannelUserEntryEntityController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/common/utils/StringUtil.php" afterPath="$PROJECT_DIR$/source/common/utils/StringUtil.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/db/controller/UserEntityController.php" afterPath="$PROJECT_DIR$/source/db/controller/UserEntityController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/templates/main.html" afterPath="$PROJECT_DIR$/source/view/templates/main.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php" afterPath="$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/templates/partialChannel.html" afterPath="$PROJECT_DIR$/source/view/templates/partialChannel.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/view/templates/partialChannels.html" afterPath="$PROJECT_DIR$/source/view/templates/partialChannels.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="D:\repositories\Github\PHP\semester-project-2015\source\db\controller\ChannelMessageUserEntrEntityController.php" afterPath="$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntryEntityController.php" />
     </list>
     <ignored path="semester-project-2015.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -45,8 +36,8 @@
       <file leaf-file-name="ChannelController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/view/controller/ChannelController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.038462">
-              <caret line="133" column="36" selection-start-line="133" selection-start-column="36" selection-end-line="133" selection-end-column="36" />
+            <state vertical-scroll-proportion="-17.0">
+              <caret line="43" column="76" selection-start-line="43" selection-start-column="76" selection-end-line="43" selection-end-column="76" />
               <folding>
                 <element signature="e#126#170#0#PHP" expanded="true" />
               </folding>
@@ -54,15 +45,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ChannelMessageEntityController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ChannelMessageEntityController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.7655501">
-              <caret line="107" column="30" selection-start-line="107" selection-start-column="30" selection-end-line="107" selection-end-column="30" />
+            <state vertical-scroll-proportion="-48.96154">
+              <caret line="174" column="37" selection-start-line="174" selection-start-column="37" selection-end-line="174" selection-end-column="37" />
               <folding>
-                <marker date="1439468250006" expanded="true" signature="289:362" placeholder="INSERT INTO ..." />
-                <marker date="1439468250006" expanded="true" signature="416:456" placeholder="DELETE FROM ..." />
-                <marker date="1439468250006" expanded="true" signature="524:823" placeholder="SELECT DATE(..." />
+                <element signature="e#123#153#0#PHP" expanded="true" />
+                <marker date="1439553170031" expanded="true" signature="315:388" placeholder="INSERT INTO ..." />
+                <marker date="1439553170031" expanded="true" signature="442:482" placeholder="DELETE FROM ..." />
+                <marker date="1439553170031" expanded="true" signature="536:578" placeholder="SELECT * FRO..channel_message..." />
+                <marker date="1439553170031" expanded="true" signature="545:578" placeholder="DELETE FROM ..." />
+                <marker date="1439553170031" expanded="true" signature="647:964" placeholder="SELECT DATE(..." />
+                <marker date="1439553170031" expanded="true" signature="1397:1714" placeholder="SELECT DATE(..." />
+                <marker date="1439553170031" expanded="true" signature="2187:2268" placeholder="DELETE FROM ..." />
+                <marker date="1439553170031" expanded="true" signature="2194:2268" placeholder="SELECT DISTI..channel_message_user_entry..." />
+                <marker date="1439553170031" expanded="true" signature="2338:2385" placeholder="SELECT * FRO..channel_message..." />
+                <marker date="1439553170031" expanded="true" signature="2338:2386" placeholder="SELECT * FRO..channel_message..." />
+                <marker date="1439553170031" expanded="true" signature="2338:2413" placeholder="SELECT * FRO..channel_message..." />
+                <marker date="1439553170031" expanded="true" signature="2338:2445" placeholder="SELECT DISTI..channel_message..." />
+                <marker date="1439553170031" expanded="true" signature="2338:2447" placeholder="SELECT * FRO..channel_message..." />
+                <marker date="1439553170031" expanded="true" signature="2338:2482" placeholder="SELECT DISTI..channel_message..." />
+                <marker date="1439553170031" expanded="true" signature="2338:2484" placeholder="SELECT DISTI..channel_message..." />
               </folding>
             </state>
           </provider>
@@ -71,14 +75,15 @@
       <file leaf-file-name="partialChannel.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannel.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.3461537">
-              <caret line="97" column="189" selection-start-line="97" selection-start-column="189" selection-end-line="97" selection-end-column="189" />
+            <state vertical-scroll-proportion="13.153846">
+              <caret line="124" column="55" selection-start-line="124" selection-start-column="55" selection-end-line="124" selection-end-column="55" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#a#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#a#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#a#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#small#0;n#a#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#small#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#small#0;n#a#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#small#0;n#a#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#ul#0;n#div#0;n#div#1;n#!!top" expanded="true" />
@@ -87,21 +92,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ChannelMessageUserEntrEntityController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntrEntityController.php">
+      <file leaf-file-name="ChannelMessageUserEntryEntityController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntryEntityController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.076923">
-              <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.37639552">
+              <caret line="75" column="23" selection-start-line="75" selection-start-column="23" selection-end-line="75" selection-end-column="23" />
               <folding>
-                <marker date="1439468379189" expanded="true" signature="308:394" placeholder="INSERT INTO ..." />
-                <marker date="1439468379189" expanded="true" signature="472:480" placeholder="SELECT DATE(..." />
-                <marker date="1439468379189" expanded="true" signature="472:579" placeholder="SELECT DISTI..channel_message_user_entry..." />
-                <marker date="1439468379189" expanded="true" signature="472:580" placeholder="SELECT DISTI..channel_message_user_entry..." />
-                <marker date="1439468379189" expanded="true" signature="472:657" placeholder="SELECT DISTI..channel_message_user_entry..." />
-                <marker date="1439468379189" expanded="true" signature="472:658" placeholder="SELECT DISTI..channel_message_user_entry..." />
-                <marker date="1439468379189" expanded="true" signature="472:695" placeholder="SELECT DISTI..channel_message_user_entry..." />
-                <marker date="1439468379189" expanded="true" signature="472:731" placeholder="SELECT DISTI..channel_message_user_entry..." />
+                <element signature="e#123#164#0#PHP" expanded="true" />
+                <marker date="1439550482483" expanded="true" signature="340:452" placeholder="INSERT INTO ..." />
+                <marker date="1439550482483" expanded="true" signature="530:789" placeholder="SELECT DISTI..channel_message_user_entry..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ChannelEntityController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelEntityController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.9615384">
+              <caret line="134" column="55" selection-start-line="134" selection-start-column="55" selection-end-line="134" selection-end-column="55" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -122,7 +132,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/source/composer/composer.json" />
         <option value="$PROJECT_DIR$/source/composer/vendor/twig/twig/lib/Twig/Autoloader.php" />
         <option value="$PROJECT_DIR$/source/common/Autoloader.php" />
         <option value="$PROJECT_DIR$/source/view/controller/PoolController.php" />
@@ -160,7 +169,6 @@
         <option value="$PROJECT_DIR$/source/view/controller/MainController.php" />
         <option value="$PROJECT_DIR$/public/start.php" />
         <option value="$PROJECT_DIR$/source/view/controller/ViewController.php" />
-        <option value="$PROJECT_DIR$/source/view/templates/partialChannels.html" />
         <option value="$PROJECT_DIR$/source/view/templates/login.html" />
         <option value="$PROJECT_DIR$/source/view/templates/main.html" />
         <option value="$PROJECT_DIR$/source/db/controller/AbstractEntityController.php" />
@@ -169,10 +177,12 @@
         <option value="$PROJECT_DIR$/source/db/controller/UserEntityController.php" />
         <option value="$PROJECT_DIR$/source/common/utils/StringUtil.php" />
         <option value="$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntityController.php" />
-        <option value="$PROJECT_DIR$/source/view/controller/ChannelController.php" />
-        <option value="$PROJECT_DIR$/source/view/templates/partialChannel.html" />
-        <option value="$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php" />
         <option value="$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntrEntityController.php" />
+        <option value="$PROJECT_DIR$/source/view/templates/partialChannels.html" />
+        <option value="$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntryEntityController.php" />
+        <option value="$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php" />
+        <option value="$PROJECT_DIR$/source/view/templates/partialChannel.html" />
+        <option value="$PROJECT_DIR$/source/view/controller/ChannelController.php" />
       </list>
     </option>
   </component>
@@ -223,6 +233,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -499,8 +511,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -710,7 +720,13 @@
       <option name="project" value="LOCAL" />
       <updated>1439397272645</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="- removed ddl scripts, will create them when project is finished&#10;- display of message within a channel is working properly. Actions are still missing&#10;- messages are ordered via date -&gt; time -&gt; importance&#10;- added missing files which haven't been added to git yet.&#10;">
+      <created>1439468690233</created>
+      <option name="number" value="00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1439468690233</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView">
@@ -734,7 +750,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32936507" sideWeight="0.4943128" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21055438" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19616205" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2489339" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -778,7 +794,8 @@
     <MESSAGE value="- login and logout are working now properly&#10;- redirect to login page if user not logged anymore on start page&#10;- redirect user to start page is already logged in&#10;- channels retrieval working now. Actions are missing&#10;- creation of channels works now" />
     <MESSAGE value="- added glyphonics icons&#10;- added refactored AbstractRequestController and added function prepareView which provides the parameters for the templates by the actual controller implementation. Renamed handleRequest to handleAction because got split to handleAction and prepareView&#10;- Refactored VireController which delegates to the controller on handleAction and prepareView. Added function handleRequest which is unique for this controller type&#10;- Assign, remove assigned channel and set favorite are working now on channels view&#10;- added ajax status on ajax requests for main view" />
     <MESSAGE value="- started development of channel view which holds the messages within a channel.&#10;- switching to this view works, but message load is missing" />
-    <option name="LAST_COMMIT_MESSAGE" value="- started development of channel view which holds the messages within a channel.&#10;- switching to this view works, but message load is missing" />
+    <MESSAGE value="- removed ddl scripts, will create them when project is finished&#10;- display of message within a channel is working properly. Actions are still missing&#10;- messages are ordered via date -&gt; time -&gt; importance&#10;- added missing files which haven't been added to git yet.&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="- removed ddl scripts, will create them when project is finished&#10;- display of message within a channel is working properly. Actions are still missing&#10;- messages are ordered via date -&gt; time -&gt; importance&#10;- added missing files which haven't been added to git yet.&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -789,11 +806,41 @@
           <option name="timeStamp" value="56" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="148" />
+      <option name="time" value="160" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannel.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="97" column="189" selection-start-line="97" selection-start-column="189" selection-end-line="97" selection-end-column="189" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#a#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#a#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#a#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ul#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntryEntityController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
+          <folding>
+            <element signature="e#123#164#0#PHP" expanded="true" />
+            <marker date="1439550482483" expanded="true" signature="340:452" placeholder="INSERT INTO ..." />
+            <marker date="1439550482483" expanded="true" signature="530:789" placeholder="SELECT DISTI..channel_message_user_entry..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/source/db/model_propel/Base/Locale.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="147.11539">
@@ -1007,13 +1054,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/start.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6219512">
-          <caret line="47" column="35" selection-start-line="47" selection-start-column="35" selection-end-line="47" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/source/view/controller/MainController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.3076925">
@@ -1033,7 +1073,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="143" column="22" selection-start-line="143" selection-start-column="22" selection-end-line="143" selection-end-column="22" />
           <folding>
-            <element signature="e#125#169#0#PHP" expanded="true" />
+            <element signature="e#125#169#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1042,7 +1082,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="54" column="23" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1050,26 +1089,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="20" column="9" selection-start-line="15" selection-start-column="8" selection-end-line="20" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannels.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="114" selection-start-line="49" selection-start-column="71" selection-end-line="49" selection-end-column="114" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#0;n#a#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#0;n#a#1;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#0;n#a#2;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#0;n#a#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#2;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1077,25 +1096,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.384615">
-          <caret line="34" column="56" selection-start-line="34" selection-start-column="56" selection-end-line="34" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/view/templates/main.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.153846">
-          <caret line="57" column="45" selection-start-line="57" selection-start-column="45" selection-end-line="57" selection-end-column="45" />
-          <folding>
-            <element signature="n#style#0;n#section#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1107,9 +1107,43 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/source/common/utils/StringUtil.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.5">
+          <caret line="65" column="88" selection-start-line="65" selection-start-column="88" selection-end-line="65" selection-end-column="88" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.192307">
+          <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/view/templates/main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.730769">
+          <caret line="94" column="105" selection-start-line="94" selection-start-column="105" selection-end-line="94" selection-end-column="105" />
+          <folding>
+            <element signature="n#style#0;n#section#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannels.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.038462">
+          <caret line="56" column="67" selection-start-line="56" selection-start-column="67" selection-end-line="56" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelUserEntryEntityController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.192308">
+        <state vertical-scroll-proportion="0.72886765">
           <caret line="131" column="31" selection-start-line="131" selection-start-column="31" selection-end-line="131" selection-end-column="31" />
           <folding>
             <marker date="1439458139564" expanded="true" signature="-1:-1" placeholder="INSERT INTO ..." />
@@ -1120,11 +1154,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/start.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.5384614">
+          <caret line="26" column="50" selection-start-line="26" selection-start-column="50" selection-end-line="26" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/source/db/controller/UserEntityController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-24.538462">
+        <state vertical-scroll-proportion="-113.69231">
           <caret line="179" column="33" selection-start-line="179" selection-start-column="33" selection-end-line="179" selection-end-column="33" />
           <folding>
+            <element signature="e#123#153#0#PHP" expanded="true" />
             <marker date="1439458143902" expanded="true" signature="-1:-1" placeholder="SELECT id FR..user..." />
             <marker date="1439458143902" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..user..." />
             <marker date="1439458143902" expanded="true" signature="-1:-1" placeholder="SELECT id FR..user..." />
@@ -1135,47 +1178,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelEntityController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.769231">
-          <caret line="114" column="29" selection-start-line="114" selection-start-column="29" selection-end-line="115" selection-end-column="42" />
-          <folding>
-            <marker date="1439458133861" expanded="true" signature="-1:-1" placeholder="SELECT id FR..channel..." />
-            <marker date="1439458133861" expanded="true" signature="-1:-1" placeholder="INSERT INTO ..." />
-            <marker date="1439458133861" expanded="true" signature="-1:-1" placeholder="DELETE FROM ..." />
-            <marker date="1439458133861" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..channel..." />
-            <marker date="1439458133861" expanded="true" signature="-1:-1" placeholder="SELECT c.id,..channel..." />
-            <marker date="1439458133861" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..channel..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/common/utils/StringUtil.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.5">
-          <caret line="65" column="88" selection-start-line="65" selection-start-column="88" selection-end-line="65" selection-end-column="88" />
+        <state vertical-scroll-proportion="-1.9615384">
+          <caret line="134" column="55" selection-start-line="134" selection-start-column="55" selection-end-line="134" selection-end-column="55" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/view/controller/ChannelController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.038462">
-          <caret line="133" column="36" selection-start-line="133" selection-start-column="36" selection-end-line="133" selection-end-column="36" />
-          <folding>
-            <element signature="e#126#170#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/view/templates/partialChannel.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.3461537">
-          <caret line="97" column="189" selection-start-line="97" selection-start-column="189" selection-end-line="97" selection-end-column="189" />
+        <state vertical-scroll-proportion="13.153846">
+          <caret line="124" column="55" selection-start-line="124" selection-start-column="55" selection-end-line="124" selection-end-column="55" />
           <folding>
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#a#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#a#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#a#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#a#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#a#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#small#0;n#a#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#0;n#div#0;n#div#1;n#!!top" expanded="true" />
@@ -1183,31 +1202,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntrEntityController.php">
+    <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.076923">
-          <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
+        <state vertical-scroll-proportion="-48.96154">
+          <caret line="174" column="37" selection-start-line="174" selection-start-column="37" selection-end-line="174" selection-end-column="37" />
           <folding>
-            <marker date="1439468379189" expanded="true" signature="308:394" placeholder="INSERT INTO ..." />
-            <marker date="1439468379189" expanded="true" signature="472:480" placeholder="SELECT DATE(..." />
-            <marker date="1439468379189" expanded="true" signature="472:579" placeholder="SELECT DISTI..channel_message_user_entry..." />
-            <marker date="1439468379189" expanded="true" signature="472:580" placeholder="SELECT DISTI..channel_message_user_entry..." />
-            <marker date="1439468379189" expanded="true" signature="472:657" placeholder="SELECT DISTI..channel_message_user_entry..." />
-            <marker date="1439468379189" expanded="true" signature="472:658" placeholder="SELECT DISTI..channel_message_user_entry..." />
-            <marker date="1439468379189" expanded="true" signature="472:695" placeholder="SELECT DISTI..channel_message_user_entry..." />
-            <marker date="1439468379189" expanded="true" signature="472:731" placeholder="SELECT DISTI..channel_message_user_entry..." />
+            <element signature="e#123#153#0#PHP" expanded="true" />
+            <marker date="1439553170031" expanded="true" signature="315:388" placeholder="INSERT INTO ..." />
+            <marker date="1439553170031" expanded="true" signature="442:482" placeholder="DELETE FROM ..." />
+            <marker date="1439553170031" expanded="true" signature="536:578" placeholder="SELECT * FRO..channel_message..." />
+            <marker date="1439553170031" expanded="true" signature="545:578" placeholder="DELETE FROM ..." />
+            <marker date="1439553170031" expanded="true" signature="647:964" placeholder="SELECT DATE(..." />
+            <marker date="1439553170031" expanded="true" signature="1397:1714" placeholder="SELECT DATE(..." />
+            <marker date="1439553170031" expanded="true" signature="2187:2268" placeholder="DELETE FROM ..." />
+            <marker date="1439553170031" expanded="true" signature="2194:2268" placeholder="SELECT DISTI..channel_message_user_entry..." />
+            <marker date="1439553170031" expanded="true" signature="2338:2385" placeholder="SELECT * FRO..channel_message..." />
+            <marker date="1439553170031" expanded="true" signature="2338:2386" placeholder="SELECT * FRO..channel_message..." />
+            <marker date="1439553170031" expanded="true" signature="2338:2413" placeholder="SELECT * FRO..channel_message..." />
+            <marker date="1439553170031" expanded="true" signature="2338:2445" placeholder="SELECT DISTI..channel_message..." />
+            <marker date="1439553170031" expanded="true" signature="2338:2447" placeholder="SELECT * FRO..channel_message..." />
+            <marker date="1439553170031" expanded="true" signature="2338:2482" placeholder="SELECT DISTI..channel_message..." />
+            <marker date="1439553170031" expanded="true" signature="2338:2484" placeholder="SELECT DISTI..channel_message..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageEntityController.php">
+    <entry file="file://$PROJECT_DIR$/source/view/controller/ChannelController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.7655501">
-          <caret line="107" column="30" selection-start-line="107" selection-start-column="30" selection-end-line="107" selection-end-column="30" />
+        <state vertical-scroll-proportion="-17.0">
+          <caret line="43" column="76" selection-start-line="43" selection-start-column="76" selection-end-line="43" selection-end-column="76" />
           <folding>
-            <marker date="1439468250006" expanded="true" signature="289:362" placeholder="INSERT INTO ..." />
-            <marker date="1439468250006" expanded="true" signature="416:456" placeholder="DELETE FROM ..." />
-            <marker date="1439468250006" expanded="true" signature="524:823" placeholder="SELECT DATE(..." />
+            <element signature="e#126#170#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/db/controller/ChannelMessageUserEntryEntityController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37639552">
+          <caret line="75" column="23" selection-start-line="75" selection-start-column="23" selection-end-line="75" selection-end-column="23" />
+          <folding>
+            <element signature="e#123#164#0#PHP" expanded="true" />
+            <marker date="1439550482483" expanded="true" signature="340:452" placeholder="INSERT INTO ..." />
+            <marker date="1439550482483" expanded="true" signature="530:789" placeholder="SELECT DISTI..channel_message_user_entry..." />
           </folding>
         </state>
       </provider>
