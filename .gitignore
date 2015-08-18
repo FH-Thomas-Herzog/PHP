@@ -48,4 +48,4 @@ Temporary Items
 # ==================================
 /**/vendor
 .*
-/**/.idea
+!/.gitignore
