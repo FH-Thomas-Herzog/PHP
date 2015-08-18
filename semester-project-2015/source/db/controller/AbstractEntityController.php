@@ -21,7 +21,7 @@ abstract class AbstractEntityController extends BaseObject
         "fh_2015_scm4",
         "fh_2015_scm4",
         "fh_2015_scm4_s1310307011",
-        50001
+        3306
     );
 
     private $mysqli = null;
