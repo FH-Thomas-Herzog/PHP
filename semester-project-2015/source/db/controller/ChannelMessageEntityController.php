@@ -26,7 +26,7 @@ class ChannelMessageEntityController extends AbstractEntityController
         " LEFT OUTER JOIN channel_message_user_entry cme ON (cme.channel_message_id = cm.id AND cme.user_id = ?) " .
         " INNER JOIN user u on u.id = cm.user_id " .
         " WHERE cm.channel_id = ? " .
-        " ORDER BY creation_date_date ASC, creation_date_time ASC, important_flag DESC ";
+        " ORDER BY creation_date_date ASC, creation_date ASC, important_flag DESC ";
 
     private static $SQL_SELECT_IMPORTANT_MESSAGES_FOR_CHANNEL =
         " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%m') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
@@ -55,33 +55,66 @@ class ChannelMessageEntityController extends AbstractEntityController
     {
         parent::open();
 
-        $stmt = null;
+        $stmtString = null;
+        $stmtGetMessages = null;
+        $stmtInsertUserEntry = null;
         $res = array();
         $stmtString = "";
+        $favorite = (boolean) $favoriteOnly;
         $p1 = (integer)$userId;
         $p2 = (integer)$channelId;
 
         try {
             // only favorite ones
-            if ((boolean)$favoriteOnly) {
+            if ($favorite) {
                 $stmtString = self::$SQL_SELECT_IMPORTANT_MESSAGES_FOR_CHANNEL;
             } // all messages
             else {
                 $stmtString = self::$SQL_SELECT_MESSAGES_FOR_CHANNEL;
             }
-            $stmt = parent::prepareStatement($stmtString);
-            $stmt->bind_param("iii", $p1, $p1, $p2);
-            $stmt->execute();
-            $result = $stmt->get_result();
+
+            // retrieve messages for this channel
+            $stmtGetMessages = parent::prepareStatement($stmtString);
+            $stmtGetMessages->bind_param("iii", $p1, $p1, $p2);
+            $stmtGetMessages->execute();
+            $result = $stmtGetMessages->get_result();
             $data = null;
+            $userEntryArgs = array();
             while ($data = $result->fetch_object()) {
                 $res[] = $data;
+                // get all message ids which the given user does not own and has not read yet
+                if((!$favorite) && (!$data->owned_flag) && (!$data->read_flag)) {
+                    $userEntryArgs[] = $data->id;
+                }
             }
+
+            // create user entries for all messages which haven't been read yet
+            if(!empty($userEntryArgs)) {
+                parent::startTx();
+
+                $stmtString = ChannelMessageUserEntryEntityController::$SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY;
+                $stmtInsertUserEntry = parent::prepareStatement($stmtString);
+                foreach($userEntryArgs as $id) {
+                    $p2 = $id;
+                    $p3 = 1;
+                    $p4 = 1;
+                    $p5 = 0;
+                    $stmtInsertUserEntry->bind_param("iiiii", $p1, $p2, $p3, $p4, $p5);
+                    $stmtInsertUserEntry->execute();
+                }
+
+                parent::commit();
+            }
+
         } catch (\Exception $e) {
             throw new DbException("Error on executing query: '" . $stmtString . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
-            if (isset($stmt)) {
-                $stmt->close();
+            if (isset($stmtGetMessages)) {
+                $stmtGetMessages->free_result();
+                $stmtGetMessages->close();
+            }
+            if (isset($stmtCreateUserEntry)) {
+                $stmtCreateUserEntry->close();
             }
             parent::close();
         }
@@ -104,32 +137,47 @@ class ChannelMessageEntityController extends AbstractEntityController
 
         parent::open();
 
-        $stmt = null;
-        $result = null;
+        $stmtInsertMessage = null;
+        $stmtInsertUserEntry = null;
+        $stmtString = "";
         $p1 = (integer)$args["userId"];
         $p2 = (integer)$args["channelId"];
         $p3 = (string)$args["message"];
+        $p4 = (!empty($args["markRead"])) ? (integer)$args["markRead"] : 0;
+        $p5 = (!empty($args["readFlag"])) ? ((boolean)$args["readFlag"]) : 0;
+        $p6 = (!empty($args["importantFlag"])) ? ((boolean)$args["importantFlag"]) : 0;
 
         try {
             parent::startTx();
+            $stmtString = self::$SQL_INSERT_CHANNEL_MESSAGE;
 
-            $stmt = parent::prepareStatement(self::$SQL_INSERT_CHANNEL_MESSAGE);
-            $stmt->bind_param("iis", $p1, $p2, $p3);
             parent::startTx();
-            $stmt->execute();
-            $result = $stmt->insert_id;
+
+            // insert message
+            $stmtInsertMessage = parent::prepareStatement($stmtString);
+            $stmtInsertMessage->bind_param("iis", $p1, $p2, $p3);
+            $stmtInsertMessage->execute();
+
+            // insert message user entry
+            $p2 = $stmtInsertMessage->insert_id;
+            $stmtString = ChannelMessageUserEntryEntityController::$SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY;
+            $stmtInsertUserEntry = parent::prepareStatement($stmtString);
+            $stmtInsertUserEntry->bind_param("iiiii", $p1, $p2, $p4, $p5, $p6);
+            $stmtInsertUserEntry->execute();
+
             parent::commit();
         } catch (\Exception $e) {
             parent::rollback();
-            throw new DbException("Error on executing query: '" . self::$SQL_INSERT_CHANNEL_MESSAGE . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+            throw new DbException("Error on executing query: '" . $stmtString . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
-            if (isset($stmt)) {
-                $stmt->close();
+            if (isset($stmtInsertMessage)) {
+                $stmtInsertMessage->close();
+            }
+            if(isset($stmtInsertUserEntry)) {
+                $stmtInsertUserEntry->close();
             }
             parent::close();
         }
-
-        return $result;
     }
 
     public function delete(array $args)
@@ -151,8 +199,9 @@ class ChannelMessageEntityController extends AbstractEntityController
             $stmtCheckFollowing->bind_param("iis", $p1, $p2, $p3);
             parent::startTx();
             $stmtCheckFollowing->execute();
+            $stmtCheckFollowingResult = $stmtCheckFollowing->get_result();
             // check if post have been followed
-            if ($stmtCheckFollowing->get_result()->num_rows == 0) {
+            if ($stmtCheckFollowingResult->num_rows == 0) {
                 // Check if message owned by user
                 $stmtMessageById = parent::prepareStatement(self::$SQL_CHANNEL_MESSAGE_BY_ID);
                 $stmtMessageById->bind_param("i", $p1);

@@ -93,19 +93,13 @@
                 {% endif %}
                 <div class="channel-message">
                     <div class="message-actions">
-                        {% if message.important_flag== 0 %}
-                        <a href="#" onclick="" aria-label="Important">
-                            <small><span class="glyphicon glyphicon-star-empty"
-                                         style="color:gold; vertical-align:middle;"/></small>
+                        <a href="#"
+                           onclick="postRequest('viewId={{viewId}}&actionId={{actionSetImportantMessage}}&channelId={{channel.id}}&messageId={{mValue[loop.index0].id}}&importantFlag={% if mValue[loop.index0].important_flag == 0 %}1{% else %}0{% endif %}')"
+                           aria-label="Important">
+                            <small><span
+                                    class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
+                                    style="color:gold; vertical-align:middle;"/></small>
                         </a>
-                        {% else %}
-                        <small><span class="glyphicon glyphicon-star" style="color:gold; vertical-align:middle;"/>
-                        </small>
-                        {% endif %}
-                        {% if readFlags[mValue[loop.index0].id] == 1 %}
-                        <small><span class="glyphicon glyphicon-flag" aria-hidden="true" aria-label="New" title="New"/>
-                        </small>
-                        {% endif %}
                         {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
                         mValue|length) and
                         (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==

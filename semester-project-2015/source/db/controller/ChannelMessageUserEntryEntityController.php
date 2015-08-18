@@ -15,46 +15,18 @@ use source\common\DbException;
 class ChannelMessageUserEntryEntityController extends AbstractEntityController
 {
 
-    private static $SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY = "INSERT INTO channel_message_user_entry (user_id, channel_message_id, read_flag, important_flag) VALUES (?,?,?,?)";
+    public static $SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY =
+        " INSERT INTO channel_message_user_entry (user_id, channel_message_id, read_date, read_flag, important_flag) " .
+        " VALUES (?,?,  (CASE WHEN (? = 1) THEN CURRENT_TIMESTAMP(6) ELSE NULL END), ?,?)";
 
-    private static $SQL_SELECT_MESSAGE_READ_FLAGS_FOR_CHANNEL =
-        " SELECT DISTINCT cm.id AS channel_message_id, cme.read_flag AS read_flag FROM channel_message_user_entry cme " .
-        " INNER JOIN channel_message cm ON cme.channel_message_id = cm.id " .
-        " WHERE cm.channel_id = ? " .
-        " AND cme.read_flag = 1 ";
+    private static $SQL_UPDATE_USER_ENTRY_IMPORTANT_FLAG =
+        " UPDATE channel_message_user_entry SET important_flag = ? " .
+        " WHERE user_id = ? " .
+        " AND channel_message_id = ? ";
 
     public function __construct()
     {
         parent::__construct();
-    }
-
-    public function getMessageReadFlagsForChannel($channelId)
-    {
-        parent::open();
-
-        $stmt = null;
-        $res = array();
-
-        try {
-            $stmt = parent::prepareStatement(self::$SQL_SELECT_MESSAGE_READ_FLAGS_FOR_CHANNEL);
-            $p1 = (integer)$channelId;
-            $stmt->bind_param("i", $p1);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $data = null;
-            while ($data = $result->fetch_object()) {
-                $res[$data->channel_message_id] = $data->read_flag;
-            }
-        } catch (\Exception $e) {
-            throw new DbException("Error on executing query: '" . self::$SQL_SELECT_MESSAGE_READ_FLAGS_FOR_CHANNEL . "''" . PHP_EOL . "Error: '" . $e->getMessage());
-        } finally {
-            if (isset($stmt)) {
-                $stmt->close();
-            }
-            parent::close();
-        }
-
-        return $res;
     }
 
     public function getById($id)
@@ -67,6 +39,37 @@ class ChannelMessageUserEntryEntityController extends AbstractEntityController
         throw new InternalErrorException("Deletion of channel_message_user_entry entries not allowed");
     }
 
+    public function markMessageAsImportant($userId, $messageId, $importantFlag) {
+        parent::open();
+
+        $stmt = null;
+        $result = null;
+        $p1 = (integer)$importantFlag;
+        $p2 = (integer)$userId;
+        $p3 = (integer)$messageId;
+
+        try {
+            parent::startTx();
+
+            $stmt = parent::prepareStatement(self::$SQL_UPDATE_USER_ENTRY_IMPORTANT_FLAG);
+            $stmt->bind_param("iii", $p1, $p2, $p3);
+            parent::startTx();
+            $stmt->execute();
+            $result = $stmt->affected_rows != 0;
+            parent::commit();
+        } catch (\Exception $e) {
+            parent::rollback();
+            throw new DbException("Error on executing query: '" . self::$SQL_UPDATE_USER_ENTRY_IMPORTANT_FLAG . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->close();
+            }
+            parent::close();
+        }
+
+        return $result;
+    }
+
     public function persist(array $args)
     {
 
@@ -76,14 +79,15 @@ class ChannelMessageUserEntryEntityController extends AbstractEntityController
         $result = null;
         $p1 = (integer)$args["userId"];
         $p2 = (integer)$args["channelMessageId"];
-        $p3 = (!empty($args["readFlag"])) ? ((boolean)$args["readFlag"]) : 0;
-        $p4 = (!empty($args["importantFlag"])) ? ((boolean)$args["importantFlag"]) : 0;
+        $p3 = (!empty($args["markRead"])) ? (integer) $args["markRead"] : 0;
+        $p4 = (!empty($args["readFlag"])) ? ((boolean)$args["readFlag"]) : 0;
+        $p5 = (!empty($args["importantFlag"])) ? ((boolean)$args["importantFlag"]) : 0;
 
         try {
             parent::startTx();
 
             $stmt = parent::prepareStatement(self::$SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY);
-            $stmt->bind_param("iiii", $p1, $p2, $p3, $p4);
+            $stmt->bind_param("iiiii", $p1, $p2, $p3, $p4, $p5);
             parent::startTx();
             $stmt->execute();
             parent::commit();

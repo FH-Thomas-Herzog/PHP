@@ -41,7 +41,7 @@ class ChannelController extends AbstractRequestController
 
     public static $ACTION_EDIT_MESSAGE = "actionEditMessage";
 
-    public static $ACTION_SET_FAVORITE_MESSAGE = "actionSetFavoriteMessage";
+    public static $ACTION_SET_IMPORTANT_MESSAGE = "actionSetImportantMessage";
 
     public function __construct()
     {
@@ -76,8 +76,9 @@ class ChannelController extends AbstractRequestController
             case self::$ACTION_DELETE_MESSAGE:
                 $result = $this->handleDeleteMessage();
                 break;
-            case self::$ACTION_SET_FAVORITE_MESSAGE:
+            case self::$ACTION_SET_IMPORTANT_MESSAGE:
                 $result = $this->handleSetFavoriteMessage();
+                break;
             default:
                 throw new InternalErrorException("Action with id: '" . $this->actionId . "' not supported by this handler: '" . __CLASS__ . "''");
         }
@@ -140,7 +141,6 @@ class ChannelController extends AbstractRequestController
         try {
             $channel = $channelCtrl->getById($channelId);
             $messages = $channelMessageCtrl->getMessagesForChannel($channelId, $this->securityCtrl->getLoggedUser(), $favoriteOnly);
-            $messageReadFlags = $channelMessageUserEntryCtrl->getMessageReadFlagsForChannel($channelId);
             $viewMessages = array();
             $dateMessages = array();
             $timeMessages = array();
@@ -199,10 +199,9 @@ class ChannelController extends AbstractRequestController
                 "actionDeleteMessage" => self::$ACTION_DELETE_MESSAGE,
                 "actionEditMessage" => self::$ACTION_EDIT_MESSAGE,
                 "actionToSelectedChannel" => self::$ACTION_TO_SELECTED_CHANNEL,
-                "actionSetFavoriteMessage" => self::$ACTION_SET_FAVORITE_MESSAGE,
+                "actionSetImportantMessage" => self::$ACTION_SET_IMPORTANT_MESSAGE,
                 "channel" => $channel,
                 "messages" => $viewMessages,
-                "readFlags" => $messageReadFlags,
                 "favoriteOnly" => $favoriteOnly
             );
         } catch (DbException $e) {
@@ -218,17 +217,22 @@ class ChannelController extends AbstractRequestController
 
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("messageId");
+        $importantFlag = (integer)parent::getParameter("importantFlag");
         $channelMessageUserEntryCtrl = new ChannelMessageUserEntryEntityController();
 
         try {
-            $channelMessageUserEntryCtrl->delete(array(
-                "userId" => $userId,
-                "messageId" => $messageId
-            ));
-            $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
+            $updated = $channelMessageUserEntryCtrl->markMessageAsImportant($userId, $messageId, $importantFlag);
+            if (!$updated) {
+                $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNEL, array(
+                    "message" => "Could not set important flag. Maybe message has been deleted",
+                    "messageType" => "warning"
+                ));
+            } else {
+                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
+            }
         } catch (DbException $e) {
             $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNELS, array(
-                "message" => "Could not set favorite flag on message. If this error keeps showing up, please notify the administrator",
+                "message" => "Could not set important flag on message. If this error keeps showing up, please notify the administrator",
                 "messageType" => "danger"
             ));
         }
@@ -280,16 +284,18 @@ class ChannelController extends AbstractRequestController
         $msg = (string)parent::getParameter("message");
 
         $channelMessageCtrl = new ChannelMessageEntityController();
-        $channelMessageUserEntryCtrl = new ChannelMessageUserEntryEntityController();
         try {
-            $messageId = $channelMessageCtrl->persist(array(
+            $channelMessageCtrl->persist(array(
                 "userId" => $userId,
                 "channelId" => $channelId,
-                "message" => $msg
+                "message" => $msg,
+                "readFlag" => 1,
+                "importantFlag" => 0,
+                "markRead" => 1
             ));
             $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
         } catch (DbException $e) {
-            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNELS, array(
+            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNEL, array(
                 "message" => "Could not post message. If this error keeps showing up, please notify the administrator",
                 "messageType" => "danger"
             ));
