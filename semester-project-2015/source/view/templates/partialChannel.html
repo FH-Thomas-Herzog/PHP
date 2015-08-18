@@ -104,12 +104,7 @@
                         mValue|length) and
                         (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
                         messages|length ) %}
-                        <a href="#" onclick="" aria-label="Edit" title="Edit">
-                            <small><span class="glyphicon glyphicon-edit"
-                                         style="color:green; vertical-align:middle;"/></small>
-                        </a>
                         <a href="#"
-                           onclick="postRequest('viewId={{viewId}}&actionId={{actionDeleteMessage}}&channelId={{channel.id}}&messageId={{mValue[loop.index0].id}}&creationDate={{mValue[loop.index0].creation_date}}')"
                            aria-label="Remove" title="Remove">
                             <small><span class="glyphicon glyphicon-remove"
                                          style="color:red; vertical-align:middle;"/></small>
@@ -117,7 +112,26 @@
                         {% endif %}
                     </div>
                     <div style="display: inline-block">
-                        <span class="channel-message-text">{{ mValue[loop.index0].message }}</span></div>
+                        {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
+                        mValue|length) and
+                        (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
+                        messages|length ) %}
+                        <a id="editMessage" href="#" >{{ mValue[loop.index0].message }}</a>
+                        <script type="text/javascript">
+                            var editElement = $("#editMessage");
+                            editElement.editable({
+                                send: 'always',
+                                type: 'textarea',
+                                pk: "{{mValue[loop.index0].id}}",
+                                url: '/public/start.php?viewId={{viewId}}&actionId={{actionEditMessage}}',
+                                title: 'Edit message'
+                            });
+                        </script>
+                        {% else %}
+                        <span class="channel-message-text">{{ mValue[loop.index0].message }}</span>
+                        {% endif %}
+                    </div>
+
                 </div>
                 {% endfor %}
             </div>
@@ -159,6 +173,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    $('#username').editable();
     $('#messageTextArea').keyup(function (evt) {
         if ((evt.keyCode == 13) && (!evt.shiftKey)) {
             var msg = $('#messageTextArea').val();

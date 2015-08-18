@@ -11,9 +11,7 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
-// set server root path which is used for accessing the resources
-define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'] . '/php-semester-project');
-
+define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 // Import common resources which do not follow psr-4 namespace specification
 // and therefore cannot be autoloaded
 require_once(ROOT_PATH . "/source/common/Objects.php");

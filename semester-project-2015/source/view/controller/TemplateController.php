@@ -20,9 +20,6 @@ use \Stash\Pool;
 class TemplateController extends BaseObject
 {
 
-    public static $CONTEXT_ROOT = "/php-semester-project";
-
-
     public static $POOL_NAMESPACE = "ViewController";
 
     private static $CSS_ROOT = "/public/css";
@@ -108,8 +105,8 @@ class TemplateController extends BaseObject
     private static function addCommonArguments($viewId, array $args)
     {
         if (isset($args)) {
-            $args["cssRoot"] = self::$CONTEXT_ROOT . self::$CSS_ROOT;
-            $args["jsRoot"] = self::$CONTEXT_ROOT . self::$JS_ROOT;
+            $args["cssRoot"] = self::$CSS_ROOT;
+            $args["jsRoot"] = self::$JS_ROOT;
             $args[ViewController::$VIEW_ID] = (string)$viewId;
         }
         return $args;
