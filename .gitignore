@@ -47,3 +47,4 @@ Temporary Items
 # Ignore contained git repositories
 # ==================================
 /**/vendor
+/**/.
