@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="php-semester-project">
+  <component name="PublishConfigData" autoUpload="Always" serverName="semster-project">
     <serverData>
-      <paths name="php-semester-project">
+      <paths name="semster-project">
         <serverdata>
           <mappings>
-            <mapping deploy="php-semester-project" local="$PROJECT_DIR$" web="/php-semester-project" />
+            <mapping deploy="\" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
