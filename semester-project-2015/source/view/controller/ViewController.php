@@ -58,11 +58,18 @@ class ViewController extends AbstractRequestController
     public function handleRequest()
     {
         $result = $this->handleAction();
-        $args = $this->prepareView($result->nextView);
-        if (isset($args)) {
-            return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($result->args, $args));
-        } else {
-            return "";
+        // handle request which renders result
+        if(!$this->isAjaxResponse()) {
+            $args = $this->prepareView($result->nextView);
+            if (isset($args)) {
+                return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($result->args, $args));
+            } else {
+                return "";
+            }
+        }
+        // handle request which expects ajax result (provided by action controller set args)
+        else{
+            return $result->args["ajax"];
         }
     }
 
@@ -181,4 +188,7 @@ class ViewController extends AbstractRequestController
         return $item->get();
     }
 
+    private function isAjaxResponse() {
+        return (empty(parent::getParameter("ajax"))) ? false: true;
+    }
 }

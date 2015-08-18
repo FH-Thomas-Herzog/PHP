@@ -17,6 +17,11 @@ class ChannelMessageEntityController extends AbstractEntityController
 
     private static $SQL_INSERT_CHANNEL_MESSAGE = "INSERT INTO channel_message (user_id, channel_id, message) VALUES (?,?,?)";
 
+    private static $SQL_UPDATE_MESSAGE =
+        " UPDATE channel_message SET message=?, updated_date = CURRENT_TIMESTAMP(6) " .
+        " WHERE id = ? " .
+        " AND user_id = ? ";
+
     private static $SQL_DELETE_CHANNEL_MESSAGE = "DELETE FROM channel_message WHERE id = ? ";
 
     private static $SQL_CHANNEL_MESSAGE_BY_ID = "SELECT * FROM channel_message WHERE id = ? ";
@@ -60,7 +65,7 @@ class ChannelMessageEntityController extends AbstractEntityController
         $stmtInsertUserEntry = null;
         $res = array();
         $stmtString = "";
-        $favorite = (boolean) $favoriteOnly;
+        $favorite = (boolean)$favoriteOnly;
         $p1 = (integer)$userId;
         $p2 = (integer)$channelId;
 
@@ -83,18 +88,18 @@ class ChannelMessageEntityController extends AbstractEntityController
             while ($data = $result->fetch_object()) {
                 $res[] = $data;
                 // get all message ids which the given user does not own and has not read yet
-                if((!$favorite) && (!$data->owned_flag) && (!$data->read_flag)) {
+                if ((!$favorite) && (!$data->owned_flag) && (!$data->read_flag)) {
                     $userEntryArgs[] = $data->id;
                 }
             }
 
             // create user entries for all messages which haven't been read yet
-            if(!empty($userEntryArgs)) {
+            if (!empty($userEntryArgs)) {
                 parent::startTx();
 
                 $stmtString = ChannelMessageUserEntryEntityController::$SQL_INSERT_CHANNEL_MESSAGE_USER_ENTRY;
                 $stmtInsertUserEntry = parent::prepareStatement($stmtString);
-                foreach($userEntryArgs as $id) {
+                foreach ($userEntryArgs as $id) {
                     $p2 = $id;
                     $p3 = 1;
                     $p4 = 1;
@@ -151,8 +156,6 @@ class ChannelMessageEntityController extends AbstractEntityController
             parent::startTx();
             $stmtString = self::$SQL_INSERT_CHANNEL_MESSAGE;
 
-            parent::startTx();
-
             // insert message
             $stmtInsertMessage = parent::prepareStatement($stmtString);
             $stmtInsertMessage->bind_param("iis", $p1, $p2, $p3);
@@ -173,7 +176,7 @@ class ChannelMessageEntityController extends AbstractEntityController
             if (isset($stmtInsertMessage)) {
                 $stmtInsertMessage->close();
             }
-            if(isset($stmtInsertUserEntry)) {
+            if (isset($stmtInsertUserEntry)) {
                 $stmtInsertUserEntry->close();
             }
             parent::close();
@@ -253,6 +256,34 @@ class ChannelMessageEntityController extends AbstractEntityController
 
     function update(array $args)
     {
-        // TODO: Implement update() method.
+        parent::open();
+
+        $stmt = null;
+        $result = false;
+        $p1 = (string)$args["message"];
+        $p2 = (integer)$args["messageId"];
+        $p3 = (integer)$args["userId"];
+
+        try {
+            parent::startTx();
+
+            // insert message
+            $stmt = parent::prepareStatement(self::$SQL_UPDATE_MESSAGE);
+            $stmt->bind_param("sii", $p1, $p2, $p3);
+            $stmt->execute();
+            $result = ($stmt->affected_rows == 1);
+
+            parent::commit();
+        } catch (\Exception $e) {
+            parent::rollback();
+            throw new DbException("Error on executing query: '" . self::$SQL_UPDATE_MESSAGE . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->close();
+            }
+            parent::close();
+        }
+
+        return $result;
     }
 }

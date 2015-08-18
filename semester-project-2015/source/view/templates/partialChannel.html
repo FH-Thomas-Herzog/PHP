@@ -70,6 +70,37 @@
         margin-right: auto;
     }
 </style>
+
+<script type="text/javascript">
+    var setImportantMessage = function (messageId) {
+        var linkJQ = $('#setImportantMessageSpan_' + messageId);
+        var
+                classImportant = "glyphicon glyphicon-star",
+                classNotImportant = classImportant + "-empty",
+                importantFlag = (linkJQ.attr("class") == classImportant) ? 0 : 1,
+                classActual = (importantFlag == 1) ? classImportant : classNotImportant;
+        $.ajax({
+            async: true,
+            type: "POST",
+            url: "start.php",
+            data: ("ajax=true&viewId={{viewId}}&actionId={{actionSetImportantMessage}}&channelId={{channel.id}}&messageId=" + messageId + "&importantFlag=" + importantFlag),
+            success: function (data) {
+                var obj = JSON.parse(data);
+                if (obj.refresh) {
+                    $('#refreshMessages').click();
+                } else {
+                    linkJQ.attr("class", classActual);
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#refreshMessages').click();
+            }
+        });
+    }
+    var postRequest = function (params) {
+        postUpdateTarget('content', params);
+    }
+</script>
 <div id="channelContent" class="child" style="width: 400px; min-height: 150px; max-height: 400px; overflow-y: auto;">
     <div>
         <h4><b>#{{channel.title}}</b></h4>
@@ -94,11 +125,11 @@
                 <div class="channel-message">
                     <div class="message-actions">
                         <a href="#"
-                           onclick="postRequest('viewId={{viewId}}&actionId={{actionSetImportantMessage}}&channelId={{channel.id}}&messageId={{mValue[loop.index0].id}}&importantFlag={% if mValue[loop.index0].important_flag == 0 %}1{% else %}0{% endif %}')"
+                           onclick="setImportantMessage('{{mValue[loop.index0].id}}')"
                            aria-label="Important">
-                            <small><span
-                                    class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
-                                    style="color:gold; vertical-align:middle;"/></small>
+                            <small><span id="setImportantMessageSpan_{{mValue[loop.index0].id}}"
+                                         class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
+                                         style="color:gold; vertical-align:middle;"/></small>
                         </a>
                         {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
                         mValue|length) and
@@ -116,16 +147,31 @@
                         mValue|length) and
                         (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
                         messages|length ) %}
-                        <a id="editMessage" href="#" >{{ mValue[loop.index0].message }}</a>
+                        <a id="editMessage" href="#">{{ mValue[loop.index0].message }}</a>
                         <script type="text/javascript">
                             var editElement = $("#editMessage");
                             editElement.editable({
                                 send: 'always',
                                 type: 'textarea',
                                 pk: "{{mValue[loop.index0].id}}",
-                                url: '/public/start.php?viewId={{viewId}}&actionId={{actionEditMessage}}',
+                                url: '/public/start.php',
+                                params: {
+                                    ajax: true,
+                                    viewId: "{{viewId}}",
+                                    actionId: "{{actionEditMessage}}"
+                                },
+                                validate: function (value) {
+                                    if ($.trim(value) == '') {
+                                        return 'Message must contain at least one character';
+                                    }
+                                }
+                                ,
+                                error: function (errors) {
+                                    $("#refreshMessages").click();
+                                },
                                 title: 'Edit message'
-                            });
+                            })
+                            ;
                         </script>
                         {% else %}
                         <span class="channel-message-text">{{ mValue[loop.index0].message }}</span>
@@ -149,7 +195,7 @@
                 </a>
             </li>
             <li>
-                <a href="#"
+                <a id="refreshMessages" href="#"
                    onclick="postRequest('viewId={{viewId}}&actionId={{actionToSelectedChannel}}&channelId={{channel.id}}&favoriteOnly={% if favoriteOnly == true %}1{% else %}0{% endif %}')">
                     refresh
                 </a>

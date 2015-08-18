@@ -18,6 +18,7 @@ use source\db\controller\ChannelMessageEntityController;
 use source\db\controller\ChannelMessageUserEntryEntityController;
 use source\db\controller\ChannelUserEntryEntityController;
 use source\view\model\RequestControllerResult;
+use source\view\model\SimpleJsonResult;
 
 class ChannelController extends AbstractRequestController
 {
@@ -78,6 +79,9 @@ class ChannelController extends AbstractRequestController
                 break;
             case self::$ACTION_SET_IMPORTANT_MESSAGE:
                 $result = $this->handleSetFavoriteMessage();
+                break;
+            case self::$ACTION_EDIT_MESSAGE:
+                $result = $this->handleEditMessage();
                 break;
             default:
                 throw new InternalErrorException("Action with id: '" . $this->actionId . "' not supported by this handler: '" . __CLASS__ . "''");
@@ -211,9 +215,46 @@ class ChannelController extends AbstractRequestController
         return $result;
     }
 
+    private function handleEditMessage()
+    {
+
+        $result = new RequestControllerResult(false);
+
+        $userId = $this->securityCtrl->geTLoggedUser();
+        $messageId = (integer)parent::getParameter("pk");
+        $message = (string)parent::getParameter("value");
+        $channelMessageCtrl = new ChannelMessageEntityController();
+
+        try {
+            $updated = $channelMessageCtrl->update(array(
+                "userId" => $userId,
+                "messageId" => $messageId,
+                "message" => $message
+            ));
+            if (!$updated) {
+                http_response_code(500);
+            } else {
+                $result->args = array(
+                    "ajax" => json_encode(array(
+                        "successful" => true
+                    ))
+                );
+            }
+        } catch (DbException $e) {
+            $result->args = array(
+                "ajax" => json_encode(array(
+                    "error" => true,
+                    "refresh" => true
+                ))
+            );
+        }
+
+        return $result;
+    }
+
     private function handleSetFavoriteMessage()
     {
-        $result = null;
+        $result = new RequestControllerResult(false);
 
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("messageId");
@@ -223,18 +264,25 @@ class ChannelController extends AbstractRequestController
         try {
             $updated = $channelMessageUserEntryCtrl->markMessageAsImportant($userId, $messageId, $importantFlag);
             if (!$updated) {
-                $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNEL, array(
-                    "message" => "Could not set important flag. Maybe message has been deleted",
-                    "messageType" => "warning"
-                ));
+                $result->args = array(
+                    "ajax" => json_encode(array(
+                        "refresh" => true
+                    ))
+                );
             } else {
-                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
+                $result->args = array(
+                    "ajax" => json_encode(array(
+                        "successful" => true
+                    ))
+                );
             }
         } catch (DbException $e) {
-            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNELS, array(
-                "message" => "Could not set important flag on message. If this error keeps showing up, please notify the administrator",
-                "messageType" => "danger"
-            ));
+            $result->args = array(
+                "ajax" => json_encode(array(
+                    "error" => true,
+                    "refresh" => true
+                ))
+            );
         }
 
         return $result;
