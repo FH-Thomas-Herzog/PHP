@@ -9,11 +9,11 @@
 namespace source\view\controller;
 
 
-use source\common\AbstractRequestController;
+use source\common\AbstractViewController;
 use source\common\InternalErrorException;
 use source\view\model\RequestControllerResult;
 
-class MainController extends AbstractRequestController
+class MainViewController extends AbstractViewController
 {
 
     public static $ACTION_TO_CHANNELS = "actionToChannels";
@@ -63,9 +63,9 @@ class MainController extends AbstractRequestController
                 break;
             case ViewController::$VIEW_MAIN:
                 $args = array(
-                    "actionToNewChannel" => MainController::$ACTION_TO_NEW_CHANNEL,
-                    "actionToChannels" => MainController::$ACTION_TO_CHANNELS,
-                    "actionLogout" => MainController::$ACTION_LOGOUT
+                    "actionToNewChannel" => MainViewController::$ACTION_TO_NEW_CHANNEL,
+                    "actionToChannels" => MainViewController::$ACTION_TO_CHANNELS,
+                    "actionLogout" => MainViewController::$ACTION_LOGOUT
                 );
                 break;
             default:

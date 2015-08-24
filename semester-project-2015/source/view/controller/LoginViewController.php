@@ -9,13 +9,13 @@
 namespace source\view\controller;
 
 
-use source\common\AbstractRequestController;
+use source\common\AbstractViewController;
 use source\common\DbException;
 use source\common\InternalErrorException;
 use source\db\controller\UserEntityController;
 use source\view\model\RequestControllerResult;
 
-class LoginRequestController extends AbstractRequestController
+class LoginViewController extends AbstractViewController
 {
     public static $ACTION_REGISTRATION = "ACTION_TO_REGISTRATION";
 
@@ -56,8 +56,8 @@ class LoginRequestController extends AbstractRequestController
         switch ((string)$nextView) {
             case ViewController::$VIEW_LOGIN:
                 $args = array(
-                    "actionLogin" => LoginRequestController::$ACTION_LOGIN,
-                    "actionRegister" => LoginRequestController::$ACTION_REGISTRATION
+                    "actionLogin" => LoginViewController::$ACTION_LOGIN,
+                    "actionRegister" => LoginViewController::$ACTION_REGISTRATION
                 );
                 break;
             default:

@@ -1,108 +1,94 @@
 {% extends "root-template.html" %}
-{% block header %}
-<style type="text/css">
-    html, body {
-        height: 100%
-    }
-
-    .parent {
-        display: table;
-        height: 70%;
-        width: 100%;
-    }
-
-    .child {
-        display: table-cell;
-        vertical-align: middle;
-    }
-
-    div.row-buffer {
-        margin: 10px;
-    }
-
-    div.form-group {
-        margin: 10px;
-    }
-
-    div.text-center {
-        margin: 10px;
-    }
-
-    label {
-        margin-right: 10px;
-    }
-</style>
-{%endblock%}
 {%block title%}Registration{%endblock%}
 {%block content%}
-<div class="parent">
-    <div class="child">
-        <div class="container">
-            {% if message and messageType %}
-            <div class="row row-buffer">
-                <div class="col-sm-12">
-                    <div class="text-center">
-                        <div class="alert alert-{{messageType}} alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <strong>{{message}}</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            <div class="row row-buffer">
-                <div class="col-md-4 col-md-offset-4">
-                    <form id="registrationForm" enctype="application/x-www-form-urlencoded" method="post"
-                          data-toggle="validator" role="form">
-                        <input id='actionId' name='actionId' value="" type='hidden'/>
-                        <input id='viewId' name='viewId' value="{{viewId}}" type='hidden'/>
-
-                        <div class="form-group">
-                            <label id="firstnameLabel" class="control-label">Firstname</label>
-                            <input id="firstname" name="firstname"
-                                   value="{% if firstname%}{{firstname}}{%endif%}" type="text" class="form-control"
-                                   placeholder="Enter your first name" required/>
-                        </div>
-                        <div class="form-group">
-                            <label id="lastnameLabel" class="control-label">Lastname</label>
-                            <input id="lastname" name="lastname"
-                                   value="{% if lastname%}{{lastname}}{%endif%}" type="text"
-                                   placeholder="Enter your lastname" class="form-control" required/>
-                        </div>
-                        <div class="form-group">
-                            <label id="emailLabel" class="control-label">Email</label>
-                            <input id="email" name="email"
-                                   value="{% if email%}{{email}}{%endif%}" type="email"
-                                   data-error="Invalid email (max.mustermann@gmail.com)"
-                                   placeholder="Enter your email" class="form-control" required/>
-                        </div>
-                        <div class="form-group">
-                            <label id="usernameLabel" class="control-label">Username</label>
-                            <input id="username" name="username"
-                                   value="{% if username%}{{username}}{%endif%}" type="text"
-                                   placeholder="Enter your username" class="form-control" required/>
-                        </div>
-                        <div class="form-group">
-                            <label id="passwordLabel" class="control-label">Password</label>
-                            <input
-                                    id="password" name="password"
-                                    value="{% if password%}{{password}}{%endif%}" type="password" class="form-control"
-                                    placeholder="Enter your password" required/>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-default" style="margin: 5px;"
-                                    onclick="setAction('{{actionRegister}}')">Save
-                            </button>
-                            <button type="button" class="btn btn-default" style="margin: 5px;"
-                                    onclick="submitCancelWithValidation('registrationForm', '{{actionToLogin}}')">Cancel
-                            </button>
-                        </div>
-                    </form>
-                    <div class="col-md-4"></div>
+<div class="container">
+    <div id="formMessageRow" class="row row-buffer" style="display: none;">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <div id="formMessageAlert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                            onclick="hideElement('formMessageRow')"><span
+                            aria-hidden="true">&times;</span></button>
+                    <strong id="formMessage"></strong>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row row-buffer">
+        <div class="col-md-4 col-md-offset-4">
+            <form id="registrationForm" enctype="application/x-www-form-urlencoded" method="post"
+                  data-toggle="validator" role="form" onsubmit="">
+                <input id='actionId' name='actionId' value="" type='hidden'/>
+                <input id='viewId' name='viewId' value="{{viewId}}" type='hidden'/>
+
+                <div class="form-group">
+                    <label id="firstnameLabel" class="control-label">Firstname</label>
+                    <input id="firstname" name="firstname"
+                           value="{% if firstname%}{{firstname}}{%endif%}" type="text" class="form-control"
+                           placeholder="Enter your first name" required/>
+                </div>
+                <div class="form-group">
+                    <label id="lastnameLabel" class="control-label">Lastname</label>
+                    <input id="lastname" name="lastname"
+                           value="{% if lastname%}{{lastname}}{%endif%}" type="text"
+                           placeholder="Enter your lastname" class="form-control" required/>
+                </div>
+                <div class="form-group">
+                    <label id="emailLabel" class="control-label">Email</label>
+                    <input id="email" name="email"
+                           value="{% if email%}{{email}}{%endif%}" type="email"
+                           data-error="Invalid email (max.mustermann@gmail.com)"
+                           placeholder="Enter your email" class="form-control" required/>
+                </div>
+                <div class="form-group">
+                    <label id="usernameLabel" class="control-label">Username</label>
+                    <input id="username" name="username"
+                           value="{% if username%}{{username}}{%endif%}" type="text"
+                           placeholder="Enter your username" class="form-control" required/>
+                </div>
+                <div class="form-group">
+                    <label id="passwordLabel" class="control-label">Password</label>
+                    <input
+                            id="password" name="password"
+                            value="{% if password%}{{password}}{%endif%}" type="password" class="form-control"
+                            placeholder="Enter your password" required/>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-default" style="margin: 5px;">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-default" style="margin: 5px;"
+                            onclick="toLogin();">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
 </div>
+<script type="text/javascript">
+    // function used by ajax form submit function
+    var registerSuccessFunction = function (data) {
+                var resultObj = JSON.parse(data);
+                if (resultObj.error === true) {
+                    $("#formMessageAlert").attr("class", "alert alert-" + resultObj.type + " alert-dismissible");
+                    $("#formMessage").text(resultObj.message);
+                    showElement("formMessageRow");
+                } else {
+                    $("body").html(resultObj.html);
+                }
+            }
+            ,
+            toLogin = function () {
+                document.location.href = "/public/index.php"
+            }
+    // init validation on form and prepare for ajax submit
+    $('#registrationForm').validator().on('submit', function (e) {
+        if (!e.isDefaultPrevented()) {
+            ajaxPostRequestSubmitForm('registrationForm', 'index.php', 'actionId={{actionRegister}}', registerSuccessFunction);
+        }
+        return false;
+    })
+</script>
 {%endblock%}

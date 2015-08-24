@@ -14,11 +14,48 @@
     {%endblock%}
 
     <style type="text/css">
-        footer{
-            position:fixed;
-            bottom:10px;
-            left:10px;
-            right:0px;
+        html, body {
+            height: 100%
+        }
+
+        .parent {
+            display: table;
+            height: 70%;
+            width: 100%;
+        }
+
+        .child {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        div.row-buffer {
+            margin: 10px;
+        }
+
+        div.form-group {
+            margin: 10px;
+        }
+
+        div.text-center {
+            margin: 10px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            right: 0px;
+        }
+
+        .modal {
+            position: absolute;
+            background: url('/public/images/ajax-loader.gif') 50% 50% no-repeat rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
     </style>
     <script type="text/javascript">
@@ -33,15 +70,70 @@
             setAction(actionId);
             $("#" + formId).submit();
         }
+
+        var
+                ajaxPostRequest = function (relUrl, params, successFunc, errorFunc, completeFunc) {
+                    $("#ajaxLoaderImage").show();
+                    $.ajax({
+                        async: true,
+                        type: "POST",
+                        url: relUrl,
+                        data: ("ajax=true&viewId={{viewId}}" + (params ? ("&" + params) : "")),
+                        success: function (data) {
+                            if (successFunc) {
+                                successFunc(data);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            if (errorFunc) {
+                                errorFunc(xhr, status, error);
+                            }
+                        },
+                        complete: function (xhr, status) {
+                            $("#ajaxLoaderImage").hide();
+                            if (completeFunc) {
+                                completeFunc(xhr, status);
+                            }
+                        }
+                    });
+                    // prevent submit of form
+                    return false;
+                },
+                ajaxPostRequestSubmitForm = function (formId, relUrl, params, successFunc, errorFunc, completeFunc) {
+                    var form = $('#' + formId);
+                    if (!form) {
+                        throw "Form with id '" + formId + "' does not exist";
+                    }
+                    ajaxPostRequest(relUrl, form.serialize() + (params ? ("&" + params) : ""), successFunc, errorFunc, completeFunc);
+                },
+                hideElement = function (id) {
+                    var element = $("#" + id);
+                    if (!element) {
+                        throw "Can not find element with id '" + id + "' which should be hided";
+                    }
+                    element.hide();
+                },
+                showElement = function (id) {
+                    var element = $("#" + id);
+                    if (!element) {
+                        throw "Can not find element with id '" + id + "' which should be showed";
+                    }
+                    element.show();
+                }
     </script>
 
     <title>{%block title%} {%endblock%}</title>
 </head>
 <body>
-{% block content %}{% endblock %}
+<div id="ajaxLoaderImage" class="modal" style="display: none;">
+</div>
+<div class="parent">
+    <div class="child">
+        {% block content %}{% endblock %}
+    </div>
+</div>
 <footer>
     &copy; Copyright 2015 by Ing. Thomas Herzog</a>.
 </footer>
-
 </body>
 </html>

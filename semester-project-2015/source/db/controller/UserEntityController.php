@@ -12,24 +12,54 @@ namespace source\db\controller;
 use source\common\DbException;
 use source\common\InternalErrorException;
 
+/**
+ * This controller is the db accessor to the user table.
+ *
+ * Class UserEntityController
+ * @package source\db\controller
+ */
 class UserEntityController extends AbstractEntityController
 {
-    private static $SQL_CHECK_ACTIVE_USER_BY_USERNAME = "SELECT id FROM user WHERE UPPER(username) = UPPER(?) AND deleted_flag = 0 AND blocked_flag = 0";
+    /**
+     * Query which gets all user attributes as they are present on the database.
+     * @var string
+     */
+    private static $SQL_GET_ACTIVE_USER_BY_USERNAME = "SELECT * FROM user WHERE UPPER(username) = UPPER(?) AND deleted_flag = 0";
 
-    private static $SQL_GET_ACTIVE_USER_BY_USERNAME = "SELECT * FROM user WHERE UPPER(username) = UPPER(?) AND deleted_flag = 0 AND blocked_flag = 0";
+    /**
+     * The query which is used to check if an user already user exists with the given username.
+     * @var string
+     */
+    private static $SQL_CHECK_ACTIVE_USER_BY_USERNAME = "SELECT id FROM user WHERE UPPER(username) = UPPER(?) AND deleted_flag = 0";
 
-    private static $SQL_CHECK_ACTIVE_USER_BY_EMAIL = "SELECT id FROM user WHERE UPPER(email) = UPPER(?) AND deleted_flag = 0 AND blocked_flag = 0";
+    /**
+     * Query which is used to check if an user already exists with the given email
+     * @var string
+     */
+    private static $SQL_CHECK_ACTIVE_USER_BY_EMAIL = "SELECT id FROM user WHERE UPPER(email) = UPPER(?) AND deleted_flag = 0";
 
+    /**
+     * Query which is used to insert an user on the database. It relies on default values or triggers on user table.
+     * @var string
+     */
     private static $SQL_INSERT_USER = "INSERT INTO user (firstname, lastname, email, username, password) VALUES (?,?,?,?,?)";
 
-    public function __construct($mysqli = null)
+    /**
+     * Constructs this instance and delegates to the base class so that common initialization can be done to.
+     */
+    public function __construct()
     {
-        parent::__construct($mysqli);
+        parent::__construct();
     }
 
+    /**
+     * Gets the user entity by its id
+     * @param integer $id the user id
+     * @return stdClass the user as represented on the database
+     */
     public function getById($id)
     {
-        // TODO: Implement getById() method.
+        // TODO: Not needed therefore not implemented.
     }
 
     /**
@@ -45,10 +75,10 @@ class UserEntityController extends AbstractEntityController
 
         $stmt = null;
         $res = false;
+        $p1 = (string)$username;
 
         try {
             $stmt = parent::prepareStatement(self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME);
-            $p1 = (string)$username;
             $stmt->bind_param("s", $p1);
             $stmt->execute();
             $stmtRes = $stmt->get_result();
@@ -67,7 +97,7 @@ class UserEntityController extends AbstractEntityController
     }
 
     /**
-     * Answers the question if a user with the give email already exists.
+     * Answers the question if an user with the given email already exists.
      *
      * @param string $email the users email
      * @return boolean true if a user already exists with this email, false otherwise
@@ -79,9 +109,10 @@ class UserEntityController extends AbstractEntityController
 
         $stmt = null;
         $res = false;
+        $p1 = (string)$email;
+
         try {
             $stmt = parent::prepareStatement(self::$SQL_CHECK_ACTIVE_USER_BY_EMAIL);
-            $p1 = (string)$email;
             $stmt->bind_param("s", $p1);
             $stmt->execute();
             $stmtRes = $stmt->get_result();
@@ -112,10 +143,10 @@ class UserEntityController extends AbstractEntityController
 
         $stmt = null;
         $res = null;
+        $p1 = (string)$username;
 
         try {
             $stmt = parent::prepareStatement(self::$SQL_GET_ACTIVE_USER_BY_USERNAME);
-            $p1 = (string)$username;
             $stmt->bind_param("s", $p1);
             $stmt->execute();
             $res = $stmt->get_result()->fetch_object();
@@ -132,34 +163,41 @@ class UserEntityController extends AbstractEntityController
         return $res;
     }
 
-
+    /**
+     * Deletes an user with the given id
+     * @param integer $id the user id
+     * @return boolean true if successful false otherwise
+     */
     public function deleteById($id)
     {
-        // TODO: Implement deleteById() method.
+        // TODO: Not needed therefore not implemented
     }
 
     /**
-     * Persists the user defined by given parameters
+     * Persists the user defined by the given parameters.
+     *
      * @param array $args the array containing the user attributes
-     * @return stdClass the persisted user
-     * @throws DbException if an error occurs
-     * @throws InternalErrorException if the array is not set
+     * @throws DbException
+     * @throws InternalErrorException
+     * @return nothing
      */
     public function persist(array $args)
     {
         if (empty($args)) {
-            throw new InternalErrorException("Cannot save user with null given entity field args");
+            throw new InternalErrorException("Cannot save user with null or empty given user attributes");
         }
 
         parent::open();
 
+        $p1 = (string)$args["firstname"];
+        $p2 = (string)$args["lastname"];
+        $p3 = (string)$args["email"];
+        $p4 = (string)$args["username"];
+
+
         $stmt = null;
         try {
             $stmt = parent::prepareStatement(self::$SQL_INSERT_USER);
-            $p1 = (string)$args["firstname"];
-            $p2 = (string)$args["lastname"];
-            $p3 = (string)$args["email"];
-            $p4 = (string)$args["username"];
             $p5 = password_hash((string)$args["password"], PASSWORD_BCRYPT);
             $stmt->bind_param("sssss", $p1, $p2, $p3, $p4, $p5);
             parent::startTx(true);
@@ -176,10 +214,13 @@ class UserEntityController extends AbstractEntityController
         }
     }
 
-
+    /**
+     * Updates the user with the given user attributes
+     * @param array $args the array holding the user attributes
+     * @return boolean true if successful false otherwise
+     */
     public function update(array $args)
     {
-        // TODO: Implement update() method.
+        // TODO: Not needed therefore not implemented
     }
-
 }

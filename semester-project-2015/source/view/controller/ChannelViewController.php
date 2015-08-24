@@ -9,7 +9,7 @@
 namespace source\view\controller;
 
 
-use source\common\AbstractRequestController;
+use source\common\AbstractViewController;
 use source\common\DbException;
 use source\common\InternalErrorException;
 use source\common\utils\StringUtil;
@@ -20,7 +20,7 @@ use source\db\controller\ChannelUserEntryEntityController;
 use source\view\model\RequestControllerResult;
 use source\view\model\SimpleJsonResult;
 
-class ChannelController extends AbstractRequestController
+class ChannelViewController extends AbstractViewController
 {
 
     /* Action specification */
@@ -100,8 +100,8 @@ class ChannelController extends AbstractRequestController
                 break;
             case ViewController::$PARTIAL_VIEW_NEW_CHANNEL:
                 $args = array(
-                    "actionSaveChannel" => ChannelController::$ACTION_SAVE_CHANNEL,
-                    "actionToMain" => MainController::$ACTION_TO_CHANNELS
+                    "actionSaveChannel" => ChannelViewController::$ACTION_SAVE_CHANNEL,
+                    "actionToMain" => MainViewController::$ACTION_TO_CHANNELS
                 );
                 break;
             case ViewController::$PARTIAL_VIEW_CHANNEL:
@@ -235,17 +235,13 @@ class ChannelController extends AbstractRequestController
                 http_response_code(500);
             } else {
                 $result->args = array(
-                    "ajax" => json_encode(array(
-                        "successful" => true
-                    ))
+                    "successful" => true
                 );
             }
         } catch (DbException $e) {
             $result->args = array(
-                "ajax" => json_encode(array(
-                    "error" => true,
-                    "refresh" => true
-                ))
+                "error" => true,
+                "refresh" => true
             );
         }
 
@@ -265,23 +261,17 @@ class ChannelController extends AbstractRequestController
             $updated = $channelMessageUserEntryCtrl->markMessageAsImportant($userId, $messageId, $importantFlag);
             if (!$updated) {
                 $result->args = array(
-                    "ajax" => json_encode(array(
-                        "refresh" => true
-                    ))
+                    "refresh" => true
                 );
             } else {
                 $result->args = array(
-                    "ajax" => json_encode(array(
-                        "successful" => true
-                    ))
+                    "successful" => true
                 );
             }
         } catch (DbException $e) {
             $result->args = array(
-                "ajax" => json_encode(array(
-                    "error" => true,
-                    "refresh" => true
-                ))
+                "error" => true,
+                "refresh" => true
             );
         }
 

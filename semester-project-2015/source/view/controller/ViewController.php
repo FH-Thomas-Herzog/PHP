@@ -9,13 +9,13 @@
 namespace source\view\controller;
 
 
-use source\common\AbstractRequestController;
+use source\common\AbstractViewController;
 use source\common\InternalErrorException;
 use source\common\utils\StringUtil;
 use source\db\controller\ChannelEntityController;
 use \Stash\Pool;
 
-class ViewController extends AbstractRequestController
+class ViewController extends AbstractViewController
 {
 
     public static $VIEW_INITIAL = "login";
@@ -28,7 +28,7 @@ class ViewController extends AbstractRequestController
 
     public static $VIEW_REGISTRATION = "registration";
 
-    public static $VIEW_REGISTRATION_SUCCESS = "registrationSuccess";
+    public static $PARTIAL_VIEW_REGISTRATION_SUCCESS = "registrationSuccess";
 
     public static $PARTIAL_VIEW_CHANNELS = "partialChannels";
 
@@ -43,12 +43,9 @@ class ViewController extends AbstractRequestController
 
     private $pool;
 
-    private $actionCtrl;
-
     public function __construct(Pool $pool)
     {
         parent::__construct();
-        $this->actionCtrl = new ActionController();
         if (!isset($pool)) {
             throw new InternalErrorException("Pool null but needed");
         }
@@ -59,17 +56,20 @@ class ViewController extends AbstractRequestController
     {
         $result = $this->handleAction();
         // handle request which renders result
-        if(!$this->isAjaxResponse()) {
+        if (!$this->jsonResult) {
             $args = $this->prepareView($result->nextView);
             if (isset($args)) {
                 return $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($result->args, $args));
             } else {
                 return "";
             }
-        }
-        // handle request which expects ajax result (provided by action controller set args)
-        else{
-            return $result->args["ajax"];
+        } // handle request which expects ajax result (provided by action controller set args)
+        else {
+            $args = $this->prepareView($result->nextView);
+            if (isset($args)) {
+                $result->args["html"] = $this->getTemplateController()->renderView($result->nextView, true, true, array_merge($result->args, $args));
+            }
+            return json_encode($result->args);
         }
     }
 
@@ -81,35 +81,35 @@ class ViewController extends AbstractRequestController
         switch ($this->viewId) {
             // the login view actions
             case self::$VIEW_LOGIN:
-                $controller = new LoginRequestController();
+                $controller = new LoginViewController();
                 break;
             // the registration view actions
             case self::$VIEW_REGISTRATION:
-                $controller = new RegistrationRequestController();
+                $controller = new RegistrationViewController();
                 break;
             // the registration success actions
-            case self::$VIEW_REGISTRATION_SUCCESS:
-                $controller = new RegistrationRequestController();
+            case self::$PARTIAL_VIEW_REGISTRATION_SUCCESS:
+                $controller = new RegistrationViewController();
                 break;
             // the new channel view actions
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
-                $controller = new ChannelController();
+                $controller = new ChannelViewController();
                 break;
             // the main view actions
             case self::$VIEW_MAIN:
-                $controller = new MainController();
+                $controller = new MainViewController();
                 break;
             // the channels view actions
             case self::$PARTIAL_VIEW_CHANNELS:
-                $controller = new ChannelController();
+                $controller = new ChannelViewController();
                 break;
             // the new channel view actions
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
-                $controller = new ChannelController();
+                $controller = new ChannelViewController();
                 break;
             // the selected channel view actions
             case self::$PARTIAL_VIEW_CHANNEL:
-                $controller = new ChannelController();
+                $controller = new ChannelViewController();
                 break;
             default:
                 throw new InternalErrorException("Unknown view with id: '" . $this->viewId . "' detected'");
@@ -128,29 +128,29 @@ class ViewController extends AbstractRequestController
 
         switch ($nextView) {
             case self::$VIEW_LOGIN:
-                $controller = new LoginRequestController();
+                $controller = new LoginViewController();
                 break;
             case self::$VIEW_REGISTRATION:
-                $controller = new RegistrationRequestController();
+                $controller = new RegistrationViewController();
                 break;
-            case self::$VIEW_REGISTRATION_SUCCESS:
-                $controller = new RegistrationRequestController();
+            case self::$PARTIAL_VIEW_REGISTRATION_SUCCESS:
+                $controller = new RegistrationViewController();
                 break;
             // the main view actions
             case self::$VIEW_START:
-                $controller = new MainController();
+                $controller = new MainViewController();
                 break;
             case self::$VIEW_MAIN:
-                $controller = new MainController();
+                $controller = new MainViewController();
                 break;
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
-                $controller = new ChannelController();
+                $controller = new ChannelViewController();
                 break;
             case self::$PARTIAL_VIEW_CHANNELS:
-                $controller = new ChannelController();
+                $controller = new ChannelViewController();
                 break;
             case self::$PARTIAL_VIEW_CHANNEL:
-                $controller = new ChannelController();
+                $controller = new ChannelViewController();
                 break;
             default:
                 throw new InternalErrorException("Next view: '" . $nextView . "' cannot be handled by '" . __CLASS__ . "'");
@@ -186,9 +186,5 @@ class ViewController extends AbstractRequestController
             $item->set($templateCtrl);
         }
         return $item->get();
-    }
-
-    private function isAjaxResponse() {
-        return (empty(parent::getParameter("ajax"))) ? false: true;
     }
 }

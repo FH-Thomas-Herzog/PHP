@@ -1,50 +1,3 @@
-{% extends "root-template.html" %}
-{% block header %}
-<style type="text/css">
-    html, body {
-        height: 100%
-    }
-
-    .parent {
-        display: table;
-        height: 70%;
-        width: 100%;
-    }
-
-    .child {
-        display: table-cell;
-        vertical-align: middle;
-    }
-
-    div.row-buffer {
-        margin: 10px;
-    }
-
-    div.form-group {
-        margin: 10px;
-    }
-
-    div.text-center {
-        margin: 10px;
-    }
-
-    label {
-        margin-right: 10px;
-    }
-</style>
-
-<script type="text/javascript">
-    var toLogin = function (actionId) {
-        setAction(actionId);
-        $("#successForm").submit();
-    }
-    setTimeout(function () {
-        toLogin('{{actionToLogin}}');
-    }, 3000);
-</script>
-{%endblock%}
-{%block title%}Registration Success{%endblock%}
-{%block content%}
 <div class="parent">
     <div class="child">
         <div class="container">
@@ -75,4 +28,12 @@
         </div>
     </div>
 </div>
-{%endblock%}
+<script type="text/javascript">
+    var toLogin = function (actionId) {
+        setAction(actionId);
+        $("#successForm").submit();
+    }
+    setTimeout(function () {
+        toLogin('{{actionToLogin}}');
+    }, 3000);
+</script>
