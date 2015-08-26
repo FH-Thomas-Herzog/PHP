@@ -8,30 +8,30 @@
 
 namespace source\view\controller;
 
-use \source\common\BaseObject;
-use \source\common\InternalErrorException;
-use \Stash\Pool;
+use source\common\BaseObject;
+use source\common\InternalErrorException;
+use Stash\Pool;
 
 /**
  * This class represents the template controller which renders the templates and returns the rendered result.
- * This class supports Stash caching for rendered templates
+ * This class supports Stash caching for rendered templates.
+ *
  * @package SCM4\View\Controller
  */
 class TemplateController extends BaseObject
 {
-
     public static $POOL_NAMESPACE = "ViewController";
 
-    private static $CSS_ROOT = "/public/css";
-
-    private static $JS_ROOT = "/public/js";
-
+    /**
+     * The static stash options used for configuring the Stash cache pool
+     * @var array
+     */
     private static $TWIG_OPTIONS = array(
         'cache' => ROOT_PATH . '/cache/templates/compiled',
-        'debug' => true,
-        'auto_reload ' => true, // autoload of templates for development puspose only
-        'strict_variables' => false, // avoid undefined variables
-        'autoescape' => true // escape html
+        'debug' => false,
+        'auto_reload ' => false,
+        'strict_variables' => false,
+        'autoescape' => true
     );
 
     private $twig;
@@ -39,15 +39,16 @@ class TemplateController extends BaseObject
     private $pool;
 
     /**
-     * Constructs this View handler and inits the used template engine.
-     * Be aware that the parameters must be given if no twig environment can be retrieved from the cache.
+     * Constructs this template controller instance and initializes it with the given stash pool.
+     * Delegates to the base class so that common initialization work can be done.
      *
-     * @param \Stash\Pool pool the stash pool to use by this controller
-     * @throws InternalErrorException if the pool is not set
+     * @param Pool $pool the stash cache pool to use
+     * @throws InternalErrorException if no pool is given
      */
     public function __construct(Pool $pool)
     {
         parent::__construct();
+
         if (!isset($pool)) {
             throw new InternalErrorException("Pool not set but needed");
         }
@@ -65,14 +66,14 @@ class TemplateController extends BaseObject
     }
 
     /**
-     * Gets the view content of the given viewId.
+     * Renders the template defined by the given view id
      *
-     * @param string $viewId the view id to render
+     * @param string $viewId the id of the template to render
      * @param boolean|false cache true if the rendered view shall be cached and retrieved from cache
-     * @param boolean|false recreate true if an already cached item shall be overwritten. Works only tih $cache = true
+     * @param boolean|false recreate true if an already cached item shall be overwritten. Works only with $cache = true
      * @param array $args the arguments for the template engine
      * @return the rendered view
-     * @throws InternalErrorException if the view id does not map to a valid view.
+     * @throws InternalErrorException if the viewId does not map to a valid template.
      */
     public function renderView($viewId, $cache = false, $recreate = false, $args = null)
     {
@@ -81,16 +82,20 @@ class TemplateController extends BaseObject
         }
 
         $rendered = null;
-        if ($cache) {
-            $item = $this->pool->getItem("/twig/rendered/" . $viewId);
-            if ($recreate || $item->isMiss()) {
-                $rendered = $this->twig->loadTemplate($viewId . ".html")->render(self::addCommonArguments($viewId, $args));
-                $item->set($rendered);
+        try {
+            if ($cache) {
+                $item = $this->pool->getItem("/twig/rendered/" . $viewId);
+                if ($recreate || $item->isMiss()) {
+                    $rendered = $this->twig->loadTemplate($viewId . ".html")->render(self::addCommonArguments($viewId, $args));
+                    $item->set($rendered);
+                } else {
+                    $rendered = $item->get();
+                }
             } else {
-                $rendered = $item->get();
+                $rendered = $this->twig->loadTemplate($viewId . ".html")->render(self::addCommonArguments($viewId, $args));
             }
-        } else {
-            $rendered = $this->twig->loadTemplate($viewId . ".html")->render(self::addCommonArguments($viewId, $args));
+        } catch (\Exception $e) {
+            throw new InternalErrorException("Template for view with id: '" . $viewId . "' not found." . PHP_EOL . $e->getMessage());
         }
         return $rendered;
     }
@@ -105,9 +110,7 @@ class TemplateController extends BaseObject
     private static function addCommonArguments($viewId, array $args)
     {
         if (isset($args)) {
-            $args["cssRoot"] = self::$CSS_ROOT;
-            $args["jsRoot"] = self::$JS_ROOT;
-            $args[ViewController::$VIEW_ID] = (string)$viewId;
+            $args["viewId"] = (string)$viewId;
         }
         return $args;
     }

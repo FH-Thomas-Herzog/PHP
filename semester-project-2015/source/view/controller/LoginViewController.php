@@ -57,7 +57,9 @@ class LoginViewController extends AbstractViewController
             case ViewController::$VIEW_LOGIN:
                 $args = array(
                     "actionLogin" => LoginViewController::$ACTION_LOGIN,
-                    "actionRegister" => LoginViewController::$ACTION_REGISTRATION
+                    "actionRegister" => LoginViewController::$ACTION_REGISTRATION,
+                    "cacheTemplate" => true,
+                    "recreateTemplate" => false
                 );
                 break;
             default:
@@ -85,7 +87,6 @@ class LoginViewController extends AbstractViewController
                     return new RequestControllerResult(false, ViewController::$VIEW_LOGIN, array(
                         "message" => "Username or password wrong. Please try again",
                         "messageType" => "warning"
-
                     ));
                 }
                 return new RequestControllerResult($valid, ViewController::$VIEW_START);

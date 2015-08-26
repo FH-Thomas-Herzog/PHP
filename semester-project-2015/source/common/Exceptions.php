@@ -78,7 +78,7 @@ abstract class BaseException extends \Exception
  */
 final  class InternalErrorException extends BaseException
 {
-    public function __construct($message = "Unspecified Internal Error occurred", $code = 666, Exception $previous = null)
+    public function __construct($message = "Unspecified Internal Error occurred", $code = 666, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
@@ -92,7 +92,7 @@ final  class InternalErrorException extends BaseException
  */
 class CoreException extends BaseException
 {
-    public function __construct($message = "Unspecified Core Exception occurred", $code = 100, Exception $previous = null)
+    public function __construct($message = "Unspecified Core Exception occurred", $code = 100, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
@@ -107,7 +107,7 @@ class CoreException extends BaseException
 class SecurityException extends BaseException
 {
 
-    public function __construct($message = "Unspecified SecurityException occurred", $code = 200, Exception $previous = null)
+    public function __construct($message = "Unspecified SecurityException occurred", $code = 200, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
@@ -122,7 +122,7 @@ class SecurityException extends BaseException
 class DbException extends BaseException
 {
 
-    public function __construct($message = "Entity could not be found", $code = 300, Exception $previous = null)
+    public function __construct($message = "Entity could not be found", $code = 300, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

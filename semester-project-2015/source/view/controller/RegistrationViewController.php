@@ -8,7 +8,6 @@
 
 namespace source\view\controller;
 
-
 use source\common\AbstractViewController;
 use source\common\DbException;
 use source\common\InternalErrorException;
@@ -81,13 +80,17 @@ class RegistrationViewController extends AbstractViewController
             case ViewController::$VIEW_REGISTRATION:
                 $result = array(
                     "actionRegister" => RegistrationViewController::$ACTION_REGISTER,
-                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN
+                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN,
+                    "cacheTemplate" => true,
+                    "recreateTemplate" => false
                 );
                 break;
             // prepares the registration success view
             case ViewController::$PARTIAL_VIEW_REGISTRATION_SUCCESS:
                 $result = array(
-                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN
+                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN,
+                    "cacheTemplate" => true,
+                    "recreateTemplate" => false
                 );
                 break;
             // Error on unsupported view
@@ -110,7 +113,7 @@ class RegistrationViewController extends AbstractViewController
     private function handleRegister()
     {
         $jsonArray = null;
-        $result = null;
+        $nextView = null;
         $userCtrl = new UserEntityController();
         $valid = true;
         $success = false;
@@ -125,23 +128,27 @@ class RegistrationViewController extends AbstractViewController
 
         if ($valid) {
             try {
+                // If email already used by another active user
                 if ($userCtrl->isActiveUserExistingWithEmail($args["email"])) {
                     $jsonArray = array(
                         "error" => true,
                         "message" => "Email already in use",
                         "type" => "warning"
                     );
-                } else if ($userCtrl->isActiveUserExistingWithUsername($args["username"])) {
+                } // If username already used by another active user
+                else if ($userCtrl->isActiveUserExistingWithUsername($args["username"])) {
                     $jsonArray = array(
                         "error" => true,
                         "message" => "Username already in use",
                         "type" => "warning"
                     );
-                } else {
+                } // Here we are ready to save the user
+                else {
                     $success = $userCtrl->persist($args);
                     $jsonArray = array(
                         "false" => true
                     );
+                    $nextView = ViewController::$PARTIAL_VIEW_REGISTRATION_SUCCESS;
                 }
             } catch (DbException $e) {
                 $jsonArray = array(
@@ -152,6 +159,6 @@ class RegistrationViewController extends AbstractViewController
             }
         }
 
-        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_REGISTRATION_SUCCESS, $jsonArray);
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 }

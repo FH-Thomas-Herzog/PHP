@@ -70,19 +70,15 @@
 <script type="text/javascript">
     // function used by ajax form submit function
     var registerSuccessFunction = function (data) {
-                var resultObj = JSON.parse(data);
-                if (resultObj.error === true) {
-                    $("#formMessageAlert").attr("class", "alert alert-" + resultObj.type + " alert-dismissible");
-                    $("#formMessage").text(resultObj.message);
-                    showElement("formMessageRow");
-                } else {
-                    $("body").html(resultObj.html);
-                }
-            }
-            ,
-            toLogin = function () {
-                document.location.href = "/public/index.php"
-            }
+        var resultObj = JSON.parse(data);
+        if (resultObj.error === true) {
+            $("#formMessageAlert").attr("class", "alert alert-" + resultObj.type + " alert-dismissible");
+            $("#formMessage").text(resultObj.message);
+            showElement("formMessageRow");
+        } else {
+            $("body").html(resultObj.html);
+        }
+    };
     // init validation on form and prepare for ajax submit
     $('#registrationForm').validator().on('submit', function (e) {
         if (!e.isDefaultPrevented()) {

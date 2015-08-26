@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{cssRoot}}/bootstrap.min.css">
-    <link rel="stylesheet" href="{{cssRoot}}/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="{{cssRoot}}/bootstrap-editable.css">
-    <script type="text/javascript" src="{{jsRoot}}/jquery-1.11.3.js"></script>
-    <script type="text/javascript" src="{{jsRoot}}/bootstrap-3.3.5.min.js"></script>
-    <script type="text/javascript" src="{{jsRoot}}/validator-min-0.9.js"></script>
-    <script type="text/javascript" src="{{jsRoot}}/bootstrap-editable.js"></script>
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/public/css/bootstrap-editable.css">
+    <script type="text/javascript" src="/public/js/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="/public/js/bootstrap-3.3.5.min.js"></script>
+    <script type="text/javascript" src="/public/js/validator-min-0.9.js"></script>
+    <script type="text/javascript" src="/public/js/bootstrap-editable.js"></script>
 
     {%block header%}
     {%endblock%}
@@ -119,7 +119,10 @@
                         throw "Can not find element with id '" + id + "' which should be showed";
                     }
                     element.show();
-                }
+                },
+                toLogin = function () {
+                    document.location.href = "/public/index.php"
+                };
     </script>
 
     <title>{%block title%} {%endblock%}</title>

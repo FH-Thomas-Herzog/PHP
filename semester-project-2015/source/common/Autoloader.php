@@ -19,8 +19,8 @@ class Autoloader extends BaseObject
      */
     public static function register($prepend = false)
     {
-        require_once(ROOT_PATH . '/source/composer/vendor/twig/twig/lib/Twig/Autoloader.php');
-        require_once(ROOT_PATH . '/source/composer/vendor/tedivm/stash/autoload.php');
+        require_once(ROOT_PATH . '/source/library/twig/twig/lib/Twig/Autoloader.php');
+        require_once(ROOT_PATH . '/source/library/tedivm/stash/autoload.php');
         \Twig_Autoloader::register(true);
         spl_autoload_register(array(__CLASS__, 'load'), true, $prepend);
     }

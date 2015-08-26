@@ -33,6 +33,7 @@ Autoloader::register();
 // Security and session controller unique instances over an http request
 $securityCtrl = SecurityController::getInstance();
 $sessionCtrl = SessionController::getInstance();
+$clearCache = false;
 
 // handle initial call with not logged user
 // TODO: redirect via start.php causes an submit of start.php form and not login form on the first
@@ -40,13 +41,14 @@ $sessionCtrl = SessionController::getInstance();
 if (!$securityCtrl->isUserLogged()) {
     // in case of an get request
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
+        $clearCache = (!empty($_GET['clearCache'])) ? true : false;
         if (!isset($_GET['viewId'])) {
             $_GET['viewId'] = ViewController::$VIEW_LOGIN;
             $_GET['actionId'] = ViewController::$REFRESH_ACTION;
         }
-    }
-    // in case of an post request
+    } // in case of an post request
     else if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        $clearCache = (!empty($_POST['clearCache'])) ? true : false;
         if (!isset($_POST['viewId'])) {
             $_POST['viewId'] = ViewController::$VIEW_LOGIN;
             $_POST['actionId'] = ViewController::$REFRESH_ACTION;
@@ -54,14 +56,16 @@ if (!$securityCtrl->isUserLogged()) {
     }
 
     // instantiate pool and connect to existing cache (could be empty)
-    // TODO: Will need to add functionality to clear cache
     $pool = PoolController::createFileSystemPool(TemplateController::$POOL_NAMESPACE, array("path" => ROOT_PATH . "/stash"));
+    // clear cache if intended
+    if($clearCache) {
+        $pool->flush();
+    }
     // The view controller which controls access to the views and view bound actions
     $viewCtrl = new ViewController($pool);
     // handles the request by delegating to the proper controller depending on the current view.
     echo $viewCtrl->handleRequest();
-}
-// redirect logged user to main page
+} // redirect logged user to main page
 else {
     header('Location: start.php');
     return "";
