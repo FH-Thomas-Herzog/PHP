@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
     <link rel="stylesheet" href="/public/css/bootstrap.min.css">
     <link rel="stylesheet" href="/public/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/public/css/bootstrap-editable.css">
@@ -9,6 +12,7 @@
     <script type="text/javascript" src="/public/js/bootstrap-3.3.5.min.js"></script>
     <script type="text/javascript" src="/public/js/validator-min-0.9.js"></script>
     <script type="text/javascript" src="/public/js/bootstrap-editable.js"></script>
+    <script type="text/javascript" src="/public/js/utils.js"></script>
 
     {%block header%}
     {%endblock%}
@@ -20,7 +24,7 @@
 
         .parent {
             display: table;
-            height: 70%;
+            height: 100%;
             width: 100%;
         }
 
@@ -58,83 +62,13 @@
             text-align: center;
         }
     </style>
-    <script type="text/javascript">
-        var setAction = function (actionId) {
-            $('#actionId').val(actionId);
-        }
-        var destroyValidation = function (formId) {
-            $("#" + formId).validator('destroy');
-        }
-        var submitCancelWithValidation = function (formId, actionId) {
-            destroyValidation(formId);
-            setAction(actionId);
-            $("#" + formId).submit();
-        }
-
-        var
-                ajaxPostRequest = function (relUrl, params, successFunc, errorFunc, completeFunc) {
-                    $("#ajaxLoaderImage").show();
-                    $.ajax({
-                        async: true,
-                        type: "POST",
-                        url: relUrl,
-                        data: ("ajax=true&viewId={{viewId}}" + (params ? ("&" + params) : "")),
-                        success: function (data) {
-                            if (successFunc) {
-                                successFunc(data);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            if (errorFunc) {
-                                errorFunc(xhr, status, error);
-                            }
-                        },
-                        complete: function (xhr, status) {
-                            $("#ajaxLoaderImage").hide();
-                            if (completeFunc) {
-                                completeFunc(xhr, status);
-                            }
-                        }
-                    });
-                    // prevent submit of form
-                    return false;
-                },
-                ajaxPostRequestSubmitForm = function (formId, relUrl, params, successFunc, errorFunc, completeFunc) {
-                    var form = $('#' + formId);
-                    if (!form) {
-                        throw "Form with id '" + formId + "' does not exist";
-                    }
-                    ajaxPostRequest(relUrl, form.serialize() + (params ? ("&" + params) : ""), successFunc, errorFunc, completeFunc);
-                },
-                hideElement = function (id) {
-                    var element = $("#" + id);
-                    if (!element) {
-                        throw "Can not find element with id '" + id + "' which should be hided";
-                    }
-                    element.hide();
-                },
-                showElement = function (id) {
-                    var element = $("#" + id);
-                    if (!element) {
-                        throw "Can not find element with id '" + id + "' which should be showed";
-                    }
-                    element.show();
-                },
-                toLogin = function () {
-                    document.location.href = "/public/index.php"
-                };
-    </script>
 
     <title>{%block title%} {%endblock%}</title>
 </head>
-<body>
+<body id="bodyTag">
 <div id="ajaxLoaderImage" class="modal" style="display: none;">
 </div>
-<div class="parent">
-    <div class="child">
-        {% block content %}{% endblock %}
-    </div>
-</div>
+{% block content %}{% endblock %}
 <footer>
     &copy; Copyright 2015 by Ing. Thomas Herzog</a>.
 </footer>

@@ -57,7 +57,7 @@ class ChannelViewController extends AbstractViewController
                 $result = $this->handleChannelSave();
                 break;
             case self::$ACTION_TO_CHANNELS:
-                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
+                $result = $this->handleToChannelsAction();
                 break;
             case self::$ACTION_SET_FAVORITE_CHANNEL:
                 $result = $this->handleSetFavoriteChannel();
@@ -101,7 +101,7 @@ class ChannelViewController extends AbstractViewController
             case ViewController::$PARTIAL_VIEW_NEW_CHANNEL:
                 $args = array(
                     "actionSaveChannel" => ChannelViewController::$ACTION_SAVE_CHANNEL,
-                    "actionToMain" => MainViewController::$ACTION_TO_CHANNELS
+                    "actionToChannels" => MainViewController::$ACTION_TO_CHANNELS
                 );
                 break;
             case ViewController::$PARTIAL_VIEW_CHANNEL:
@@ -126,7 +126,8 @@ class ChannelViewController extends AbstractViewController
                 "actionToSelectedChannel" => self::$ACTION_TO_SELECTED_CHANNEL,
                 "actionAssignChannel" => self::$ACTION_ASSIGN_CHANNEL,
                 "assignedChannels" => $assigned,
-                "availableChannels" => $unassigned
+                "availableChannels" => $unassigned,
+                "cacheTemplate" => false
             );
         } catch (DbException $e) {
             var_dump($e);
@@ -213,6 +214,46 @@ class ChannelViewController extends AbstractViewController
         }
 
         return $result;
+    }
+
+    /**
+     * Handles the to channels action. It is checked if there are channels present.
+     * If not then next view is set to new channels view.
+     *
+     * @return RequestControllerResult the action handle result
+     */
+    private function handleToChannelsAction()
+    {
+        $success = false;
+        $jsonArray = null;
+        $nextView = null;
+
+        try {
+            if (!((new ChannelEntityController())->checkIfChannelAreExisting())) {
+                $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
+                $jsonArray = array(
+                    "error" => false,
+                    "message" => "There are no channels present.",
+                    "messageType" => "warning",
+                    "additionalMessage" => "Please create one"
+                );
+            } else {
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+                $jsonArray = array(
+                    "error" => false
+                );
+            }
+            $success = true;
+        } catch (\Exception $e) {
+            $jsonArray = array(
+                "error" => true,
+                "message" => "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator",
+                "messageType" => "danger",
+                "additionalMessage" => $e->getMessage()
+            );
+        }
+
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
     private function handleEditMessage()
@@ -361,99 +402,132 @@ class ChannelViewController extends AbstractViewController
         return $result;
     }
 
+    /**
+     * This function handles the remove assignment action where an channel assignment will be removed from this user.
+     *
+     * @return RequestControllerResult the handled action result
+     * @throws \source\db\controller\DbException
+     */
     private function handleRemoveAssignedChannel()
     {
+        $jsonArray = null;
+        $success = false;
         $channelUserEntryCtrl = new ChannelUserEntryEntityController();
-
-        $result = null;
         try {
-            $channelUserEntryCtrl->deleteById(array(
+            $success = (boolean)$channelUserEntryCtrl->deleteById(array(
                 "userId" => (integer)$this->securityCtrl->getLoggedUser(),
                 "channelId" => (integer)parent::getParameter("channelId")
             ));
-            $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
+            if ($success) {
+                $jsonArray = array(
+                    "error" => false
+                );
+            } else {
+                $jsonArray = array(
+                    "error" => true,
+                    "message" => "Assignment already removed",
+                    "messageType" => "warning"
+                );
+            }
         } catch (DbException $e) {
-            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNELS, array(
+            $jsonArray = array(
+                "error" => true,
                 "message" => "Could not delete assigned channel. If this error keeps showing up, please notify the administrator",
-                "messageType" => "danger"
-            ));
+                "messageType" => "danger",
+                "additionalMessage" => $e->getMessage()
+            );
         }
 
-        return $result;
+        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNELS, $jsonArray);
     }
-
 
     private function handleAssignChannel()
     {
+        $jsonArray = null;
+        $success = false;
+        $channelId = (integer)parent::getParameter("channelId");
         $channelUserEntryCtrl = new ChannelUserEntryEntityController();
 
-        $result = null;
         try {
-            $channelUserEntryCtrl->persist(array(
-                "userId" => (integer)$this->securityCtrl->getLoggedUser(),
-                "channelId" => (integer)parent::getParameter("channelId"),
-                "favorite" => 0
-            ));
-            $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
-        } catch (DbException $e) {
-            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNELS, array(
-                "message" => "Could not assign channel. If this error keeps showing up, please notify the administrator",
-                "messageType" => "danger"
-            ));
-        }
-
-        return $result;
-    }
-
-    private function handleChannelSave()
-    {
-
-        $channelCtrl = new ChannelEntityController();
-        $channelUserEntryCtrl = new ChannelUserEntryEntityController();
-        $args = array(
-            "title" => parent::getParameter("title"),
-            "description" => parent::getParameter("description")
-        );
-        $channelId = null;
-
-        try {
-            if ($channelCtrl->isChannelExistingWithTitle($args["title"])) {
-                $args = array(
-                    "message" => "A Channel with this title already exists",
-                    "messageType" => "warning",
-                    "description" => $args["description"]
+            // channel already assigned to user
+            if ($channelUserEntryCtrl->getById(array(
+                    "userId" => $this->securityCtrl->geTLoggedUser(),
+                    "channelId" => $channelId
+                )) != null
+            ) {
+                $jsonArray = array(
+                    "error" => true,
+                    "message" => "Assignment already exists",
+                    "messageType" => "warning"
                 );
             } else {
-                $channelId = $channelCtrl->persist(array(
-                    "title" => $args["title"],
-                    "description" => $args["description"]
-                ));
                 $channelUserEntryCtrl->persist(array(
-                    "userId" => $this->securityCtrl->getLoggedUser(),
+                    "userId" => (integer)$this->securityCtrl->getLoggedUser(),
                     "channelId" => $channelId,
-                    "favorite" => parent::getParameter("favorite")
+                    "favorite" => 0
                 ));
-                $args = array(
-                    "message" => "Channel successfully saved",
-                    "messageType" => "info"
+                $success = true;
+                $jsonArray = array(
+                    "error" => false
                 );
             }
-        } catch (DbException $e) {
-            try {
-                if (isset($channelId)) {
-                    $channelCtrl->delete($channelId);
-                    $channelUserEntryCtrl->delete(array(
-                        "userId" => $this->securityCtrl->getLoggedUser(),
-                        "channelId" => $channelId
-                    ));
-                }
-            } catch (DbException $e2) {
-            }
-            $args["message"] = "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator";
-            $args["messageType"] = "danger";
+        } catch (\Exception $e) {
+            $jsonArray = array(
+                "error" => true,
+                "message" => "Could not assign you to channel. If this error keeps showing up, please notify the administrator",
+                "messageType" => "danger",
+                "additionalMessage" => $e->getMessage()
+            );
         }
 
+        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNELS, $jsonArray);
+    }
 
-        return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_NEW_CHANNEL, $args);
+    /**
+     * This function handles the save channel action which saves an channel for an user.
+     * The newly created channel will implicitly assigned to the creating user.
+     *
+     * @return RequestControllerResult the handled action result
+     * @throws \source\db\controller\DbException
+     */
+    private function handleChannelSave()
+    {
+        $jsonArray = null;
+        $channelCtrl = new ChannelEntityController();
+        $title = parent::getParameter("title");
+        $success = false;
+
+        try {
+            if ($channelCtrl->isChannelExistingWithTitle($title)) {
+                $jsonArray = array(
+                    "error" => true,
+                    "message" => "A Channel with this title already exists",
+                    "messageType" => "warning",
+                    "additionalMessage" => "title: '" . $title . "'"
+                );
+            } else {
+                $channelCtrl->persist(array(
+                    "title" => $title,
+                    "description" => parent::getParameter("description"),
+                    "userId" => $this->securityCtrl->getLoggedUser(),
+                    "favorite" => parent::getParameter("favorite")
+                ));
+                $jsonArray = array(
+                    "error" => false,
+                    "message" => "Channel successfully saved",
+                    "additionalMessage" => "Go to channels to get to the channel or create a new one",
+                    "messageType" => "info"
+                );
+                $success = true;
+            }
+        } catch (\Exception $e) {
+            $jsonArray = array(
+                "error" => true,
+                "message" => "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator",
+                "messageType" => "danger",
+                "additionalMessage" => $e->getMessage());
+        }
+
+        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_NEW_CHANNEL, $jsonArray);
     }
 }

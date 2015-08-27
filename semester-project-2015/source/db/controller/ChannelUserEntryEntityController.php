@@ -14,9 +14,11 @@ use source\common\InternalErrorException;
 class ChannelUserEntryEntityController extends AbstractEntityController
 {
 
-    private static $SQL_INSERT_CHANNEL_USER_ENTRY = "INSERT INTO channel_user_entry (user_id, channel_id, favorite_flag) VALUES (?,?,?)";
+    public static $SQL_CHANNEL_USER_ENTRY_BY_ID = "SELECT * FROM channel_user_entry WHERE user_id = ? AND channel_id = ?";
 
-    private static $SQL_UPDATE_RESET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=0 WHERE favorite_flag=1 AND user_id=?";
+    public static $SQL_INSERT_CHANNEL_USER_ENTRY = "INSERT INTO channel_user_entry (user_id, channel_id, favorite_flag) VALUES (?,?,?)";
+
+    public static $SQL_UPDATE_RESET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=0 WHERE favorite_flag=1 AND user_id=?";
 
     private static $SQL_UPDATE_SET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=1 WHERE user_id=? AND channel_id=?";
 
@@ -29,7 +31,30 @@ class ChannelUserEntryEntityController extends AbstractEntityController
 
     public function getById($id)
     {
-        // TODO: Implement getById() method.
+        parent::open();
+
+        $res = null;
+        $stmt = null;
+        $p1 = (integer)$id["userId"];
+        $p2 = (integer)$id["channelId"];
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_CHANNEL_USER_ENTRY_BY_ID);
+            $stmt->bind_param("ii", $p1, $p2);
+            $stmt->execute();
+            $res = $stmt->get_result()->fetch_object();
+        } catch (\Exception $e) {
+            parent::rollback();
+            throw new DbException("Error on executing query '" . self::$SQL_CHANNEL_USER_ENTRY_BY_ID . "'" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->free_result();
+                $stmt->close();
+            }
+            parent::close();
+        }
+
+        return $res;
     }
 
 
@@ -70,6 +95,7 @@ class ChannelUserEntryEntityController extends AbstractEntityController
         parent::open();
 
         $stmt = null;
+        $result = false;
 
         try {
             $stmt = parent::prepareStatement(self::$SQL_DELETE_CHANNEL_USER_ENTRY);
@@ -78,6 +104,7 @@ class ChannelUserEntryEntityController extends AbstractEntityController
             $stmt->bind_param("ii", $p1, $p2);
             parent::startTx();
             $stmt->execute();
+            $result = ($stmt->affected_rows == 1);
             parent::commit();
         } catch (\Exception $e) {
             parent::rollback();
@@ -91,6 +118,8 @@ class ChannelUserEntryEntityController extends AbstractEntityController
             }
             parent::close();
         }
+
+        return $result;
     }
 
     public function persist(array $args)

@@ -11,6 +11,7 @@ namespace source\view\controller;
 
 use source\common\AbstractViewController;
 use source\common\InternalErrorException;
+use source\db\controller\ChannelEntityController;
 use source\view\model\RequestControllerResult;
 
 class MainViewController extends AbstractViewController
@@ -38,14 +39,17 @@ class MainViewController extends AbstractViewController
                 $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_NEW_CHANNEL);
                 break;
             case self::$ACTION_TO_CHANNELS:
-                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
+                $result = $this->handleToChannelsAction();
                 break;
             case ViewController::$REFRESH_ACTION:
                 $result = new RequestControllerResult(true, ViewController::$VIEW_MAIN);
                 break;
             case self::$ACTION_LOGOUT:
                 $this->securityCtrl->logoutUser();
-                $result = new RequestControllerResult(true, ViewController::$VIEW_LOGIN);
+                $result = new RequestControllerResult(true, ViewController::$VIEW_LOGIN, array(
+                    "error" => false,
+                    "redirectUrl" => "/public/index.php"
+                ));
                 break;
             default:
                 throw new InternalErrorException("Action with id: '" . $this->actionId . "' not supported by this handler: '" . __CLASS__ . "''");
@@ -58,9 +62,6 @@ class MainViewController extends AbstractViewController
     {
         $args = array();
         switch ((string)$nextView) {
-            case ViewController::$VIEW_START:
-                header('Location: start.php');
-                break;
             case ViewController::$VIEW_MAIN:
                 $args = array(
                     "actionToNewChannel" => MainViewController::$ACTION_TO_NEW_CHANNEL,
@@ -75,4 +76,43 @@ class MainViewController extends AbstractViewController
         return $args;
     }
 
+    /**
+     * Handles the to channels action. It is checked if there are channels present.
+     * If not then next view is set to new channels view.
+     *
+     * @return RequestControllerResult the action handle result
+     */
+    private function handleToChannelsAction()
+    {
+        $success = false;
+        $jsonArray = null;
+        $nextView = null;
+
+        try {
+            if (!((new ChannelEntityController())->checkIfChannelAreExisting())) {
+                $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
+                $jsonArray = array(
+                    "error" => false,
+                    "message" => "There are no channels present.",
+                    "messageType" => "warning",
+                    "additionalMessage" => "Please create one"
+                );
+            } else {
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+                $jsonArray = array(
+                    "error" => false
+                );
+            }
+            $success = true;
+        } catch (\Exception $e) {
+            $jsonArray = array(
+                "error" => true,
+                "message" => "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator",
+                "messageType" => "danger",
+                "additionalMessage" => $e->getMessage()
+            );
+        }
+
+        return new RequestControllerResult($success, $nextView, $jsonArray);
+    }
 }

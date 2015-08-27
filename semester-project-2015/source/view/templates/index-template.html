@@ -1,0 +1,26 @@
+{% extends "root-template.html" %}
+{%block title%}Start{%endblock%}
+{%block content%}
+<div class="parent">
+    <div class="child">
+        <div class="container">
+            <div id="messageRow" class="row row-buffer" style="display: none;">
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <div id="messageAlert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                    onclick="hideElement('formMessageRow')"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <strong id="message"></strong><br>
+                            <span id="additionalMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="partialContent">
+                {% block partialContent %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

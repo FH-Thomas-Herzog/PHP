@@ -13,6 +13,8 @@ use source\common\DbException;
 
 class ChannelEntityController extends AbstractEntityController
 {
+    private static $SQL_CHECK_CHANNEL_EXISITING = "SELECT id FROM channel";
+
     private static $SQL_CHECK_CHANNEL_BY_TITLE = "SELECT id FROM channel WHERE UPPER(title) = UPPER(?) AND deleted_flag = 0";
 
     private static $SQL_INSERT_CHANNEL = "INSERT INTO channel (title, description) VALUES (?,?)";
@@ -70,6 +72,30 @@ class ChannelEntityController extends AbstractEntityController
         return $res;
     }
 
+    public function checkIfChannelAreExisting()
+    {
+        parent::open();
+
+        $stmt = null;
+        $result = false;
+
+        try {
+            $stmt = parent::prepareStatement(self::$SQL_CHECK_CHANNEL_EXISITING);
+            $stmt->execute();
+            $stmtRes = $stmt->get_result();
+            $result = ($stmtRes->num_rows != 0);
+        } catch (\Exception $e) {
+            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_CHANNEL_EXISITING . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+        } finally {
+            if (isset($stmt)) {
+                $stmt->free_result();
+                $stmt->close();
+            }
+            parent::close();
+        }
+
+        return $result;
+    }
 
     public function getAssignedChannelsWithMsgCount($userId)
     {
@@ -195,34 +221,58 @@ class ChannelEntityController extends AbstractEntityController
         return $res;
     }
 
+    /**
+     * Persists an entry in the channel table along with an entry in the channel_user_entry table which assigns
+     * the channel to the creating user. If the channel is marked as favorite then the former set favorite channel will
+     * be reset and the newly create one will be marked as favorite.
+     *
+     * @param array $args the array holding the channel and channel_user_entry needed parameters.
+     * @throws DbException if an error occurs
+     * @return nothing
+     */
     public function persist(array $args)
     {
-
         parent::open();
 
-        $stmt = null;
-        $res = null;
+        $stmtChannel = null;
+        $stmtUserEntry = null;
+        $p1 = $args["title"];
+        $p2 = $args["description"];
+        $p3 = (integer)$args["userId"];
+        $p4 = (boolean)$args["favorite"];
 
         try {
-            $stmt = parent::prepareStatement(self::$SQL_INSERT_CHANNEL);
-            $p1 = $args["title"];
-            $p2 = $args["description"];
-            $stmt->bind_param("ss", $p1, $p2);
-
             parent::startTx();
-            $stmt->execute();
+
+            $stmtChannel = parent::prepareStatement(self::$SQL_INSERT_CHANNEL);
+            $stmtChannel->bind_param("ss", $p1, $p2);
+            $stmtChannel->execute();
+            $p5 = $stmtChannel->insert_id;
+
+            // reset existing favorite flag
+            if ($p4) {
+                $stmtUserEntry = parent::prepareStatement(ChannelUserEntryEntityController::$SQL_UPDATE_RESET_FAVORITE_CHANNEL);
+                $stmtUserEntry->bind_param("i", $p3);
+                $stmtUserEntry->execute();
+            }
+
+            $stmtUserEntry = parent::prepareStatement(ChannelUserEntryEntityController::$SQL_INSERT_CHANNEL_USER_ENTRY);
+            $stmtUserEntry->bind_param("iii", $p3, $p5, $p4);
+            $stmtUserEntry->execute();
+
             parent::commit();
-            $res = $stmt->insert_id;
         } catch (\Exception $e) {
             parent::rollback();
-            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
+            throw new DbException("Error on creating channel along with channel user entry." . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
-            if (isset($stmt)) {
-                $stmt->close();
+            if (isset($stmtChannel)) {
+                $stmtChannel->close();
+            }
+            if (isset($stmtUserEntry)) {
+                $stmtUserEntry->close();
             }
             parent::close();
         }
-        return $res;
     }
 
 

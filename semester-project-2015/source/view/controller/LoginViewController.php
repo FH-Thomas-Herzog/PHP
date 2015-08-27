@@ -15,12 +15,21 @@ use source\common\InternalErrorException;
 use source\db\controller\UserEntityController;
 use source\view\model\RequestControllerResult;
 
+/**
+ * This controller is sued for handling the login and logout of an user.
+ *
+ * Class LoginViewController
+ * @package source\view\controller
+ */
 class LoginViewController extends AbstractViewController
 {
-    public static $ACTION_REGISTRATION = "ACTION_TO_REGISTRATION";
+    public static $ACTION_REGISTRATION = "actionToRegistration";
 
-    public static $ACTION_LOGIN = "ACTION_LOGIN";
+    public static $ACTION_LOGIN = "actionLogin";
 
+    /**
+     * Constructs this controller instance and delegates to the base class so that common initialization can occur.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -49,6 +58,13 @@ class LoginViewController extends AbstractViewController
         return $result;
     }
 
+    /**
+     * Prepares the next intended view supported by this controller.
+     *
+     * @param string $nextView the id of the next intended view
+     * @return array the array with the template arguments
+     * @throws InternalErrorException if the view id is not supported by this handler
+     */
     public function prepareView($nextView)
     {
         $args = array();
@@ -57,9 +73,9 @@ class LoginViewController extends AbstractViewController
             case ViewController::$VIEW_LOGIN:
                 $args = array(
                     "actionLogin" => LoginViewController::$ACTION_LOGIN,
-                    "actionRegister" => LoginViewController::$ACTION_REGISTRATION,
+                    "actionToRegister" => LoginViewController::$ACTION_REGISTRATION,
                     "cacheTemplate" => true,
-                    "recreateTemplate" => false
+                    "recreateTemplate" => true
                 );
                 break;
             default:
@@ -69,14 +85,17 @@ class LoginViewController extends AbstractViewController
         return $args;
     }
 
+    /**
+     * Handles the login of an user.
+     *
+     * @return RequestControllerResult the controller action result
+     */
     private function handleLogin()
     {
+        $jsonArray = null;
+        $success = false;
         $username = parent::getParameter("username");
         $password = parent::getParameter("password");
-
-        if (!isset($username) || (!isset($password))) {
-            return new RequestControllerResult(false, ViewController::$VIEW_LOGIN);
-        }
 
         try {
             $userCtrl = new UserEntityController();
@@ -84,25 +103,34 @@ class LoginViewController extends AbstractViewController
             if (isset($user)) {
                 $valid = SecurityController::getInstance()->loginUser($password, $user);
                 if (!$valid) {
-                    return new RequestControllerResult(false, ViewController::$VIEW_LOGIN, array(
-                        "message" => "Username or password wrong. Please try again",
+                    $jsonResult = array(
+                        "error" => true,
+                        "message" => "Login failed. Check your credentials and try again",
                         "messageType" => "warning"
-                    ));
+                    );
+                } else {
+                    $jsonResult = array(
+                        "error" => false,
+                        "redirectUrl" => "/public/start.php"
+                    );
                 }
-                return new RequestControllerResult($valid, ViewController::$VIEW_START);
             } else {
-                return new RequestControllerResult(false, ViewController::$VIEW_LOGIN, array(
-                    "message" => "Username or password wrong. Please try again",
+                $jsonResult = array(
+                    "error" => true,
+                    "message" => "Login failed. Check your credentials and try again",
                     "messageType" => "warning"
-
-                ));
+                );
+                $success = true;
             }
         } catch (DbException $e) {
-            return new RequestControllerResult(false, ViewController::$VIEW_LOGIN, array(
+            $jsonResult = array(
+                "error" => true,
                 "message" => "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator",
                 "messageType" => "danger"
-            ));
+            );
         }
+
+        return new RequestControllerResult($success, null, $jsonResult);
     }
 
 }

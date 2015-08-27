@@ -6,15 +6,5 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jquery-1.11.3" level="project" />
     <orderEntry type="library" name="bootstrap-3.3.5" level="project" />
-    <orderEntry type="module-library">
-      <library name="PHARS">
-        <CLASSES>
-          <root url="phar://$MODULE_DIR$/source/composer/composer.phar" />
-        </CLASSES>
-        <SOURCES>
-          <root url="phar://$MODULE_DIR$/source/composer/composer.phar" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>

@@ -82,7 +82,7 @@ class RegistrationViewController extends AbstractViewController
                     "actionRegister" => RegistrationViewController::$ACTION_REGISTER,
                     "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN,
                     "cacheTemplate" => true,
-                    "recreateTemplate" => false
+                    "recreateTemplate" => true
                 );
                 break;
             // prepares the registration success view
@@ -90,7 +90,7 @@ class RegistrationViewController extends AbstractViewController
                 $result = array(
                     "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN,
                     "cacheTemplate" => true,
-                    "recreateTemplate" => false
+                    "recreateTemplate" => true
                 );
                 break;
             // Error on unsupported view
@@ -133,20 +133,23 @@ class RegistrationViewController extends AbstractViewController
                     $jsonArray = array(
                         "error" => true,
                         "message" => "Email already in use",
-                        "type" => "warning"
+                        "messageType" => "warning"
                     );
                 } // If username already used by another active user
                 else if ($userCtrl->isActiveUserExistingWithUsername($args["username"])) {
                     $jsonArray = array(
                         "error" => true,
                         "message" => "Username already in use",
-                        "type" => "warning"
+                        "messageType" => "warning"
                     );
                 } // Here we are ready to save the user
                 else {
                     $success = $userCtrl->persist($args);
                     $jsonArray = array(
-                        "false" => true
+                        "error" => false,
+                        "message" => "Registration successful",
+                        "messageType" => "info",
+                        "additionalMessage" => "You will be redirected to login. If you are not automatically redirected then click the button below."
                     );
                     $nextView = ViewController::$PARTIAL_VIEW_REGISTRATION_SUCCESS;
                 }
@@ -154,7 +157,7 @@ class RegistrationViewController extends AbstractViewController
                 $jsonArray = array(
                     "error" => true,
                     "message" => "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator",
-                    "type" => "danger"
+                    "messageType" => "danger"
                 );
             }
         }

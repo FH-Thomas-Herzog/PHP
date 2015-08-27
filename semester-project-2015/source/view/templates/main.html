@@ -1,80 +1,5 @@
 {% extends "root-template.html" %}
-{% block header %}
-<style type="text/css">
-    html, body {
-        height: 100%
-    }
-
-    .parent {
-        display: table;
-        height: 70%;
-        width: 100%;
-    }
-
-    .child {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    div.row-buffer {
-        margin: 10px;
-    }
-
-    div.form-group {
-        margin: 10px;
-    }
-
-    div.text-center {
-        margin: 10px;
-    }
-
-    label {
-        margin-right: 10px;
-    }
-
-    #ajaxLoaderImage {
-        position: absolute;
-        margin: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-</style>
-<script type="text/javascript">
-
-    $('#ajaxLoaderImage').hide();
-    var postUpdateTarget = function (targetId, params) {
-        $.ajax({
-            async: true,
-            type: "POST",
-            url: "start.php",
-            data: params,
-            beforeSend: function () {
-                $('#' + targetId).empty();
-                $('#ajaxLoaderImage').show();
-            },
-            success: function (data) {
-                $('#' + targetId).html(data);
-            },
-            error: function (xhr, status, error) {
-                // TODO: Handle error here
-            },
-            complete: function () {
-                $('#ajaxLoaderImage').hide();
-            }
-        });
-    }
-    var postRequest = function (params) {
-        postUpdateTarget('content', params);
-    }
-    window.onload = function () {
-        postRequest("actionId={{actionToChannels}}&viewId={{viewId}}");
-    }
-</script>
-{%endblock%}
 {%block title%}Start{%endblock%}
-
 {%block content%}
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
@@ -89,10 +14,13 @@
                     <!-- Iterate over already existing channels -->
                     <li class="divider"></li>
                     <li class="dropdown-header">Actions</li>
-                    <li><a href="#" onclick="postRequest('actionId={{actionToNewChannel}}&viewId={{viewId}}');">New
+                    <li><a href="#"
+                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToNewChannel}}&viewId={{viewId}}');">New
                     </a></li>
                     <li>
-                        <a href="#" onclick="postRequest('actionId={{actionToChannels}}&viewId={{viewId}}')">Show all
+                        <a href="#"
+                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToChannels}}&viewId={{viewId}}');">Show
+                            all
                         </a>
                     </li>
                 </ul>
@@ -100,16 +28,43 @@
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration <span
                     class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="start.php?viewId={{viewId}}&actionId={{actionLogout}}">Logout</a></li>
+                    <li>
+                        <a href="#"
+                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionLogout}}&viewId={{viewId}}');">Logout</a>
+                    </li>
                 </ul>
             </li>
         </ul>
     </div>
 </nav>
 
-<section style="margin: 10px;">
-    <div id="content" class="parent">
+<section>
+    <div class="parent">
+        <div class="child">
+            <div class="container">
+                <div id="messageRow" class="row row-buffer" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <div id="messageAlert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                        onclick="hideElement('formMessageRow')"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <strong id="message"></strong><br>
+                                <span id="additionalMessage"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="partialContent">
+                </div>
+            </div>
+        </div>
     </div>
-    <img id="ajaxLoaderImage" src="images/ajax-loader.gif">
 </section>
+
+<script type="text/javascript">
+    window.onload = function () {
+        ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToChannels}}&viewId={{viewId}}');
+    }
+</script>
 {%endblock%}

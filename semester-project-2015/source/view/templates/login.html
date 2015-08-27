@@ -1,48 +1,37 @@
-{% extends "root-template.html" %}
-{%block title%}Login{%endblock%}
-{%block content%}
-<div class="container">
-    {% if message and messageType %}
-    <div class="row row-buffer">
-        <div class="col-sm-12">
-            <div class="text-center">
-                <div class="alert alert-{{messageType}} alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <strong>{{message}}</strong>
-                </div>
+{% extends "index-template.html" %}
+{%block partialContent%}
+<div class="row row-buffer">
+    <div class="col-sm-4 col-sm-offset-4">
+        <form id="loginForm" enctype="application/x-www-form-urlencoded" method="post" class="form-inline"
+              data-toggle="validator" role="form">
+            <div class="form-group">
+                <label id="usernameLabel" class="control-label">Username</label>
+                <input id="username" name="username" value="" type="text"
+                       placeholder="Enter your username" class="form-control" required/>
             </div>
-        </div>
+            <div class="form-group"><label id="passwordLabel"
+                                           class="control-label">Password</label>
+                <input id="password" name="password" value="" type="password"
+                       placeholder="Enter your password" class="form-control" required/>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-default" style="margin: 5px;">Login
+                </button>
+                <button type="button" class="btn btn-default" style="margin: 5px;"
+                        onclick="toUrl('/public/index.php?viewId={{viewId}}&actionId={{actionToRegister}}')">Register
+                </button>
+            </div>
+        </form>
     </div>
-    {% endif %}
-    <div class="row row-buffer">
-        <div class="col-sm-4 col-sm-offset-4">
-            <form id="loginForm" enctype="application/x-www-form-urlencoded" method="post" class="form-inline"
-                  data-toggle="validator" role="form">
-                <input id='actionId' name='actionId' value="" type='hidden'/>
-                <input id='viewId' name='viewId' value="{{viewId}}" type='hidden'/>
-
-                <div class="form-group">
-                    <label id="usernameLabel" class="control-label">Username</label>
-                    <input id="username" name="username" value="" type="text"
-                           placeholder="Enter your username" class="form-control" required/>
-                </div>
-                <div class="form-group"><label id="passwordLabel"
-                                               class="control-label">Password</label>
-                    <input id="password" name="password" value="" type="password"
-                           placeholder="Enter your password" class="form-control" required/>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-default" style="margin: 5px;"
-                            onclick="setAction('{{actionLogin}}')">Login
-                    </button>
-                    <button type="button" class="btn btn-default" style="margin: 5px;"
-                            onclick="submitCancelWithValidation('loginForm','{{actionRegister}}')">Register
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="col-sm-4"></div>
-    </div>
+    <div class="col-sm-4"></div>
 </div>
+<script type="text/javascript">
+    // init validation on form and prepare for ajax submit
+    $('#loginForm').validator().on('submit', function (e) {
+        if (!e.isDefaultPrevented()) {
+            ajaxPostRequestSubmitForm('loginForm', null, 'index.php', 'viewId={{viewId}}&actionId={{actionLogin}}');
+        }
+        return false;
+    })
+</script>
 {%endblock%}
