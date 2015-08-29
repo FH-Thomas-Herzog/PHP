@@ -36,7 +36,7 @@ class MainViewController extends AbstractViewController
 
         switch ($this->actionId) {
             case self::$ACTION_TO_NEW_CHANNEL:
-                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_NEW_CHANNEL);
+                $result = $this->handleToNewChannel();
                 break;
             case self::$ACTION_TO_CHANNELS:
                 $result = $this->handleToChannelsAction();
@@ -74,6 +74,26 @@ class MainViewController extends AbstractViewController
         }
 
         return $args;
+    }
+
+    /**
+     * Handles the action to new channel which checks for an existing channels.
+     *
+     * @throws \source\common\DbException
+     */
+    private function handleToNewChannel()
+    {
+        $jsonArray = null;
+        if (!((new ChannelEntityController())->checkIfChannelAreExisting())) {
+            $jsonArray = array(
+                "error" => false,
+                "message" => "There are no channels present.",
+                "messageType" => "warning",
+                "additionalMessage" => "Please create one"
+            );
+        }
+
+        return new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_NEW_CHANNEL, $jsonArray);
     }
 
     /**

@@ -205,7 +205,71 @@ Nach der erfolgreichen Registrierung eines Benutzers wird eine Erfolgsmeldung an
 	\caption
 	{Registrierung erfolgreich}
 \end{figure}\\\\
+\newpage
 
+\subsubsection{Login}
+Folgend sind die Tests für den Login angeführt.\\\\
+Folgender Test zeigt die angewendete Client Validierung über Bootstrap-Form-Validation Plugin. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/login_client_validation_full.PNG}
+	\caption
+	{Bootstrap Form Validation}
+\end{figure}\\\\
+Folgender Test zeigt die serversetige Validierung der Login Daten.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/login_server_validation_credentials.PNG}
+	\caption
+	{Serverseitige Validierung Login Daten (Benutzername, Passwort)}
+\end{figure}\\\\
 
+\newpage
 
+\subsubsection{Neuer Channel}
+Folgend sind die Tests für die Startseite (Neuer Channel) angeführt, die nur eingeloggte Benutzer sehen können.\\\\
+Folgender Test zeigt dass wenn es noch keine Channels gibt, der Benutzer immer die Seite für das Anlegen eines Channels angezeigt bekommt. Diese Seite bekommt er solange angezeigt bis mindestens ein Channel existiert, egal welchen Link (außer Logout) er anklickt. Eine entsprechende Meldung wird ebenso angezeigt.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/start_new_channel_no_channels.PNG}
+	\caption
+	{Channel anlegen wenn keine vorhanden}
+\end{figure}\\\\
+
+Folgender Test zeigt die Erfolgsmeldung wenn ein Channel von einem Benutzer angelegt wurde.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/start_new_channel_successful.PNG}
+	\caption
+	{Channel erfolgreich angelegt}
+\end{figure}\\\\
+\newpage
+
+Folgender Test zeigt die Fehlermeldung wenn ein Channel von einem Benutzer versucht wird anzulegen dieser aber bereits existiert. Groß- und Kleinschreibung wird hier ignoriert.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/start_new_channel_fail.PNG}
+	\caption
+	{Channel existiert bereits}
+\end{figure}\\\\
+
+Folgender Test zeigt die implizite Zuweisung eines Channels zu dem Benutzer der diese angelegt hat.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/start_channels_assigned_after_creation.PNG}
+	\caption
+	{Implizite Zuweisung}
+\end{figure}\\\\
+\newpage
+
+\subsubsection{Channels}
+Folgend sind die Tests für die Startseite (Channels) angeführt, die nur eingeloggte Benutzer sehen können.\\\\
+Folgender Test zeigt die Fehlermeldung wenn versucht wird eine Aktion auszuführen aber der Channel nicht mehr existiert.\\
+Sollte überhaupt kein channel mehr existieren wird auf die Seite für das Erstellen eines Channels gewechselt.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/start_channels_action_fail.PNG}
+	\caption
+	{Channel anlegen wenn keine vorhanden}
+\end{figure}\\\\
 \end{document}  

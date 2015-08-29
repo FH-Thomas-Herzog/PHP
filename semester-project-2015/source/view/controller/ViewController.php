@@ -41,6 +41,8 @@ class ViewController extends AbstractViewController
 
     public static $PARTIAL_VIEW_CHANNEL = "partialChannel";
 
+    public static $PARTIAL_VIEW_CHANNEL_CHAT = "partialChannelChat";
+
     public static $REFRESH_ACTION = "refreshAction";
 
     private $pool;
@@ -78,9 +80,10 @@ class ViewController extends AbstractViewController
         // If null then not defined by action result
         $cache = $this->isToCacheTemplate($result->args);
         $recreate = $this->isToRecreateTemplate($result->args);
+        $html = null;
 
         // render html
-        if ($result->nextView) {
+        if (!empty($result->nextView)) {
             $args = $this->prepareView($result->nextView);
             $html = "";
             if (isset($args)) {
@@ -119,36 +122,31 @@ class ViewController extends AbstractViewController
 
         // handle view specific action
         switch ($this->viewId) {
-            // the login view actions
             case self::$VIEW_LOGIN:
                 $controller = new LoginViewController();
                 break;
-            // the registration view actions
             case self::$VIEW_REGISTRATION:
                 $controller = new RegistrationViewController();
                 break;
-            // the registration success actions
             case self::$PARTIAL_VIEW_REGISTRATION_SUCCESS:
                 $controller = new RegistrationViewController();
                 break;
-            // the new channel view actions
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
                 $controller = new ChannelViewController();
                 break;
-            // the main view actions
             case self::$VIEW_MAIN:
                 $controller = new MainViewController();
                 break;
-            // the channels view actions
             case self::$PARTIAL_VIEW_CHANNELS:
                 $controller = new ChannelViewController();
                 break;
-            // the new channel view actions
             case self::$PARTIAL_VIEW_NEW_CHANNEL:
                 $controller = new ChannelViewController();
                 break;
-            // the selected channel view actions
             case self::$PARTIAL_VIEW_CHANNEL:
+                $controller = new ChannelViewController();
+                break;
+            case self::$PARTIAL_VIEW_CHANNEL_CHAT:
                 $controller = new ChannelViewController();
                 break;
             default:
@@ -196,6 +194,9 @@ class ViewController extends AbstractViewController
                 $controller = new ChannelViewController();
                 break;
             case self::$PARTIAL_VIEW_CHANNEL:
+                $controller = new ChannelViewController();
+                break;
+            case self::$PARTIAL_VIEW_CHANNEL_CHAT:
                 $controller = new ChannelViewController();
                 break;
             default:

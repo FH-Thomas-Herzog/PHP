@@ -1,0 +1,96 @@
+<div id="channelMessageContent">
+    <div>
+        <h4><b>#{{channel.title}}</b></h4>
+        <span style="margin-left: 10px">{{channel.description}}</span>
+    </div>
+    <div class="list-group">
+        {% for key, value in messages %}
+        <hr class="message-group-divider-first">
+        <h5 class="list-group-item-heading"><b>{{ key }}</b></h5>
+        {% for mKey, mValue in value %}
+        <div class="list-group-item-text">
+            {% set oldUser = '' %}
+            {% set actualUser = '' %}
+            {% for message in mValue %}
+            {% set oldUser = actualUser %}
+            {% set actualUser = mValue[loop.index0].username %}
+            {% if (oldUser != actualUser) %}
+            <hr class="message-divider">
+            <span class="channel-message-label">({{ mValue[loop.index0].username }}) {{ mKey }}</span>
+            {% endif %}
+            <div class="channel-message">
+                <div class="message-action-container">
+                    <a href="javascript:{}"
+                       onclick="setImportantMessage('{{mValue[loop.index0].id}}')"
+                       aria-label="Important">
+                        <small><span id="setImportantMessageSpan_{{mValue[loop.index0].id}}"
+                                     class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
+                                     style="color:gold; vertical-align:middle;"/></small>
+                    </a>
+                    {%if mValue[loop.index0].read_flag == 0 %}
+                    <a href="javascript:{}"
+                       aria-label="Important">
+                        <small><span id="radFlag_{{mValue[loop.index0].id}}"
+                                     class="glyphicon glyphicon-flag"
+                                     style="color:green; vertical-align:middle;"/></small>
+                    </a>
+                    {%endif%}
+                    {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
+                    mValue|length) and
+                    (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
+                    messages|length ) %}
+                    <a href="javascript:{}"
+                       onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionDeleteMessage}}&amp;channelId={{channel.id}}&amp;refresh=true&amp;creationDate={{mValue[loop.index0].creation_date}}&amp;messageId={{mValue[loop.index0].id}}')"
+                       aria-label="Remove" title="Remove">
+                        <small><span class="glyphicon glyphicon-remove"
+                                     style="color:red; vertical-align:middle;"/></small>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="message-container" style="display: inline-block">
+                    {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
+                    mValue|length) and
+                    (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
+                    messages|length ) %}
+                    <a id="editMessage" href="#">{{ mValue[loop.index0].message }}</a>
+                    <script type="text/javascript">
+                        var editElement = $("#editMessage");
+                        editElement.editable({
+                            send: 'always',
+                            type: 'textarea',
+                            pk: "{{mValue[loop.index0].id}}",
+                            url: '/public/start.php',
+                            params: {
+                                ajax: true,
+                                viewId: "{{viewId}}",
+                                actionId: "{{actionEditMessage}}",
+                                channelId: "{{channel.id}}"
+                            },
+                            success: function (data) {
+                                var resultObj = JSON.parse(data);
+                                handleAjaxAlertMessage(resultObj);
+                                if (resultObj.html) {
+                                    $("#channelMessageContent").html(resultObj.html);
+                                }
+                            },
+                            validate: function (value) {
+                                if ($.trim(value) == '') {
+                                    return 'Message must contain at least one character';
+                                }
+                            },
+                            title: 'Edit message'
+                        })
+                        ;
+                    </script>
+                    {% else %}
+                    <span class="channel-message-text">{{ mValue[loop.index0].message }}</span>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>

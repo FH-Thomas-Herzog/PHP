@@ -27,14 +27,14 @@ class ChannelMessageEntityController extends AbstractEntityController
     private static $SQL_CHANNEL_MESSAGE_BY_ID = "SELECT * FROM channel_message WHERE id = ? ";
 
     private static $SQL_SELECT_MESSAGES_FOR_CHANNEL =
-        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%m') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
+        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%i') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
         " LEFT OUTER JOIN channel_message_user_entry cme ON (cme.channel_message_id = cm.id AND cme.user_id = ?) " .
         " INNER JOIN user u on u.id = cm.user_id " .
         " WHERE cm.channel_id = ? " .
         " ORDER BY creation_date_date ASC, creation_date ASC, important_flag DESC ";
 
     private static $SQL_SELECT_IMPORTANT_MESSAGES_FOR_CHANNEL =
-        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%m') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
+        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%i') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
         " INNER JOIN channel_message_user_entry cme ON (cme.channel_message_id = cm.id AND cme.user_id = ?) " .
         " INNER JOIN user u on u.id = cm.user_id " .
         " WHERE cm.channel_id = ? " .

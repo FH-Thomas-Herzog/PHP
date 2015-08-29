@@ -1,4 +1,4 @@
-<style type="text/css">
+<style type="text/css" xmlns:h="http://www.w3.org/1999/html">
     div.list-group-item-text {
         margin-top: 10px;
     }
@@ -17,6 +17,18 @@
         font-size: x-small;
     }
 
+    div.message-action-container {
+        display: inline-block;
+        width: 20%;
+        min-width: 80px;
+        float: left;
+    }
+
+    div.message-container {
+        display: inline-block;
+        width: 80%;
+    }
+
     hr {
         margin-top: 15px;
         margin-bottom: 5px;
@@ -33,30 +45,16 @@
 
     div.list-group {
         padding: 10px;
-    }
-
-    div.list-group {
-        max-width: 500px;
+        width: 100%;
     }
 
     div.channel-message {
         margin-top: 5px;
     }
 
-    div.message-actions {
-        display: inline-block;
-        width: 70px;
-    }
-
-    div.message-actions * {
+    div.message-action-container * {
         float: left;
         margin: 0px 2px 0px 0px;
-    }
-
-    div.list-group {
-        overflow-y: auto;
-        min-height: 200px;
-        max-height: 600px;
     }
 
     a.favorite {
@@ -70,162 +68,105 @@
         margin-right: auto;
     }
 </style>
-
-<script type="text/javascript">
-    var setImportantMessage = function (messageId) {
-        var linkJQ = $('#setImportantMessageSpan_' + messageId);
-        var
-                classImportant = "glyphicon glyphicon-star",
-                classNotImportant = classImportant + "-empty",
-                importantFlag = (linkJQ.attr("class") == classImportant) ? 0 : 1,
-                classActual = (importantFlag == 1) ? classImportant : classNotImportant;
-        $.ajax({
-            async: true,
-            type: "POST",
-            url: "start.php",
-            data: ("ajax=true&viewId={{viewId}}&actionId={{actionSetImportantMessage}}&channelId={{channel.id}}&messageId=" + messageId + "&importantFlag=" + importantFlag),
-            success: function (data) {
-                var obj = JSON.parse(data);
-                if (obj.refresh) {
-                    $('#refreshMessages').click();
-                } else {
-                    linkJQ.attr("class", classActual);
-                }
-            },
-            error: function (xhr, status, error) {
-                $('#refreshMessages').click();
-            }
-        });
-    }
-    var postRequest = function (params) {
-        postUpdateTarget('content', params);
-    }
-</script>
-<div id="channelContent" class="child" style="width: 400px; min-height: 150px; max-height: 400px; overflow-y: auto;">
-    <div>
-        <h4><b>#{{channel.title}}</b></h4>
-        <span style="margin-left: 10px">{{channel.description}}</span>
+<div class="row row-buffer">
+    <div class="col-md-2"></div>
+    <div class="col-md-8" style="height: 600px; overflow-y: auto;">
+        {% include 'partialChannelChat.html' %}
     </div>
-    <div>
-        <div class="list-group">
-            {% for key, value in messages %}
-            <hr class="message-group-divider-first">
-            <h5 class="list-group-item-heading"><b>{{ key }}</b></h5>
-            {% for mKey, mValue in value %}
-            <div class="list-group-item-text">
-                {% set oldUser = '' %}
-                {% set actualUser = '' %}
-                {% for message in mValue %}
-                {% set oldUser = actualUser %}
-                {% set actualUser = mValue[loop.index0].username %}
-                {% if (oldUser != actualUser) %}
-                <hr class="message-divider">
-                <span class="channel-message-label">({{ mValue[loop.index0].username }}) {{ mKey }}</span>
-                {% endif %}
-                <div class="channel-message">
-                    <div class="message-actions">
-                        <a href="#"
-                           onclick="setImportantMessage('{{mValue[loop.index0].id}}')"
-                           aria-label="Important">
-                            <small><span id="setImportantMessageSpan_{{mValue[loop.index0].id}}"
-                                         class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
-                                         style="color:gold; vertical-align:middle;"/></small>
-                        </a>
-                        {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
-                        mValue|length) and
-                        (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
-                        messages|length ) %}
-                        <a href="#"
-                           aria-label="Remove" title="Remove">
-                            <small><span class="glyphicon glyphicon-remove"
-                                         style="color:red; vertical-align:middle;"/></small>
-                        </a>
-                        {% endif %}
-                    </div>
-                    <div style="display: inline-block">
-                        {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
-                        mValue|length) and
-                        (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
-                        messages|length ) %}
-                        <a id="editMessage" href="#">{{ mValue[loop.index0].message }}</a>
-                        <script type="text/javascript">
-                            var editElement = $("#editMessage");
-                            editElement.editable({
-                                send: 'always',
-                                type: 'textarea',
-                                pk: "{{mValue[loop.index0].id}}",
-                                url: '/public/start.php',
-                                params: {
-                                    ajax: true,
-                                    viewId: "{{viewId}}",
-                                    actionId: "{{actionEditMessage}}"
-                                },
-                                validate: function (value) {
-                                    if ($.trim(value) == '') {
-                                        return 'Message must contain at least one character';
-                                    }
-                                }
-                                ,
-                                error: function (errors) {
-                                    $("#refreshMessages").click();
-                                },
-                                title: 'Edit message'
-                            })
-                            ;
-                        </script>
-                        {% else %}
-                        <span class="channel-message-text">{{ mValue[loop.index0].message }}</span>
-                        {% endif %}
-                    </div>
-
+    <div class="col-md-2"></div>
+</div>
+<div class="row row-buffer">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div id="messageBox">
+            <form id="postMessageForm" enctype="application/x-www-form-urlencoded" method="post"
+                  data-toggle="validator" role="form">
+                <div class="input-group" style="width: 100%">
+                    <ul class="dropdown-menu dropdown-menu-top" aria-labelledby="dLabel" style="top: -75px; ">
+                        <li>
+                            <a id="postChannelMessage" href="javascript:{}"
+                               onclick="$('#postMessageForm').submit();">
+                                post
+                            </a>
+                        </li>
+                        <li>
+                            <a id="refreshChannelMessages" href="javascript:{}"
+                               onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;refresh=true&amp;favoriteOnly=' + favoriteChannelOnly)">
+                                refresh
+                            </a>
+                        </li>
+                        <li>
+                            <a id="favoriteChannelOnlyLink" href="javascript:{}"
+                               onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;refresh=true&amp;favoriteOnly=' + invertIntegerFlag(favoriteChannelOnly), successFavoriteOnlyLink)">
+                            </a>
+                        </li>
+                    </ul>
+                    <a class="input-group-addon" id="messageLabel" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        <span class="glyphicon glyphicon-text-background" aria-hidden="true"/>
+                    </a>
+                    <textarea id="messageTextArea" name="message" rows="3" class="form-control" required/>
                 </div>
-                {% endfor %}
-            </div>
-            {% endfor %}
-            {% endfor %}
+            </form>
         </div>
-    </div>
-</div>
-<div id="messageBox" class="child" style="width: 400px">
-    <div class="input-group">
-        <ul class="dropdown-menu dropdown-menu-top" aria-labelledby="dLabel" style="top: -75px; ">
-            <li>
-                <a href="#" onclick="">
-                    post
-                </a>
-            </li>
-            <li>
-                <a id="refreshMessages" href="#"
-                   onclick="postRequest('viewId={{viewId}}&actionId={{actionToSelectedChannel}}&channelId={{channel.id}}&favoriteOnly={% if favoriteOnly == true %}1{% else %}0{% endif %}')">
-                    refresh
-                </a>
-            </li>
-            <li>
-                <a href="#"
-                   onclick="postRequest('viewId={{viewId}}&actionId={{actionToSelectedChannel}}&channelId={{channel.id}}&favoriteOnly={% if favoriteOnly == true %}0{% else %}1{% endif %}')">
-                    {% if favoriteOnly == true %}
-                    all
-                    {% else %}
-                    favorites
-                    {% endif %}
-                </a>
-            </li>
-        </ul>
-        <a class="input-group-addon" id="messageLabel" data-toggle="dropdown" aria-haspopup="true"
-           aria-expanded="false">
-            <span class="glyphicon glyphicon-text-background" aria-hidden="true"/>
-        </a>
-        <textarea id="messageTextArea" rows="3" class="form-control"/>
+        <div class="col-md-2"></div>
     </div>
 </div>
 <script type="text/javascript">
-    $('#username').editable();
+    <![CDATA[
+    var
+            favoriteChannelOnly = ("{{favoriteOnly}}" == "true") ? 1 : (("{{favoriteOnly}}" == "false") || ("{{favoriteOnly}}" == "")) ? 0 : null
+            ,
+            setImportantMessage = function (messageId) {
+                // resolve necessary
+                var
+                        linkJQ = $('#setImportantMessageSpan_' + messageId),
+                        classImportant = "glyphicon glyphicon-star",
+                        classNotImportant = classImportant + "-empty";
+
+                ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionSetImportantMessage}}&channelId={{channel.id}}&messageId=' + messageId + '&importantFlag=' + ((linkJQ.attr("class") == classImportant) ? 0 : 1), null, function (resultObj, xhr, status) {
+                    $('#refreshMessages').click();
+                });
+            },
+            updateFavoriteOnlyLink = function () {
+                if (favoriteChannelOnly === 1) {
+                    $('#favoriteChannelOnlyLink').text('all');
+                } else if (favoriteChannelOnly === 0) {
+                    $('#favoriteChannelOnlyLink').text('favorites');
+                } else {
+                    throw "favoriteChannelOnly is null";
+                }
+            }
+            ,
+            successFavoriteOnlyLink = function (resultObj, xhr, status) {
+                favoriteChannelOnly = invertIntegerFlag(favoriteChannelOnly);
+                updateFavoriteOnlyLink();
+            }
+            ,
+            refreshChannelMessagesDelayed = function () {
+                window.setTimeout(function () {
+                    $('#refreshChannelMessages').click();
+                }, 1500);
+            };
+
+    // init validation on form and prepare for ajax submit
+    $('#postMessageForm').validator().on('submit', function (e) {
+        if (!e.isDefaultPrevented()) {
+            ajaxPostRequestSubmitForm('postMessageForm', 'channelMessageContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionPostMessage}}&channelId={{channel.id}}', function (resultObj, xhr, status) {
+                $('#messageTextArea').val('');
+            });
+        }
+        return false;
+    });
+
     $('#messageTextArea').keyup(function (evt) {
         if ((evt.keyCode == 13) && (!evt.shiftKey)) {
-            var msg = $('#messageTextArea').val();
-            postRequest('actionId={{actionPostMessage}}&viewId={{viewId}}&channelId={{channel.id}}&favoriteOnly=0&message=' + msg);
+            $('#postMessageForm').submit();
         } else {
             console.log("no post when shift enter is clicked ");
         }
     });
+
+    updateFavoriteOnlyLink();
+    ]]>
 </script>

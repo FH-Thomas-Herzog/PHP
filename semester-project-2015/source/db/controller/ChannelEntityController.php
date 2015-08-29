@@ -11,6 +11,12 @@ namespace source\db\controller;
 
 use source\common\DbException;
 
+/**
+ * The db accessor for the table channel.
+ *
+ * Class ChannelEntityController
+ * @package source\db\controller
+ */
 class ChannelEntityController extends AbstractEntityController
 {
     private static $SQL_CHECK_CHANNEL_EXISITING = "SELECT id FROM channel";
@@ -19,7 +25,7 @@ class ChannelEntityController extends AbstractEntityController
 
     private static $SQL_INSERT_CHANNEL = "INSERT INTO channel (title, description) VALUES (?,?)";
 
-    private static $SQL_DELETE_CHANNEL = "DELETE FROM channel WHERE channel_id = ?";
+    private static $SQL_DELETE_CHANNEL = " DELETE FROM channel WHERE id = ?; ";
 
     private static $SQL_SELECT_ASSIGNED_CHANNELS_WITH_MSG_COUNT =
         "SELECT COUNT(cm.id) AS msgCount, c.id, c.title, c.description, cue.favorite_flag AS favorite FROM channel c " .
@@ -41,16 +47,26 @@ class ChannelEntityController extends AbstractEntityController
         "SELECT * FROM channel " .
         "WHERE id = ?";
 
+    /**
+     * Constructs this controller instance and delegates to the base class so the common initialization can occur.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
+    /**
+     * Gets the channel by its id.
+     *
+     * @param mixed $id the channel id
+     * @return stdClass the channel instance or null if no channel exists for the given id
+     * @throws DbException if an error occurs
+     */
     public function getById($id)
     {
         parent::open();
 
-        $res = array();
+        $res = null;
         $stmt = null;
 
         try {
@@ -72,6 +88,12 @@ class ChannelEntityController extends AbstractEntityController
         return $res;
     }
 
+    /**
+     * Checks if channels are present on the database.
+     *
+     * @return bool true if channels do exists, false otherwise
+     * @throws DbException if an error occurs
+     */
     public function checkIfChannelAreExisting()
     {
         parent::open();
@@ -97,6 +119,13 @@ class ChannelEntityController extends AbstractEntityController
         return $result;
     }
 
+    /**
+     * Gets the user assinged channels with the related message counts.
+     *
+     * @param $userId the user id to get assigned channels for
+     * @return array the array holding the stdClass channel instance plus the related message count
+     * @throws DbException if an error occurs
+     */
     public function getAssignedChannelsWithMsgCount($userId)
     {
         parent::open();
@@ -127,6 +156,13 @@ class ChannelEntityController extends AbstractEntityController
         return $res;
     }
 
+    /**
+     * Gets the unassigned channels for the given user id.
+     *
+     * @param $userId the user id to get the unassigned channels for
+     * @return array the array holding the stdClass channel instance plus the related message count
+     * @throws DbException if an error occurs
+     */
     public function getUnassignedChannels($userId)
     {
         parent::open();
@@ -193,32 +229,16 @@ class ChannelEntityController extends AbstractEntityController
         return $res;
     }
 
+    /**
+     * Deletes an channel by its id.
+     *
+     * @param integer $id the channel id
+     * @return bool true if the channel has been deleted, false otherwise
+     * @throws DbException if an error occurs
+     */
     public function deleteById($id)
     {
-        parent::open();
-
-        $stmt = null;
-        $res = 0;
-
-        try {
-            $stmt = parent::prepareStatement(self::$SQL_DELETE_CHANNEL);
-            $p1 = $id;
-            $stmt->bind_param("i", $p1);
-
-            parent::startTx();
-            $stmt->execute();
-            parent::commit();
-            $res = $stmt->affected_rows;
-        } catch (\Exception $e) {
-            parent::rollback();
-            throw new DbException("Error on executing query: '" . self::$SQL_CHECK_ACTIVE_USER_BY_USERNAME . "''" . PHP_EOL . "Error: '" . $e->getMessage());
-        } finally {
-            if (isset($stmt)) {
-                $stmt->close();
-            }
-            parent::close();
-        }
-        return $res;
+       // TODO: Not yet implemented
     }
 
     /**
@@ -275,7 +295,12 @@ class ChannelEntityController extends AbstractEntityController
         }
     }
 
-
+    /**
+     * Updates the given channel.
+     *
+     * @param array $args the array holding the column values.
+     * @return bool true if the channel could be updated, false otherwise
+     */
     public function update(array $args)
     {
         // TODO: Implement update() method.

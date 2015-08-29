@@ -4,7 +4,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-target="#assignedChannels" data-parent="#channelAccordion"
+                        <a data-toggle="collapse" data-parent="#channelAccordion"
                            href="#assignedChannels">
                             Assigned channels ({{assignedChannels|length}})
                         </a>
@@ -24,7 +24,7 @@
                                 </thead>
                                 <tbody>
                                 {% for channel in assignedChannels %}
-                                <tr>
+                                <tr id="assignedChannelRow_{{channel.id}}">
                                     <td class="table-column-center">
                                         {% if channel.favorite == true %}
                                         <span class="glyphicon glyphicon-star" style="color:darkorange;"/>
@@ -34,23 +34,23 @@
                                     <td class="table-column-center">{{channel.description}}</td>
                                     <td class="table-column-center">{{channel.msgCount}}</td>
                                     <td class="table-column-center">
-                                        <a href="#" id="deleteAssignment_{{loop.index}}"
-                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionRemoveAssignedChannel}}&channelId={{channel.id}}')"
+                                        <a href="javascript:{}" id="deleteAssignment_{{loop.index}}"
+                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionRemoveAssignedChannel}}&amp;channelId={{channel.id}}')"
                                            aria-label="Remove assignment"
                                            title="Remove assignment" style="margin-right: 10px;">
                                             <span class="glyphicon glyphicon-remove"
                                                   style="color:red; vertical-align:middle;"/>
                                         </a>
-                                        <a href="#" id="openChannel_{{loop.index}}"
-                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionToSelectedChannel}}&channelId={{channel.id}}&favoriteOnly=0')"
+                                        <a href="javascript:{}" id="openChannel_{{loop.index}}"
+                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;favoriteOnly=0&amp;refresh=false')"
                                            aria-label="Open channel"
                                            title="Open channel" style="margin-right: 10px;">
                                     <span class="glyphicon glyphicon-eye-open"
                                           style="color:green; vertical-align:middle;"/>
                                         </a>
                                         {% if channel.favorite == false %}
-                                        <a href="#" id="setFavorite_{{loop.index}}"
-                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionSaveFavoriteChannel}}&channelId={{channel.id}}')"
+                                        <a href="javascript:{}" id="setFavorite_{{loop.index}}"
+                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionSaveFavoriteChannel}}&amp;channelId={{channel.id}}', successSetFocusOnChannel)"
                                            aria-label="Set favorite channel"
                                            title="Set favorite channel" style="margin-right: 10px;">
                         <span class="glyphicon glyphicon-star-empty"
@@ -70,50 +70,48 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a id="availableChannelToggle" data-toggle="collapse" data-target="#availableChannels"
-                       href="#availableChannels" class="collapsed" data-parent="#channelAccordion">
-                        Available channels ({{availableChannels|length}})
-                    </a>
-                </h4>
-            </div>
-            <div id="availableChannels" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th class="table-column-center">Title</th>
-                                <th class="table-column-center">Description</th>
-                                <th class="table-column-center">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for channel in availableChannels %}
-                            <tr>
-                                <td class="table-column-center">{{channel.title}}</td>
-                                <td class="table-column-center">{{channel.description}}</td>
-                                <td class="table-column-center">
-                                    <a href="#availableChannels" id="assignChannel_{{loop.index}}"
-                                       onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionAssignChannel}}&channelId={{channel.id}}')"
-                                       aria-label="Open channel"
-                                       title="Open channel" style="margin-right: 10px;">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a id="availableChannelToggle" data-toggle="collapse"
+                           href="#availableChannels" class="collapsed" data-parent="#channelAccordion">
+                            Available channels ({{availableChannels|length}})
+                        </a>
+                    </h4>
+                </div>
+                <div id="availableChannels" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="table-column-center">Title</th>
+                                    <th class="table-column-center">Description</th>
+                                    <th class="table-column-center">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for channel in availableChannels %}
+                                <tr id="availableChannelRow_{{channel.id}}">
+                                    <td class="table-column-center">{{channel.title}}</td>
+                                    <td class="table-column-center">{{channel.description}}</td>
+                                    <td class="table-column-center">
+                                        <a href="javascript:{}" id="assignChannel_{{loop.index}}"
+                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionAssignChannel}}&amp;channelId={{channel.id}}', successSetFocusOnChannel)"
+                                           aria-label="Open channel"
+                                           title="Assign channel" style="margin-right: 10px;">
                                         <span class="glyphicon glyphicon-plus"
                                               style="color:green; vertical-align:middle;"/>
-                                    </a></td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="4" class="table-column-center">You are assigned to all channels</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                        </a></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="table-column-center">You are assigned to all channels</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,4 +119,10 @@
     </div>
 </div>
 <script type="text/javascript">
+    var successSetFocusOnChannel = function (resultObj, xhr, status) {
+        var row = $('#assignedChannelRow_' + resultObj.channelId);
+        if (row) {
+            row.focus();
+        }
+    }
 </script>

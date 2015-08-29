@@ -15,11 +15,11 @@
                     <li class="divider"></li>
                     <li class="dropdown-header">Actions</li>
                     <li><a href="#"
-                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToNewChannel}}&viewId={{viewId}}');">New
+                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToNewChannel}}&amp;viewId={{viewId}}');">New
                     </a></li>
                     <li>
                         <a href="#"
-                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToChannels}}&viewId={{viewId}}');">Show
+                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToChannels}}&amp;viewId={{viewId}}');">Show
                             all
                         </a>
                     </li>
@@ -30,7 +30,7 @@
                 <ul class="dropdown-menu">
                     <li>
                         <a href="#"
-                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionLogout}}&viewId={{viewId}}');">Logout</a>
+                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionLogout}}&amp;viewId={{viewId}}');">Logout</a>
                     </li>
                 </ul>
             </li>
@@ -39,32 +39,25 @@
 </nav>
 
 <section>
-    <div class="parent">
-        <div class="child">
-            <div class="container">
-                <div id="messageRow" class="row row-buffer" style="display: none;">
-                    <div class="col-sm-12">
-                        <div class="text-center">
-                            <div id="messageAlert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
-                                        onclick="hideElement('formMessageRow')"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <strong id="message"></strong><br>
-                                <span id="additionalMessage"></span>
-                            </div>
-                        </div>
+    <div class="container">
+        <div id="messageRow" class="row row-buffer" style="display: none;">
+            <div class="col-sm-12">
+                <div class="text-center">
+                    <div id="messageAlert">
+                        <strong id="message"></strong><br>
+                        <span id="additionalMessage"></span>
                     </div>
                 </div>
-                <div id="partialContent">
-                </div>
             </div>
+        </div>
+        <div id="partialContent">
         </div>
     </div>
 </section>
 
 <script type="text/javascript">
     window.onload = function () {
-        ajaxPostRequest('partialContent', '/public/start.php', 'actionId={{actionToChannels}}&viewId={{viewId}}');
+        ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionToChannels}}');
     }
 </script>
 {%endblock%}

@@ -1,15 +1,29 @@
-var setAction = function (actionId) {
-        $('#actionId').val(actionId);
-    }
-    ,
+var
     destroyValidation = function (formId) {
         $("#" + formId).validator('destroy');
     }
     ,
-    submitCancelWithValidation = function (formId, params) {
-        destroyValidation(formId);
-        setAction(actionId);
-        $("#" + formId).submit();
+    invertIntegerFlag = function (flag) {
+        return (flag === 0) ? 1 : (flag === 1) ? 0 : null;
+    }
+    ,
+    handleAjaxAlertMessage = function (resultObj) {
+        // reset fromer set message
+        $("#message").text("");
+        $("#additionalMessage").text("");
+
+        hideElement("messageRow");
+
+        if ((resultObj.message) || (resultObj.additionalMessage)) {
+            showElement("messageRow");
+            $("#messageAlert").attr("class", "alert alert-" + resultObj.messageType + " alert-dismissible");
+        }
+        if (resultObj.message) {
+            $("#message").text(resultObj.message);
+        }
+        if (resultObj.additionalMessage) {
+            $("#additionalMessage").text(resultObj.additionalMessage);
+        }
     }
     ,
     ajaxPostRequest = function (htmlTargetId, relUrl, params, successFunc, errorFunc) {
@@ -21,42 +35,30 @@ var setAction = function (actionId) {
             data: ("ajax=true" + (params ? ("&" + params) : "")),
             complete: function (xhr, status) {
                 try {
-                    // reset fromer set message
-                    $("#message").text("");
-                    $("#additonalMessage").text("");
-                    hideElement("messageRow");
-
                     var resultObj = JSON.parse(xhr.responseText);
 
-                    if ((resultObj.message) || (resultObj.additionalMessage)) {
-                        showElement("messageRow");
-                        $("#messageAlert").attr("class", "alert alert-" + resultObj.messageType + " alert-dismissible");
-                    }
-                    if (resultObj.message) {
-                        $("#message").text(resultObj.message);
-                    }
-                    if (resultObj.additionalMessage) {
-                        $("#additionalMessage").text(resultObj.additionalMessage);
-                    }
+                    handleAjaxAlertMessage(resultObj);
+
                     if ((resultObj.error === true) && (successFunc)) {
                         successFunc(resultObj);
                     }
-                    if ((resultObj.error === false) && (errorFunc)) {
-                        errorFunc(resultObj);
+                    if ((resultObj.html) && (htmlTargetId)) {
+                        $("#" + htmlTargetId).html(resultObj.html);
                     }
                     if (resultObj.redirectUrl) {
                         toUrl(resultObj.redirectUrl);
                         return;
                     }
-                    if ((resultObj.html) && (htmlTargetId)) {
-                        $("#" + htmlTargetId).html(resultObj.html);
-                        if (successFunc) {
-                            successFunc(resultObj);
-                        }
+                    if ((resultObj.error === false) && (successFunc)) {
+                        successFunc(resultObj, xhr, status);
+                    }
+                    if ((resultObj.error === true) && (errorFunc)) {
+                        errorFunc(resultObj, xhr, status);
                     }
                 } catch (err) {
                     if (console) {
                         console.log(err);
+                        console.log(xhr.responseText);
                     }
                 }
                 $("#ajaxLoaderImage").hide();
@@ -89,4 +91,3 @@ var setAction = function (actionId) {
     toUrl = function (url) {
         document.location.href = url;
     };
-;

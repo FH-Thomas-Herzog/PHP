@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.1)  26 AUG 2015 22:15
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.1)  29 AUG 2015 21:24
 entering extended mode
 **Documentation.tex
 
@@ -750,7 +750,7 @@ t)
 t)
 \@outlinefile=\write6
 
-<scm4-2015-uebung01-communication-list.pdf, id=23, 597.23125pt x 845.1575pt>
+<scm4-2015-uebung01-communication-list.pdf, id=35, 597.23125pt x 845.1575pt>
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
 
 <use scm4-2015-uebung01-communication-list.pdf>
@@ -776,7 +776,7 @@ Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf used on inpu
 t line 109.
 (pdftex.def)             Requested size: 597.22978pt x 845.15544pt.
 
-<scm4-2015-uebung01-communication-list.pdf, id=28, page=1, 597.23125pt x 845.15
+<scm4-2015-uebung01-communication-list.pdf, id=40, page=1, 597.23125pt x 845.15
 75pt>
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
  <use scm4-2015-uebung01-communication-list.pdf, page 1>
@@ -802,7 +802,7 @@ Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf, page1 used
 on input line 109.
 (pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
 
-<scm4-2015-uebung01-communication-list.pdf, id=29, page=2, 597.23125pt x 845.15
+<scm4-2015-uebung01-communication-list.pdf, id=41, page=2, 597.23125pt x 845.15
 75pt>
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
  <use scm4-2015-uebung01-communication-list.pdf, page 2>
@@ -830,7 +830,7 @@ pdfTeX warning: pdflatex (file D:/repositories/Github/PHP/semester-project-2015
 /internal/doc/scm4-2015-uebung01-communication-list.pdf): PDF inclusion: invali
 d other resource which is no dict (key 'ProcSets', type <array>); ignored.
 >]
-<scm4-2015-uebung01-communication-list.pdf, id=61, page=3, 597.23125pt x 845.15
+<scm4-2015-uebung01-communication-list.pdf, id=73, page=3, 597.23125pt x 845.15
 75pt>
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
  <use scm4-2015-uebung01-communication-list.pdf, page 3>
@@ -867,7 +867,7 @@ bung01-communication-list.pdf
 pdfTeX warning: pdflatex (file D:/repositories/Github/PHP/semester-project-2015
 /internal/doc/scm4-2015-uebung01-communication-list.pdf): PDF inclusion: invali
 d other resource which is no dict (key 'ProcSets', type <array>); ignored.
->] <images/er-model.PNG, id=81, 993.7125pt x 833.1125pt>
+>] <images/er-model.PNG, id=93, 993.7125pt x 833.1125pt>
 File: images/er-model.PNG Graphic file (type png)
 
 <use images/er-model.PNG>
@@ -878,7 +878,7 @@ Overfull \hbox (13.15816pt too wide) in paragraph at lines 122--124
  [][] 
  []
 
-<FHO_Logo_Students.jpg, id=82, 569.0058pt x 476.0184pt>
+<FHO_Logo_Students.jpg, id=94, 569.0058pt x 476.0184pt>
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 
 <use FHO_Logo_Students.jpg>
@@ -894,7 +894,7 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
 [4{C:/Users/cchet/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <D:/reposi
 tories/Github/PHP/semester-project-2015/internal/doc/FHO_Logo_Students.jpg> <D:
 /repositories/Github/PHP/semester-project-2015/internal/doc/images/er-model.PNG
->] <images/Infrastructure.JPG, id=92, 536.0025pt x 559.33969pt>
+>] <images/Infrastructure.JPG, id=104, 536.0025pt x 559.33969pt>
 File: images/Infrastructure.JPG Graphic file (type jpg)
 
 <use images/Infrastructure.JPG>
@@ -934,21 +934,21 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  This may cause the page layout to be inconsistent, however.
 
 [6]
-<images/registration_client_validation_full.PNG, id=112, 375.65344pt x 443.4065
-6pt>
+<images/registration_client_validation_full.PNG, id=124, 253.69781pt x 348.5521
+9pt>
 File: images/registration_client_validation_full.PNG Graphic file (type png)
  <use images/registration_client_validation_full.PNG>
 Package pdftex.def Info: images/registration_client_validation_full.PNG used on
  input line 174.
-(pdftex.def)             Requested size: 187.82625pt x 221.70273pt.
+(pdftex.def)             Requested size: 126.84859pt x 174.27565pt.
 
-<images/registration_client_validation_email.PNG, id=114, 371.13657pt x 436.631
-26pt>
+<images/registration_client_validation_email.PNG, id=126, 255.95625pt x 350.810
+62pt>
 File: images/registration_client_validation_email.PNG Graphic file (type png)
  <use images/registration_client_validation_email.PNG>
 Package pdftex.def Info: images/registration_client_validation_email.PNG used o
 n input line 181.
-(pdftex.def)             Requested size: 185.56783pt x 218.3151pt.
+(pdftex.def)             Requested size: 127.9778pt x 175.40488pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 170--185
 
@@ -973,27 +973,22 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
 [7 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/regist
 ration_client_validation_full.PNG> <D:/repositories/Github/PHP/semester-project
 -2015/internal/doc/images/registration_client_validation_email.PNG>]
-<images/registration_server_validation_email.PNG, id=125, 1224.82594pt x 549.55
-313pt>
+<images/registration_server_validation_email.PNG, id=137, 820.56563pt x 423.080
+63pt>
 File: images/registration_server_validation_email.PNG Graphic file (type png)
  <use images/registration_server_validation_email.PNG>
 Package pdftex.def Info: images/registration_server_validation_email.PNG used o
 n input line 189.
-(pdftex.def)             Requested size: 489.92169pt x 219.81735pt.
+(pdftex.def)             Requested size: 328.22043pt x 169.22925pt.
 
-Overfull \hbox (6.22482pt too wide) in paragraph at lines 189--191
- [][] 
- []
-
-
-<images/registration_server_validation_username.PNG, id=126, 1209.01688pt x 542
-.77782pt>
+<images/registration_server_validation_username.PNG, id=138, 816.04875pt x 418.
+56375pt>
 File: images/registration_server_validation_username.PNG Graphic file (type png
 )
  <use images/registration_server_validation_username.PNG>
 Package pdftex.def Info: images/registration_server_validation_username.PNG use
 d on input line 196.
-(pdftex.def)             Requested size: 483.59819pt x 217.10727pt.
+(pdftex.def)             Requested size: 326.41371pt x 167.42252pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 186--200
 
@@ -1013,16 +1008,16 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
 [8 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/regist
 ration_server_validation_email.PNG> <D:/repositories/Github/PHP/semester-projec
 t-2015/internal/doc/images/registration_server_validation_username.PNG>]
-<images/registration_success.PNG, id=136, 371.13657pt x 199.49532pt>
+<images/registration_success.PNG, id=148, 816.04875pt x 124.96687pt>
 File: images/registration_success.PNG Graphic file (type png)
 
 <use images/registration_success.PNG>
 Package pdftex.def Info: images/registration_success.PNG used on input line 204
 .
-(pdftex.def)             Requested size: 222.68365pt x 119.69809pt.
+(pdftex.def)             Requested size: 489.63304pt x 74.9807pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 201--208
-
+Overfull \hbox (5.93617pt too wide) in paragraph at lines 204--206
+ [][] 
  []
 
 
@@ -1031,10 +1026,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 201--208
  []
 
 
-AED: lastpage setting LastPage
+Underfull \hbox (badness 10000) in paragraph at lines 201--208
+
+ []
+
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 <use FHO_Logo_Students.jpg>
-Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 211.
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 208.
 (pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
 
 
@@ -1045,30 +1043,219 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
 
 [9 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/regist
 ration_success.PNG>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 211.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 211.
+<images/login_client_validation_full.PNG, id=156, 222.07968pt x 111.41624pt>
+File: images/login_client_validation_full.PNG Graphic file (type png)
+
+<use images/login_client_validation_full.PNG>
+Package pdftex.def Info: images/login_client_validation_full.PNG used on input 
+line 215.
+(pdftex.def)             Requested size: 111.03957pt x 55.70798pt.
+
+<images/login_server_validation_credentials.PNG, id=157, 816.04875pt x 183.6862
+5pt>
+File: images/login_server_validation_credentials.PNG Graphic file (type png)
+ <use images/login_server_validation_credentials.PNG>
+Package pdftex.def Info: images/login_server_validation_credentials.PNG used on
+ input line 222.
+(pdftex.def)             Requested size: 408.02338pt x 91.84288pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 211--226
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 211--226
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 211--226
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 211--226
+
+ []
+
+File: FHO_Logo_Students.jpg Graphic file (type jpg)
+<use FHO_Logo_Students.jpg>
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 227.
+(pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (42.67912pt): 
+ Make it at least 51.68465pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[10 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/login
+_client_validation_full.PNG> <D:/repositories/Github/PHP/semester-project-2015/
+internal/doc/images/login_server_validation_credentials.PNG>]
+<images/start_new_channel_no_channels.PNG, id=167, 813.79031pt x 330.48468pt>
+File: images/start_new_channel_no_channels.PNG Graphic file (type png)
+
+<use images/start_new_channel_no_channels.PNG>
+Package pdftex.def Info: images/start_new_channel_no_channels.PNG used on input
+ line 234.
+(pdftex.def)             Requested size: 406.89417pt x 165.24193pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--238
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--238
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--238
+
+ []
+
+<images/start_new_channel_successful.PNG, id=168, 818.30719pt x 328.22626pt>
+File: images/start_new_channel_successful.PNG Graphic file (type png)
+
+<use images/start_new_channel_successful.PNG>
+Package pdftex.def Info: images/start_new_channel_successful.PNG used on input 
+line 242.
+(pdftex.def)             Requested size: 409.15259pt x 164.11272pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 239--246
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 239--246
+
+ []
+
+File: FHO_Logo_Students.jpg Graphic file (type jpg)
+<use FHO_Logo_Students.jpg>
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 246.
+(pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (42.67912pt): 
+ Make it at least 51.68465pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[11 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
+_new_channel_no_channels.PNG> <D:/repositories/Github/PHP/semester-project-2015
+/internal/doc/images/start_new_channel_successful.PNG>]
+<images/start_new_channel_fail.PNG, id=178, 816.04875pt x 332.74312pt>
+File: images/start_new_channel_fail.PNG Graphic file (type png)
+
+<use images/start_new_channel_fail.PNG>
+Package pdftex.def Info: images/start_new_channel_fail.PNG used on input line 2
+51.
+(pdftex.def)             Requested size: 408.02338pt x 166.37114pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 248--255
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 248--255
+
+ []
+
+
+<images/start_channels_assigned_after_creation.PNG, id=179, 829.59938pt x 194.9
+7844pt>
+File: images/start_channels_assigned_after_creation.PNG Graphic file (type png)
+
+ <use images/start_channels_assigned_after_creation.PNG>
+Package pdftex.def Info: images/start_channels_assigned_after_creation.PNG used
+ on input line 259.
+(pdftex.def)             Requested size: 414.79868pt x 97.48897pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 256--263
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 256--263
+
+ []
+
+File: FHO_Logo_Students.jpg Graphic file (type jpg)
+<use FHO_Logo_Students.jpg>
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 263.
+(pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (42.67912pt): 
+ Make it at least 51.68465pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[12 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
+_new_channel_fail.PNG> <D:/repositories/Github/PHP/semester-project-2015/intern
+al/doc/images/start_channels_assigned_after_creation.PNG>]
+<images/start_channels_action_fail.PNG, id=189, 836.3747pt x 231.11343pt>
+File: images/start_channels_action_fail.PNG Graphic file (type png)
+
+<use images/start_channels_action_fail.PNG>
+Package pdftex.def Info: images/start_channels_action_fail.PNG used on input li
+ne 271.
+(pdftex.def)             Requested size: 418.18633pt x 115.55643pt.
+ 
+AED: lastpage setting LastPage
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--275
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--275
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 266--275
+
+ []
+
+File: FHO_Logo_Students.jpg Graphic file (type jpg)
+<use FHO_Logo_Students.jpg>
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 275.
+(pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (42.67912pt): 
+ Make it at least 51.68465pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[13 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
+_channels_action_fail.PNG>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 275.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 275.
 
 (D:\repositories\Github\PHP\semester-project-2015\internal\doc\Documentation.au
 x)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 211.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 211.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 275.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 275.
 Package rerunfilecheck Info: File `Documentation.out' has not changed.
-(rerunfilecheck)             Checksum: 4CBBAA739D1370EAEC016BD5C6920434;336.
+(rerunfilecheck)             Checksum: 57E6BDE4BD535A92BC5433C1F8D4CC5D;542.
  ) 
 Here is how much of TeX's memory you used:
- 10763 strings out of 493921
- 171232 string characters out of 3144877
+ 10815 strings out of 493921
+ 172996 string characters out of 3144877
  300940 words of memory out of 3000000
- 13865 multiletter control sequences out of 15000+200000
+ 13896 multiletter control sequences out of 15000+200000
  5626 words of font info for 21 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  42i,18n,43p,881b,484s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C
 :/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on Documentation.pdf (9 pages, 1098853 bytes).
+Output written on Documentation.pdf (13 pages, 1155759 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 29 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 221 PDF objects out of 1000 (max. 8388607)
+ 43 named destinations out of 1000 (max. 500000)
+ 180 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -69,7 +69,7 @@ class ChannelViewController extends AbstractViewController
                 $result = $this->handleAssignChannel();
                 break;
             case self::$ACTION_TO_SELECTED_CHANNEL:
-                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
+                $result = $this->handleToSelectedChannelAction();
                 break;
             case self::$ACTION_POST_MESSAGE:
                 $result = $this->handlePostMessage();
@@ -107,6 +107,9 @@ class ChannelViewController extends AbstractViewController
             case ViewController::$PARTIAL_VIEW_CHANNEL:
                 $args = $this->prepareChannelView();
                 break;
+            case ViewController::$PARTIAL_VIEW_CHANNEL_CHAT:
+                $args = $this->prepareChannelView();
+                break;
             default:
                 throw new InternalErrorException("View: '" . $nextView . " not supported by this controller: '" . __CLASS__ . "'");
         }
@@ -114,6 +117,11 @@ class ChannelViewController extends AbstractViewController
         return $args;
     }
 
+    /**
+     * Prepares the channels view.
+     *
+     * @return array the array holding the twig template arguments
+     */
     private function prepareChannelsView()
     {
         $channelCtrl = new ChannelEntityController();
@@ -134,15 +142,22 @@ class ChannelViewController extends AbstractViewController
         }
     }
 
+    /**
+     * Prepares the partialChannel or partialChannelChat views which needs the same twig template arguments.
+     *
+     * @return array the array holding the twig template arguments
+     * @throws InternalErrorException
+     */
     private function prepareChannelView()
     {
         $result = array();
 
         $channelId = (integer)parent::getParameter("channelId");
         $favoriteOnly = (!empty(parent::getParameter("favoriteOnly"))) ? ((boolean)parent::getParameter("favoriteOnly")) : false;
+
         $channelCtrl = new ChannelEntityController();
         $channelMessageCtrl = new ChannelMessageEntityController();
-        $channelMessageUserEntryCtrl = new ChannelMessageUserEntryEntityController();
+
         try {
             $channel = $channelCtrl->getById($channelId);
             $messages = $channelMessageCtrl->getMessagesForChannel($channelId, $this->securityCtrl->getLoggedUser(), $favoriteOnly);
@@ -217,6 +232,43 @@ class ChannelViewController extends AbstractViewController
     }
 
     /**
+     * Handles the to selected channel action which determines between a initial call which will return view 'partialChannels'
+     * or an refresh action which will return view 'partialChannelChat'.
+     *
+     * @return RequestControllerResult the action result
+     */
+    private function handleToSelectedChannelAction()
+    {
+        $nextView = null;
+        $success = false;
+        $refresh = parent::getParameter("refresh");
+        $channelId = (integer)parent::getParameter("channelId");
+
+        // check if channel exists
+        $jsonArray = $this->isChannelExisting($channelId);
+        // channel exists
+        if (!isset($jsonArray)) {
+            $nextView = ($refresh) ? ViewController::$PARTIAL_VIEW_CHANNEL : ViewController::$PARTIAL_VIEW_CHANNEL_CHAT;
+            $success = true;
+            $jsonArray = array(
+                "error" => false
+            );
+        } // channel not existing
+        else {
+            $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+        }
+
+        // check for existing channels
+        $jsonArrayTmp = $this->checkForExistingChannel();
+        if (isset($jsonArrayTmp)) {
+            $jsonArray = $jsonArrayTmp;
+            $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
+        }
+
+        return new RequestControllerResult($success, $nextView, $jsonArray);
+    }
+
+    /**
      * Handles the to channels action. It is checked if there are channels present.
      * If not then next view is set to new channels view.
      *
@@ -256,72 +308,104 @@ class ChannelViewController extends AbstractViewController
         return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
+    /**
+     * Handles the edit message action.
+     *
+     * @return RequestControllerResult the action result
+     */
     private function handleEditMessage()
     {
-
-        $result = new RequestControllerResult(false);
+        $jsonArray = null;
+        $success = null;
 
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("pk");
         $message = (string)parent::getParameter("value");
+
         $channelMessageCtrl = new ChannelMessageEntityController();
 
         try {
-            $updated = $channelMessageCtrl->update(array(
+            $success = $channelMessageCtrl->update(array(
                 "userId" => $userId,
                 "messageId" => $messageId,
                 "message" => $message
             ));
-            if (!$updated) {
-                http_response_code(500);
+            if ($success) {
+                $jsonArray = array(
+                    "error" => false,
+                );
             } else {
-                $result->args = array(
-                    "successful" => true
+                $jsonArray = array(
+                    "error" => true,
+                    "message" => "Could not update message",
+                    "additionalMessage" => "Either message does ot exist anymore or a following message has been posted. Will refresh shortly",
+                    "messageType" => "warning",
                 );
             }
         } catch (DbException $e) {
-            $result->args = array(
+            $jsonArray = array(
                 "error" => true,
-                "refresh" => true
+                "message" => "Could not delete message. If this error keeps showing up, please notify the administrator",
+                "additionalMessage" => ". Will refresh shortly [" . $e->getMessage() . "]",
+                "messageType" => "danger",
             );
         }
 
-        return $result;
+        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
     }
 
+    /**
+     * Handles the set favorite message action.
+     *
+     * @return RequestControllerResult the action result
+     */
     private function handleSetFavoriteMessage()
     {
-        $result = new RequestControllerResult(false);
+        $jsonArray = null;
+        $success = false;
 
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("messageId");
         $importantFlag = (integer)parent::getParameter("importantFlag");
+
         $channelMessageUserEntryCtrl = new ChannelMessageUserEntryEntityController();
 
         try {
-            $updated = $channelMessageUserEntryCtrl->markMessageAsImportant($userId, $messageId, $importantFlag);
-            if (!$updated) {
-                $result->args = array(
-                    "refresh" => true
+            $success = $channelMessageUserEntryCtrl->markMessageAsImportant($userId, $messageId, $importantFlag);
+            if ($success) {
+                $jsonArray = array(
+                    "error" => false
                 );
             } else {
-                $result->args = array(
-                    "successful" => true
+                $jsonArray = array(
+                    "error" => true,
+                    "refresh" => true,
+                    "message" => "Could not set favorite message",
+                    "additionalMessage" => "Seems message got deleted."
                 );
             }
         } catch (DbException $e) {
-            $result->args = array(
+            $jsonArray = array(
                 "error" => true,
-                "refresh" => true
+                "message" => "Could not delete message. If this error keeps showing up, please notify the administrator",
+                "additionalMessage" => ". Will refresh shortly (" . $e->getMessage() . ")",
+                "messageType" => "danger"
             );
         }
 
-        return $result;
+        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
     }
 
+    /**
+     * Handles the delete action.
+     *
+     * @return RequestControllerResult the action result
+     */
     private function handleDeleteMessage()
     {
         $result = null;
+        $jsonArray = null;
+        $success = false;
 
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("messageId");
@@ -330,33 +414,46 @@ class ChannelViewController extends AbstractViewController
 
         $channelMessageCtrl = new ChannelMessageEntityController();
         try {
-            $deleted = $channelMessageCtrl->delete(array(
+            $success = $channelMessageCtrl->delete(array(
                 "userId" => $userId,
                 "messageId" => $messageId,
                 "channelId" => $channelId,
                 "creationDate" => $creationDate
             ));
-            if (!$deleted) {
-                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL, array(
-                    "message" => "Could not delete message because answers have already been posted",
+            if (!$success) {
+                $jsonArray = array(
+                    "error" => true,
+                    "message" => "Could not delete message.",
+                    "additionalMessage" => "Following messages have already been posted",
                     "messageType" => "warning"
-                ));
+                );
             } else {
-                $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
+                $jsonArray = array(
+                    "error" => false
+                );
             }
         } catch (DbException $e) {
-            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNELS, array(
+            $jsonArray = array(
                 "message" => "Could not delete message. If this error keeps showing up, please notify the administrator",
+                "additionalMessage" => $e->getMessage(),
                 "messageType" => "danger"
-            ));
+            );
+            $success = false;
         }
 
-        return $result;
+        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
     }
 
+    /**
+     * Handles the post message action.
+     *
+     * @return RequestControllerResult the action result
+     */
     private function handlePostMessage()
     {
         $result = null;
+        $jsonArray = null;
+        $success = false;
 
         $userId = $this->securityCtrl->getLoggedUser();
         $channelId = (integer)parent::getParameter("channelId");
@@ -372,34 +469,74 @@ class ChannelViewController extends AbstractViewController
                 "importantFlag" => 0,
                 "markRead" => 1
             ));
-            $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNEL);
+            $jsonArray = array(
+                "error" => false
+            );
         } catch (DbException $e) {
-            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNEL, array(
+            $jsonArray = array(
                 "message" => "Could not post message. If this error keeps showing up, please notify the administrator",
+                "additionalMessage" => $e->getMessage(),
                 "messageType" => "danger"
-            ));
+            );
+            $success = false;
         }
 
-        return $result;
+        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
     }
 
+    /**
+     * Handles the set favorite channel action which marks an channel s a user favorite.
+     *
+     * @return null|RequestControllerResult the action result.
+     * @throws \source\db\controller\DbException
+     */
     private function handleSetFavoriteChannel()
     {
-        $channelUserEntryCtrl = new ChannelUserEntryEntityController();
+        $jsonArray = null;
+        $success = false;
         $channelId = (integer)parent::getParameter("channelId");
+        $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+
+        $channelUserEntryCtrl = new ChannelUserEntryEntityController();
 
         $result = null;
         try {
-            $channelUserEntryCtrl->setFavoriteChannel((integer)$this->securityCtrl->getLoggedUser(), $channelId);
-            $result = new RequestControllerResult(true, ViewController::$PARTIAL_VIEW_CHANNELS);
+            // check if channel exists
+            $jsonArray = $this->isChannelExisting($channelId);
+            if (!isset($jsonArray)) {
+                $success = $channelUserEntryCtrl->update(array(
+                    "favoriteFlag" => 1,
+                    "userId" => $this->securityCtrl->getLoggedUser(),
+                    "channelId" => $channelId
+                ));
+                if ($success) {
+                    $jsonArray = array(
+                        "error" => false,
+                        "channelId" => $channelId
+                    );
+                } else {
+                    $jsonArray = array(
+                        "error" => true,
+                        "message" => "Could not set favorite channel",
+                        "additionalMessage" => "Assignment does not exist anymore",
+                        "messageType" => "warning"
+                    );
+                }
+            }
+
+            // Check if channels still exist
+            $jsonArrayTmp = $this->checkForExistingChannel();
+            $jsonArray = (isset($jsonArrayTmp)) ? $jsonArrayTmp : $jsonArray;
         } catch (DbException $e) {
-            $result = new RequestControllerResult(false, ViewController::$PARTIAL_VIEW_CHANNELS, array(
+            $jsonArray = array(
+                "error" => true,
                 "message" => "Could not save favorite channel. If this error keeps showing up, please notify the administrator",
+                "additionalMessage" => $e->getMessage(),
                 "messageType" => "danger"
-            ));
+            );
         }
 
-        return $result;
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
     /**
@@ -412,22 +549,36 @@ class ChannelViewController extends AbstractViewController
     {
         $jsonArray = null;
         $success = false;
+        $channelId = (integer)parent::getParameter("channelId");
+        $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+
         $channelUserEntryCtrl = new ChannelUserEntryEntityController();
+
         try {
-            $success = (boolean)$channelUserEntryCtrl->deleteById(array(
-                "userId" => (integer)$this->securityCtrl->getLoggedUser(),
-                "channelId" => (integer)parent::getParameter("channelId")
-            ));
-            if ($success) {
-                $jsonArray = array(
-                    "error" => false
-                );
-            } else {
-                $jsonArray = array(
-                    "error" => true,
-                    "message" => "Assignment already removed",
-                    "messageType" => "warning"
-                );
+            // check if channel exists
+            $jsonArray = $this->isChannelExisting($channelId);
+            if (!isset($jsonArray)) {
+                $success = (boolean)$channelUserEntryCtrl->deleteById(array(
+                    "userId" => (integer)$this->securityCtrl->getLoggedUser(),
+                    "channelId" => $channelId
+                ));
+                if ($success) {
+                    $jsonArray = array(
+                        "error" => false
+                    );
+                } else {
+                    $jsonArray = array(
+                        "error" => true,
+                        "message" => "Assignment already removed",
+                        "messageType" => "warning"
+                    );
+                }
+            }
+            // Check if channels still exist
+            $jsonArrayTmp = $this->checkForExistingChannel();
+            if (isset($jsonArrayTmp)) {
+                $jsonArray = $jsonArrayTmp;
+                $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
             }
         } catch (DbException $e) {
             $jsonArray = array(
@@ -438,38 +589,58 @@ class ChannelViewController extends AbstractViewController
             );
         }
 
-        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNELS, $jsonArray);
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
+    /**
+     * Handles the assign channel action which assigns an channel to the current logged user.
+     *
+     * @return RequestControllerResult the action result
+     * @throws \source\db\controller\DbException
+     */
     private function handleAssignChannel()
     {
         $jsonArray = null;
         $success = false;
         $channelId = (integer)parent::getParameter("channelId");
+        $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+
         $channelUserEntryCtrl = new ChannelUserEntryEntityController();
+        $channelCtrl = new ChannelEntityController();
 
         try {
-            // channel already assigned to user
-            if ($channelUserEntryCtrl->getById(array(
-                    "userId" => $this->securityCtrl->geTLoggedUser(),
-                    "channelId" => $channelId
-                )) != null
-            ) {
-                $jsonArray = array(
-                    "error" => true,
-                    "message" => "Assignment already exists",
-                    "messageType" => "warning"
-                );
-            } else {
-                $channelUserEntryCtrl->persist(array(
-                    "userId" => (integer)$this->securityCtrl->getLoggedUser(),
-                    "channelId" => $channelId,
-                    "favorite" => 0
-                ));
-                $success = true;
-                $jsonArray = array(
-                    "error" => false
-                );
+            // check if channel exists
+            $jsonArray = $this->isChannelExisting($channelId);
+            if (!isset($jsonArray)) {
+                // channel already assigned to user
+                if ($channelUserEntryCtrl->getById(array(
+                        "userId" => $this->securityCtrl->geTLoggedUser(),
+                        "channelId" => $channelId
+                    )) != null
+                ) {
+                    $jsonArray = array(
+                        "error" => true,
+                        "message" => "Assignment already exists",
+                        "messageType" => "warning"
+                    );
+                } else {
+                    $channelUserEntryCtrl->persist(array(
+                        "userId" => (integer)$this->securityCtrl->getLoggedUser(),
+                        "channelId" => $channelId,
+                        "favorite" => 0
+                    ));
+                    $success = true;
+                    $jsonArray = array(
+                        "error" => false,
+                        "channelId" => $channelId
+                    );
+                }
+            }
+            // Check if channels still exist
+            $jsonArrayTmp = $this->checkForExistingChannel();
+            if (isset($jsonArrayTmp)) {
+                $jsonArray = $jsonArrayTmp;
+                $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
             }
         } catch (\Exception $e) {
             $jsonArray = array(
@@ -480,7 +651,7 @@ class ChannelViewController extends AbstractViewController
             );
         }
 
-        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNELS, $jsonArray);
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
     /**
@@ -529,5 +700,65 @@ class ChannelViewController extends AbstractViewController
         }
 
         return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_NEW_CHANNEL, $jsonArray);
+    }
+
+    /**
+     * Helper to check if a channel with the given id exists on the database.
+     *
+     * @param integer $id the channel id
+     * @return array|null the json array which is null if channel exists with the given id, otherwise it contains the json result
+     */
+    private
+    function isChannelExisting($id)
+    {
+        $channelId = (integer)$id;
+        $jsonArray = null;
+        try {
+            if ((new ChannelEntityController())->getById($channelId) == null) {
+                $jsonArray = array(
+                    "message" => "Channel does not exist anymore",
+                    "messageType" => "warning"
+                );
+            };
+        } catch (\Exception $e) {
+            $jsonArray = array(
+                "error" => true,
+                "message" => "Sorry an database error occurred." . PHP_EOL . ". If this error keeps showing up, please notify the administrator",
+                "messageType" => "danger",
+                "additionalMessage" => $e->getMessage());
+        }
+
+        return $jsonArray;
+    }
+
+    /**
+     * Checks if at least one channel still exists.
+     * @return array|null the json array which is null in case at least one channel still exists,
+     * otherwise it contains the json result
+     */
+    private
+    function checkForExistingChannel()
+    {
+        $jsonArray = null;
+        try {
+            if (!(new ChannelEntityController())->checkIfChannelAreExisting()) {
+                $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
+                $jsonArray = array(
+                    "error" => true,
+                    "message" => "No channels exist anymore",
+                    "additionalMessage" => "Please create one",
+                    "messageType" => "warning"
+                );
+            }
+        } catch (\Exception $e) {
+            $jsonArray = array(
+                "error" => true,
+                "message" => "Could not delete assigned channel. If this error keeps showing up, please notify the administrator",
+                "messageType" => "danger",
+                "additionalMessage" => $e->getMessage()
+            );
+        }
+
+        return $jsonArray;
     }
 }
