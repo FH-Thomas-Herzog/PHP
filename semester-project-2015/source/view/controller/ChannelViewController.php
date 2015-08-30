@@ -49,6 +49,12 @@ class ChannelViewController extends AbstractViewController
         parent::__construct();
     }
 
+    /**
+     * Handles the intended action which must be supported by this controller.
+     *
+     * @return null|RequestControllerResult the handled controller action result
+     * @throws InternalErrorException if the controller does not support this action
+     */
     public function handleAction()
     {
         $result = null;
@@ -90,6 +96,13 @@ class ChannelViewController extends AbstractViewController
         return $result;
     }
 
+    /**
+     * Prepares the controller supported view with the intended given view id.
+     *
+     * @param string $nextView the intended next view which must be suippported by this controller
+     * @return array the array holding the template arguments
+     * @throws InternalErrorException if this controller does not support the intended view.
+     */
     public function prepareView($nextView)
     {
         $args = array();
@@ -117,6 +130,9 @@ class ChannelViewController extends AbstractViewController
         return $args;
     }
 
+    // #########################################################################
+    // Private prepare view functions
+    // #########################################################################
     /**
      * Prepares the channels view.
      *
@@ -163,10 +179,7 @@ class ChannelViewController extends AbstractViewController
             $messages = $channelMessageCtrl->getMessagesForChannel($channelId, $this->securityCtrl->getLoggedUser(), $favoriteOnly);
             $viewMessages = array();
             $dateMessages = array();
-            $timeMessages = array();
-            $timeIdx = 0;
-            $oldTime = "";
-            $actualTime = "";
+            $dateIdx = 0;
             $oldDate = "";
             $actualDate = "";
             $upperBorder = (count($messages) - 1);
@@ -179,36 +192,22 @@ class ChannelViewController extends AbstractViewController
                     $oldDate = $actualDate;
                     // get new date
                     $actualDate = $message->creation_date_date;
-                    // save old time
-                    $oldTime = $actualTime;
-                    // get actual time
-                    $actualTime = $message->creation_date_time;
                     // new date found after first item
                     if (($idx != 0) && (!StringUtil::compare($oldDate, $actualDate))) {
-                        $dateMessages[$actualTime] = $timeMessages;
+                        $dateMessages[$dateIdx] = $message;
                         $viewMessages[$oldDate] = $dateMessages;
-                        $timeMessages = array();
                         $dateMessages = array();
-                        $timeIdx = 0;
-                        $timeMessages[$timeIdx] = $message;
-                        $timeIdx++;
+                        $dateIdx = 0;
 
-                    } // still on actual date
-                    else {
-                        if (($idx != 0) && (!StringUtil::compare($oldTime, $actualTime))) {
-                            $dateMessages[$oldTime] = $timeMessages;
-                            $timeIdx = 0;
-                            $timeMessages[$timeIdx] = $message;
-                            $timeIdx++;
-                        } else {
-                            $timeMessages[$timeIdx] = $message;
-                            $timeIdx++;
-                        }
+                    } // still on actual date on not last item
+                    else if ($idx < $upperBorder) {
+                        $dateMessages[$dateIdx] = $message;
+                        $dateIdx++;
                     }
 
                     // If last item reached
                     if ($idx == $upperBorder) {
-                        $dateMessages[$actualTime] = $timeMessages;
+                        $dateMessages[$dateIdx] = $message;
                         $viewMessages[$actualDate] = $dateMessages;
                     }
                 }
@@ -222,7 +221,8 @@ class ChannelViewController extends AbstractViewController
                 "actionSetImportantMessage" => self::$ACTION_SET_IMPORTANT_MESSAGE,
                 "channel" => $channel,
                 "messages" => $viewMessages,
-                "favoriteOnly" => $favoriteOnly
+                "favoriteOnly" => $favoriteOnly,
+                "cacheTemplate" => false
             );
         } catch (DbException $e) {
             var_dump($e);
@@ -231,6 +231,9 @@ class ChannelViewController extends AbstractViewController
         return $result;
     }
 
+    // #########################################################################
+    // Private action handle functions
+    // #########################################################################
     /**
      * Handles the to selected channel action which determines between a initial call which will return view 'partialChannels'
      * or an refresh action which will return view 'partialChannelChat'.
@@ -241,25 +244,29 @@ class ChannelViewController extends AbstractViewController
     {
         $nextView = null;
         $success = false;
-        $refresh = parent::getParameter("refresh");
+        $refresh = (boolean)parent::getParameter("refresh");
         $channelId = (integer)parent::getParameter("channelId");
 
         // check if channel exists
-        $jsonArray = $this->isChannelExisting($channelId);
-        // channel exists
+        $jsonArray = $this->checkForExistingChannelById($channelId);
         if (!isset($jsonArray)) {
-            $nextView = ($refresh) ? ViewController::$PARTIAL_VIEW_CHANNEL : ViewController::$PARTIAL_VIEW_CHANNEL_CHAT;
+            $nextView = ($refresh) ? ViewController::$PARTIAL_VIEW_CHANNEL_CHAT : ViewController::$PARTIAL_VIEW_CHANNEL;
             $success = true;
             $jsonArray = array(
                 "error" => false
             );
-        } // channel not existing
+        } // handle when refresh
+        else if ($refresh) {
+            $jsonArray["redirectUrl"] = "/public/start.php?viewId=" . ViewController::$VIEW_MAIN . "&actionId=" . ViewController::$REFRESH_ACTION;
+            $jsonArray["additionalMessage"] = "You will be redirected to channels view in 3 seconds";
+            $jsonArray["delay"] = 3000;
+        } // handle when initial call
         else {
             $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
         }
 
         // check for existing channels
-        $jsonArrayTmp = $this->checkForExistingChannel();
+        $jsonArrayTmp = $this->checkForExistingChannels();
         if (isset($jsonArrayTmp)) {
             $jsonArray = $jsonArrayTmp;
             $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
@@ -318,40 +325,53 @@ class ChannelViewController extends AbstractViewController
         $jsonArray = null;
         $success = null;
 
+        $nextView = null;
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("pk");
         $message = (string)parent::getParameter("value");
+        $channelId = (string)parent::getParameter("channelId");
+        $creationDate = (string)parent::getParameter("creationDate");
 
         $channelMessageCtrl = new ChannelMessageEntityController();
 
         try {
-            $success = $channelMessageCtrl->update(array(
-                "userId" => $userId,
-                "messageId" => $messageId,
-                "message" => $message
-            ));
-            if ($success) {
-                $jsonArray = array(
-                    "error" => false,
-                );
+            $jsonArray = $this->checkForExistingChannelById($channelId);
+            if (!isset($jsonArray)) {
+                $success = $channelMessageCtrl->update(array(
+                    "userId" => $userId,
+                    "messageId" => $messageId,
+                    "message" => $message,
+                    "channelId" => $channelId,
+                    "creationDate" => $creationDate
+                ));
+                if ($success) {
+                    $jsonArray = array(
+                        "error" => false,
+                    );
+                } else {
+                    $jsonArray = array(
+                        "error" => true,
+                        "message" => "Could not update message",
+                        "additionalMessage" => "Either message does ot exist anymore or a following message has been posted.",
+                        "messageType" => "warning",
+                    );
+                }
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNEL_CHAT;
             } else {
-                $jsonArray = array(
-                    "error" => true,
-                    "message" => "Could not update message",
-                    "additionalMessage" => "Either message does ot exist anymore or a following message has been posted. Will refresh shortly",
-                    "messageType" => "warning",
-                );
+                $jsonArray["redirectUrl"] = "/public/start.php?viewId=" . ViewController::$VIEW_MAIN . "&actionId=" . ViewController::$REFRESH_ACTION;
+                $jsonArray["additionalMessage"] = "You will be redirected to channels view in 3 seconds";
+                $jsonArray["delay"] = 3000;
             }
-        } catch (DbException $e) {
+        } catch (\Exception $e) {
             $jsonArray = array(
                 "error" => true,
                 "message" => "Could not delete message. If this error keeps showing up, please notify the administrator",
-                "additionalMessage" => ". Will refresh shortly [" . $e->getMessage() . "]",
+                "additionalMessage" => $e->getMessage(),
                 "messageType" => "danger",
             );
         }
 
-        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
     /**
@@ -364,36 +384,48 @@ class ChannelViewController extends AbstractViewController
         $jsonArray = null;
         $success = false;
 
+        $nextView = null;
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("messageId");
         $importantFlag = (integer)parent::getParameter("importantFlag");
+        $channelId = (integer)parent::getParameter("channelId");
 
         $channelMessageUserEntryCtrl = new ChannelMessageUserEntryEntityController();
 
         try {
-            $success = $channelMessageUserEntryCtrl->markMessageAsImportant($userId, $messageId, $importantFlag);
-            if ($success) {
-                $jsonArray = array(
-                    "error" => false
-                );
+            // Check if channel exists
+            $jsonArray = $this->checkForExistingChannelById($channelId);
+            if (!isset($jsonArray)) {
+                $success = $channelMessageUserEntryCtrl->markMessageAsImportant($userId, $messageId, $importantFlag);
+                if ($success) {
+                    $jsonArray = array(
+                        "error" => false
+                    );
+                } else {
+                    $jsonArray = array(
+                        "error" => true,
+                        "refresh" => true,
+                        "message" => "Could not set favorite message",
+                        "additionalMessage" => "Message was deleted",
+                        "messageType" => "warning"
+                    );
+                }
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNEL_CHAT;
             } else {
-                $jsonArray = array(
-                    "error" => true,
-                    "refresh" => true,
-                    "message" => "Could not set favorite message",
-                    "additionalMessage" => "Seems message got deleted."
-                );
+                $jsonArray["redirectUrl"] = "/public/start.php?viewId=" . ViewController::$VIEW_MAIN . "&actionId=" . ViewController::$REFRESH_ACTION;
+                $jsonArray["additionalMessage"] = "You will be redirected to channels view in 3 seconds";
+                $jsonArray["delay"] = 3000;
             }
-        } catch (DbException $e) {
+        } catch (\Exception $e) {
             $jsonArray = array(
                 "error" => true,
-                "message" => "Could not delete message. If this error keeps showing up, please notify the administrator",
-                "additionalMessage" => ". Will refresh shortly (" . $e->getMessage() . ")",
+                "message" => "Could mark message as favorite. If this error keeps showing up, please notify the administrator",
+                "additionalMessage" => $e->getMessage(),
                 "messageType" => "danger"
             );
         }
 
-        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
     /**
@@ -407,6 +439,7 @@ class ChannelViewController extends AbstractViewController
         $jsonArray = null;
         $success = false;
 
+        $nextView = null;
         $userId = $this->securityCtrl->geTLoggedUser();
         $messageId = (integer)parent::getParameter("messageId");
         $channelId = (integer)parent::getParameter("channelId");
@@ -414,23 +447,32 @@ class ChannelViewController extends AbstractViewController
 
         $channelMessageCtrl = new ChannelMessageEntityController();
         try {
-            $success = $channelMessageCtrl->delete(array(
-                "userId" => $userId,
-                "messageId" => $messageId,
-                "channelId" => $channelId,
-                "creationDate" => $creationDate
-            ));
-            if (!$success) {
-                $jsonArray = array(
-                    "error" => true,
-                    "message" => "Could not delete message.",
-                    "additionalMessage" => "Following messages have already been posted",
-                    "messageType" => "warning"
-                );
+            // Check if channel exists
+            $jsonArray = $this->checkForExistingChannelById($channelId);
+            if (!isset($jsonArray)) {
+                $success = $channelMessageCtrl->delete(array(
+                    "userId" => $userId,
+                    "messageId" => $messageId,
+                    "channelId" => $channelId,
+                    "creationDate" => $creationDate
+                ));
+                if (!$success) {
+                    $jsonArray = array(
+                        "error" => true,
+                        "message" => "Could not delete message.",
+                        "additionalMessage" => "Message is deleted or there are following messages",
+                        "messageType" => "warning"
+                    );
+                } else {
+                    $jsonArray = array(
+                        "error" => false
+                    );
+                }
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNEL_CHAT;
             } else {
-                $jsonArray = array(
-                    "error" => false
-                );
+                $jsonArray["redirectUrl"] = "/public/start.php?viewId=" . ViewController::$VIEW_MAIN . "&actionId=" . ViewController::$REFRESH_ACTION;
+                $jsonArray["additionalMessage"] = "You will be redirected to channels view in 3 seconds";
+                $jsonArray["delay"] = 3000;
             }
         } catch (DbException $e) {
             $jsonArray = array(
@@ -438,10 +480,9 @@ class ChannelViewController extends AbstractViewController
                 "additionalMessage" => $e->getMessage(),
                 "messageType" => "danger"
             );
-            $success = false;
         }
 
-        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
     /**
@@ -454,24 +495,33 @@ class ChannelViewController extends AbstractViewController
         $result = null;
         $jsonArray = null;
         $success = false;
-
+        $nextView = null;
         $userId = $this->securityCtrl->getLoggedUser();
         $channelId = (integer)parent::getParameter("channelId");
         $msg = (string)parent::getParameter("message");
 
         $channelMessageCtrl = new ChannelMessageEntityController();
         try {
-            $channelMessageCtrl->persist(array(
-                "userId" => $userId,
-                "channelId" => $channelId,
-                "message" => $msg,
-                "readFlag" => 1,
-                "importantFlag" => 0,
-                "markRead" => 1
-            ));
-            $jsonArray = array(
-                "error" => false
-            );
+            // Check if channel exists
+            $jsonArray = $this->checkForExistingChannelById($channelId);
+            if (!isset($jsonArray)) {
+                $channelMessageCtrl->persist(array(
+                    "userId" => $userId,
+                    "channelId" => $channelId,
+                    "message" => $msg,
+                    "readFlag" => 1,
+                    "importantFlag" => 0,
+                    "markRead" => 1
+                ));
+                $jsonArray = array(
+                    "error" => false
+                );
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNEL_CHAT;
+            } else {
+                $jsonArray["redirectUrl"] = "/public/start.php?viewId=" . ViewController::$VIEW_MAIN . "&actionId=" . ViewController::$REFRESH_ACTION;
+                $jsonArray["additionalMessage"] = "You will be redirected to channels view in 3 seconds";
+                $jsonArray["delay"] = 3000;
+            }
         } catch (DbException $e) {
             $jsonArray = array(
                 "message" => "Could not post message. If this error keeps showing up, please notify the administrator",
@@ -481,7 +531,7 @@ class ChannelViewController extends AbstractViewController
             $success = false;
         }
 
-        return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_CHANNEL_CHAT, $jsonArray);
+        return new RequestControllerResult($success, $nextView, $jsonArray);
     }
 
     /**
@@ -495,14 +545,14 @@ class ChannelViewController extends AbstractViewController
         $jsonArray = null;
         $success = false;
         $channelId = (integer)parent::getParameter("channelId");
-        $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+        $nextView = null;
 
         $channelUserEntryCtrl = new ChannelUserEntryEntityController();
 
         $result = null;
         try {
             // check if channel exists
-            $jsonArray = $this->isChannelExisting($channelId);
+            $jsonArray = $this->checkForExistingChannelById($channelId);
             if (!isset($jsonArray)) {
                 $success = $channelUserEntryCtrl->update(array(
                     "favoriteFlag" => 1,
@@ -522,11 +572,14 @@ class ChannelViewController extends AbstractViewController
                         "messageType" => "warning"
                     );
                 }
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
             }
-
             // Check if channels still exist
-            $jsonArrayTmp = $this->checkForExistingChannel();
-            $jsonArray = (isset($jsonArrayTmp)) ? $jsonArrayTmp : $jsonArray;
+            $jsonArrayTmp = $this->checkForExistingChannels();
+            if (isset($jsonArrayTmp)) {
+                $jsonArray = $jsonArrayTmp;
+                $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
+            }
         } catch (DbException $e) {
             $jsonArray = array(
                 "error" => true,
@@ -550,13 +603,13 @@ class ChannelViewController extends AbstractViewController
         $jsonArray = null;
         $success = false;
         $channelId = (integer)parent::getParameter("channelId");
-        $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+        $nextView = null;
 
         $channelUserEntryCtrl = new ChannelUserEntryEntityController();
 
         try {
             // check if channel exists
-            $jsonArray = $this->isChannelExisting($channelId);
+            $jsonArray = $this->checkForExistingChannelById($channelId);
             if (!isset($jsonArray)) {
                 $success = (boolean)$channelUserEntryCtrl->deleteById(array(
                     "userId" => (integer)$this->securityCtrl->getLoggedUser(),
@@ -573,9 +626,10 @@ class ChannelViewController extends AbstractViewController
                         "messageType" => "warning"
                     );
                 }
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
             }
             // Check if channels still exist
-            $jsonArrayTmp = $this->checkForExistingChannel();
+            $jsonArrayTmp = $this->checkForExistingChannels();
             if (isset($jsonArrayTmp)) {
                 $jsonArray = $jsonArrayTmp;
                 $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
@@ -603,14 +657,14 @@ class ChannelViewController extends AbstractViewController
         $jsonArray = null;
         $success = false;
         $channelId = (integer)parent::getParameter("channelId");
-        $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
+        $nextView = null;
 
         $channelUserEntryCtrl = new ChannelUserEntryEntityController();
         $channelCtrl = new ChannelEntityController();
 
         try {
             // check if channel exists
-            $jsonArray = $this->isChannelExisting($channelId);
+            $jsonArray = $this->checkForExistingChannelById($channelId);
             if (!isset($jsonArray)) {
                 // channel already assigned to user
                 if ($channelUserEntryCtrl->getById(array(
@@ -635,9 +689,10 @@ class ChannelViewController extends AbstractViewController
                         "channelId" => $channelId
                     );
                 }
+                $nextView = ViewController::$PARTIAL_VIEW_CHANNELS;
             }
             // Check if channels still exist
-            $jsonArrayTmp = $this->checkForExistingChannel();
+            $jsonArrayTmp = $this->checkForExistingChannels();
             if (isset($jsonArrayTmp)) {
                 $jsonArray = $jsonArrayTmp;
                 $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
@@ -702,14 +757,16 @@ class ChannelViewController extends AbstractViewController
         return new RequestControllerResult($success, ViewController::$PARTIAL_VIEW_NEW_CHANNEL, $jsonArray);
     }
 
+    // #########################################################################
+    // Private helper functions
+    // #########################################################################
     /**
      * Helper to check if a channel with the given id exists on the database.
      *
      * @param integer $id the channel id
      * @return array|null the json array which is null if channel exists with the given id, otherwise it contains the json result
      */
-    private
-    function isChannelExisting($id)
+    private function checkForExistingChannelById($id)
     {
         $channelId = (integer)$id;
         $jsonArray = null;
@@ -736,13 +793,11 @@ class ChannelViewController extends AbstractViewController
      * @return array|null the json array which is null in case at least one channel still exists,
      * otherwise it contains the json result
      */
-    private
-    function checkForExistingChannel()
+    private function checkForExistingChannels()
     {
         $jsonArray = null;
         try {
             if (!(new ChannelEntityController())->checkIfChannelAreExisting()) {
-                $nextView = ViewController::$PARTIAL_VIEW_NEW_CHANNEL;
                 $jsonArray = array(
                     "error" => true,
                     "message" => "No channels exist anymore",

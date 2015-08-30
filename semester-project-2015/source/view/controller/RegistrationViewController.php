@@ -80,17 +80,13 @@ class RegistrationViewController extends AbstractViewController
             case ViewController::$VIEW_REGISTRATION:
                 $result = array(
                     "actionRegister" => RegistrationViewController::$ACTION_REGISTER,
-                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN,
-                    "cacheTemplate" => true,
-                    "recreateTemplate" => true
+                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN
                 );
                 break;
             // prepares the registration success view
             case ViewController::$PARTIAL_VIEW_REGISTRATION_SUCCESS:
                 $result = array(
-                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN,
-                    "cacheTemplate" => true,
-                    "recreateTemplate" => true
+                    "actionToLogin" => RegistrationViewController::$ACTION_TO_LOGIN
                 );
                 break;
             // Error on unsupported view

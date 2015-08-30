@@ -38,11 +38,11 @@
                                            onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionRemoveAssignedChannel}}&amp;channelId={{channel.id}}')"
                                            aria-label="Remove assignment"
                                            title="Remove assignment" style="margin-right: 10px;">
-                                            <span class="glyphicon glyphicon-remove"
+                                            <span class="glyphicon glyphicon-minus"
                                                   style="color:red; vertical-align:middle;"/>
                                         </a>
                                         <a href="javascript:{}" id="openChannel_{{loop.index}}"
-                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;favoriteOnly=0&amp;refresh=false')"
+                                           onclick="ajaxPostRequest('partialContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;favoriteOnly=0&amp;refresh=0', setFocusOnLastMessage)"
                                            aria-label="Open channel"
                                            title="Open channel" style="margin-right: 10px;">
                                     <span class="glyphicon glyphicon-eye-open"

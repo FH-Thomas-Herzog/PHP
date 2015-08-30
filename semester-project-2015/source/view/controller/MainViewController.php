@@ -83,7 +83,7 @@ class MainViewController extends AbstractViewController
      */
     private function handleToNewChannel()
     {
-        $jsonArray = null;
+        $jsonArray = array();
         if (!((new ChannelEntityController())->checkIfChannelAreExisting())) {
             $jsonArray = array(
                 "error" => false,

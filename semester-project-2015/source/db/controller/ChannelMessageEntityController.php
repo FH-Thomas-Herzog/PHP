@@ -27,14 +27,14 @@ class ChannelMessageEntityController extends AbstractEntityController
     private static $SQL_CHANNEL_MESSAGE_BY_ID = "SELECT * FROM channel_message WHERE id = ? ";
 
     private static $SQL_SELECT_MESSAGES_FOR_CHANNEL =
-        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%i') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
+        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%i:%s') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
         " LEFT OUTER JOIN channel_message_user_entry cme ON (cme.channel_message_id = cm.id AND cme.user_id = ?) " .
         " INNER JOIN user u on u.id = cm.user_id " .
         " WHERE cm.channel_id = ? " .
         " ORDER BY creation_date_date ASC, creation_date ASC, important_flag DESC ";
 
     private static $SQL_SELECT_IMPORTANT_MESSAGES_FOR_CHANNEL =
-        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%i') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
+        " SELECT DATE(cm.creation_date) AS creation_date_date, TIME_FORMAT(TIME(cm.creation_date), '%H:%i:%s') AS creation_date_time, cm.creation_date, cm.id, cm.message, cm.channel_id, cm.user_id, COALESCE(cme.read_flag, 0) AS read_flag, COALESCE(cme.important_flag, 0) AS important_flag, CASE WHEN (cm.user_id = ?) THEN 1 ELSE 0 END AS owned_flag, u.username  FROM channel_message cm " .
         " INNER JOIN channel_message_user_entry cme ON (cme.channel_message_id = cm.id AND cme.user_id = ?) " .
         " INNER JOIN user u on u.id = cm.user_id " .
         " WHERE cm.channel_id = ? " .
@@ -254,6 +254,13 @@ class ChannelMessageEntityController extends AbstractEntityController
         return $result;
     }
 
+    /**
+     * Updates the message with the given id only if there are no following messages.
+     *
+     * @param array $args the array holding the necessary arguments for the update
+     * @return bool true if the row has been updated, false otherwise
+     * @throws DbException if an error occurs
+     */
     function update(array $args)
     {
         parent::open();
@@ -263,23 +270,36 @@ class ChannelMessageEntityController extends AbstractEntityController
         $p1 = (string)$args["message"];
         $p2 = (integer)$args["messageId"];
         $p3 = (integer)$args["userId"];
+        $p4 = (integer)$args["channelId"];
+        $p5 = (string)$args["creationDate"];
 
         try {
-            parent::startTx();
+            // check for following messages
+            $stmtCheckFollowing = parent::prepareStatement(self::$SQL_CHECK_FOR_FOLLOWING_MESSAGES);
+            $stmtCheckFollowing->bind_param("iis", $p2, $p4, $p5);
+            $stmtCheckFollowing->execute();
+            $stmtCheckFollowingResult = $stmtCheckFollowing->get_result();
+            // check if post have been followed
+            if ($stmtCheckFollowingResult->num_rows == 0) {
+                parent::startTx();
 
-            // insert message
-            $stmt = parent::prepareStatement(self::$SQL_UPDATE_MESSAGE);
-            $stmt->bind_param("sii", $p1, $p2, $p3);
-            $stmt->execute();
-            $result = ($stmt->affected_rows == 1);
+                // insert message
+                $stmt = parent::prepareStatement(self::$SQL_UPDATE_MESSAGE);
+                $stmt->bind_param("sii", $p1, $p2, $p3);
+                $stmt->execute();
+                $result = ($stmt->affected_rows == 1);
 
-            parent::commit();
+                parent::commit();
+            }
         } catch (\Exception $e) {
             parent::rollback();
             throw new DbException("Error on executing query: '" . self::$SQL_UPDATE_MESSAGE . "''" . PHP_EOL . "Error: '" . $e->getMessage());
         } finally {
             if (isset($stmt)) {
                 $stmt->close();
+            }
+            if (isset($stmtCheckFollowing)) {
+                $stmtCheckFollowing->close();
             }
             parent::close();
         }

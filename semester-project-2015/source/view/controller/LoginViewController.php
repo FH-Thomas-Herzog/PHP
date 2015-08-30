@@ -35,6 +35,12 @@ class LoginViewController extends AbstractViewController
         parent::__construct();
     }
 
+    /**
+     * Handles the intended action which must be supported by this controller.
+     *
+     * @return null|RequestControllerResult the handled action result
+     * @throws InternalErrorException if the action is not supported by this controller
+     */
     public function handleAction()
     {
         $result = null;
@@ -73,9 +79,7 @@ class LoginViewController extends AbstractViewController
             case ViewController::$VIEW_LOGIN:
                 $args = array(
                     "actionLogin" => LoginViewController::$ACTION_LOGIN,
-                    "actionToRegister" => LoginViewController::$ACTION_REGISTRATION,
-                    "cacheTemplate" => true,
-                    "recreateTemplate" => true
+                    "actionToRegister" => LoginViewController::$ACTION_REGISTRATION
                 );
                 break;
             default:
@@ -85,6 +89,9 @@ class LoginViewController extends AbstractViewController
         return $args;
     }
 
+    // #########################################################################
+    // Private action handle functions
+    // #########################################################################
     /**
      * Handles the login of an user.
      *

@@ -1,6 +1,9 @@
 var
-    destroyValidation = function (formId) {
-        $("#" + formId).validator('destroy');
+    setFocusOnLastMessage = function () {
+        var item = $('.last-message');
+        if (item) {
+            item.focus();
+        }
     }
     ,
     invertIntegerFlag = function (flag) {
@@ -43,17 +46,21 @@ var
                         successFunc(resultObj);
                     }
                     if ((resultObj.html) && (htmlTargetId)) {
+                        $("#" + htmlTargetId).empty();
                         $("#" + htmlTargetId).html(resultObj.html);
                     }
                     if (resultObj.redirectUrl) {
-                        toUrl(resultObj.redirectUrl);
-                        return;
-                    }
-                    if ((resultObj.error === false) && (successFunc)) {
-                        successFunc(resultObj, xhr, status);
-                    }
-                    if ((resultObj.error === true) && (errorFunc)) {
-                        errorFunc(resultObj, xhr, status);
+                        var delay = (resultObj.delay) ? resultObj.delay : 0;
+                        setTimeout(function () {
+                            toUrl(resultObj.redirectUrl);
+                        }, delay);
+                    } else {
+                        if ((resultObj.error === false) && (successFunc)) {
+                            successFunc(resultObj, xhr, status);
+                        }
+                        if ((resultObj.error === true) && (errorFunc)) {
+                            errorFunc(resultObj, xhr, status);
+                        }
                     }
                 } catch (err) {
                     if (console) {

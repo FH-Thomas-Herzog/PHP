@@ -12,6 +12,7 @@ namespace source\view\controller;
 use source\common\AbstractViewController;
 use source\common\InternalErrorException;
 use source\common\utils\StringUtil;
+use source\view\model\RequestControllerResult;
 use Stash\Pool;
 
 /**
@@ -45,6 +46,10 @@ class ViewController extends AbstractViewController
 
     public static $REFRESH_ACTION = "refreshAction";
 
+    private static $CACHE_DEFAULT = true;
+
+    private static $RECREATE_CACHED_DEFAULT = false;
+
     private $pool;
 
     /**
@@ -74,25 +79,40 @@ class ViewController extends AbstractViewController
     {
         $requestResult = "undefined reqeust result";
 
-        // Handle intended action
-        $result = $this->handleAction();
-        // get cache config from action result.
-        // If null then not defined by action result
-        $cache = $this->isToCacheTemplate($result->args);
-        $recreate = $this->isToRecreateTemplate($result->args);
+        $result = null;
         $html = null;
+        try {
+            // Handle intended action
+            $result = $this->handleAction();
+            // get cache config from action result.
+            // If null then not defined by action result
+            $cache = $this->isToCacheTemplate($result->args);
+            $recreate = $this->isToRecreateTemplate($result->args);
 
-        // render html
-        if (!empty($result->nextView)) {
-            $args = $this->prepareView($result->nextView);
-            $html = "";
-            if (isset($args)) {
-                // action result overrules prepareView pool configuration
-                $cache = (!isset($cache)) ? $this->isToCacheTemplate($args) : $cache;
-                $recreate = (!isset($recreate)) ? $this->isToRecreateTemplate($args) : $recreate;
-                // Default is to never cache anything if not configured
-                $html = $this->getTemplateController()->renderView($result->nextView, ((!isset($cache)) ? false : $cache), (!isset($recreate) ? false : $recreate), array_merge($result->args, $args));
+            // render html
+            if (!empty($result->nextView)) {
+                $args = $this->prepareView($result->nextView);
+                $html = "";
+                if (isset($args)) {
+                    // action result overrules prepareView pool configuration
+                    $cache = (!isset($cache)) ? $this->isToCacheTemplate($args) : $cache;
+                    $recreate = (!isset($recreate)) ? $this->isToRecreateTemplate($args) : $recreate;
+                    // Default is to never cache anything if not configured
+                    $html = $this->getTemplateController()->renderView($result->nextView, ((!isset($cache)) ? self::$CACHE_DEFAULT : $cache), (!isset($recreate) ? self::$RECREATE_CACHED_DEFAULT : $recreate), array_merge($result->args, $args));
+                }
             }
+        } catch (InternalErrorException $e) {
+            $args = null;
+            $nextView = null;
+            if ($this->jsonResult) {
+                $args = array(
+                    "error" => true,
+                    "message" => "Error on handling request",
+                    "additionalMessage" => $e->getMessage(),
+                    "messageType" => "danger"
+                );
+            }
+            $result = new RequestControllerResult(false, $nextView, $args);
         }
 
         // handle html result request
@@ -228,6 +248,9 @@ class ViewController extends AbstractViewController
         return $args;
     }
 
+    // #########################################################################
+    // Private helper functions
+    // #########################################################################
     /**
      * Gets the template renderer instance either from cache or creates a new one if no instance has been cached yet.
      *

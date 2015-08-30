@@ -23,9 +23,7 @@ class ChannelEntityController extends AbstractEntityController
 
     private static $SQL_CHECK_CHANNEL_BY_TITLE = "SELECT id FROM channel WHERE UPPER(title) = UPPER(?) AND deleted_flag = 0";
 
-    private static $SQL_INSERT_CHANNEL = "INSERT INTO channel (title, description) VALUES (?,?)";
-
-    private static $SQL_DELETE_CHANNEL = " DELETE FROM channel WHERE id = ?; ";
+    private static $SQL_INSERT_CHANNEL = "INSERT INTO channel (title, description, user_id) VALUES (?,?,?)";
 
     private static $SQL_SELECT_ASSIGNED_CHANNELS_WITH_MSG_COUNT =
         "SELECT COUNT(cm.id) AS msgCount, c.id, c.title, c.description, cue.favorite_flag AS favorite FROM channel c " .
@@ -238,7 +236,7 @@ class ChannelEntityController extends AbstractEntityController
      */
     public function deleteById($id)
     {
-       // TODO: Not yet implemented
+        // TODO: Not yet implemented
     }
 
     /**
@@ -265,7 +263,7 @@ class ChannelEntityController extends AbstractEntityController
             parent::startTx();
 
             $stmtChannel = parent::prepareStatement(self::$SQL_INSERT_CHANNEL);
-            $stmtChannel->bind_param("ss", $p1, $p2);
+            $stmtChannel->bind_param("ssi", $p1, $p2, $p3);
             $stmtChannel->execute();
             $p5 = $stmtChannel->insert_id;
 

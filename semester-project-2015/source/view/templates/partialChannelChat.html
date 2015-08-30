@@ -7,69 +7,67 @@
         {% for key, value in messages %}
         <hr class="message-group-divider-first">
         <h5 class="list-group-item-heading"><b>{{ key }}</b></h5>
-        {% for mKey, mValue in value %}
+        {% for i in 0..((value|length)-1) %}
         <div class="list-group-item-text">
-            {% set oldUser = '' %}
-            {% set actualUser = '' %}
-            {% for message in mValue %}
-            {% set oldUser = actualUser %}
-            {% set actualUser = mValue[loop.index0].username %}
-            {% if (oldUser != actualUser) %}
             <hr class="message-divider">
-            <span class="channel-message-label">({{ mValue[loop.index0].username }}) {{ mKey }}</span>
-            {% endif %}
+            <span class="channel-message-label">({{ value[i].username }}) {{value[i].creation_date_time}}</span>
+
             <div class="channel-message">
                 <div class="message-action-container">
                     <a href="javascript:{}"
-                       onclick="setImportantMessage('{{mValue[loop.index0].id}}')"
+                       onclick="setImportantMessage('{{value[i].id}}', '{{channel.id}}')"
                        aria-label="Important">
-                        <small><span id="setImportantMessageSpan_{{mValue[loop.index0].id}}"
-                                     class="glyphicon glyphicon-star{% if mValue[loop.index0].important_flag == 0 %}-empty{% endif %}"
+                        <small><span id="setImportantMessageSpan_{{value[i].id}}"
+                                     class="glyphicon glyphicon-star{% if value[i].important_flag == 0 %}-empty{% endif %}"
                                      style="color:gold; vertical-align:middle;"/></small>
                     </a>
-                    {%if mValue[loop.index0].read_flag == 0 %}
+                    {%if value[i].read_flag == 0 %}
                     <a href="javascript:{}"
                        aria-label="Important">
-                        <small><span id="radFlag_{{mValue[loop.index0].id}}"
+                        <small><span id="radFlag_{{value[i].id}}"
                                      class="glyphicon glyphicon-flag"
                                      style="color:green; vertical-align:middle;"/></small>
                     </a>
                     {%endif%}
-                    {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
-                    mValue|length) and
-                    (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
-                    messages|length ) %}
+                    {% if (favoriteOnly == false) and (value[i].owned_flag == 1) and (loop.index ==
+                    value|length) and (loop.parent.loop.index == messages|length ) %}
                     <a href="javascript:{}"
-                       onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionDeleteMessage}}&amp;channelId={{channel.id}}&amp;refresh=true&amp;creationDate={{mValue[loop.index0].creation_date}}&amp;messageId={{mValue[loop.index0].id}}')"
+                       onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionDeleteMessage}}&amp;channelId={{channel.id}}&amp;refresh=1&amp;creationDate={{value[i].creation_date}}&amp;messageId={{value[i].id}}', setFocusOnLastMessage)"
                        aria-label="Remove" title="Remove">
                         <small><span class="glyphicon glyphicon-remove"
                                      style="color:red; vertical-align:middle;"/></small>
                     </a>
                     {% endif %}
                 </div>
-                <div class="message-container" style="display: inline-block">
-                    {% if (favoriteOnly == false) and (mValue[loop.index0].owned_flag == 1) and (loop.index ==
-                    mValue|length) and
-                    (loop.parent.loop.index == value|length) and (loop.parent.loop.parent.loop.index ==
-                    messages|length ) %}
-                    <a id="editMessage" href="#">{{ mValue[loop.index0].message }}</a>
+                <div class="message-container">
+                    {% if (favoriteOnly == false) and (value[i].owned_flag == 1) and (loop.index ==
+                    value|length) and (loop.parent.loop.index == messages|length ) %}
+                    <a id="editMessage" href="#" class="last-message">{{ value[i].message }}</a>
                     <script type="text/javascript">
                         var editElement = $("#editMessage");
                         editElement.editable({
                             send: 'always',
                             type: 'textarea',
-                            pk: "{{mValue[loop.index0].id}}",
+                            pk: "{{value[i].id}}",
                             url: '/public/start.php',
                             params: {
                                 ajax: true,
                                 viewId: "{{viewId}}",
                                 actionId: "{{actionEditMessage}}",
-                                channelId: "{{channel.id}}"
+                                channelId: "{{channel.id}}",
+                                creationDate: "{{value[i].creation_date}}"
                             },
                             success: function (data) {
                                 var resultObj = JSON.parse(data);
                                 handleAjaxAlertMessage(resultObj);
+                                if(resultObj.redirectUrl) {
+                                    setTimeout(function(){
+                                        toUrl(resultObj.redirectUrl);
+                                    }, 3000);
+                                    return;
+                                }
                                 if (resultObj.html) {
+                                    $("#channelMessageContent").empty();
                                     $("#channelMessageContent").html(resultObj.html);
                                 }
                             },
@@ -83,12 +81,12 @@
                         ;
                     </script>
                     {% else %}
-                    <span class="channel-message-text">{{ mValue[loop.index0].message }}</span>
+                    <span id="message_{{ value[i].id }}"
+                          class="channel-message-text  {% if (loop.parent.loop.index == messages|length) and (loop.index == value|length ) %}last-message{% endif %}">{{ value[i].message }}</span>
                     {% endif %}
                 </div>
 
             </div>
-            {% endfor %}
         </div>
         {% endfor %}
         {% endfor %}

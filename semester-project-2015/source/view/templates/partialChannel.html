@@ -63,6 +63,10 @@
     a.favorite-selected {
     }
 
+    span.last-message {
+
+    }
+
     .center-horizontal-align {
         display: table margin-left : auto;
         margin-right: auto;
@@ -91,13 +95,13 @@
                         </li>
                         <li>
                             <a id="refreshChannelMessages" href="javascript:{}"
-                               onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;refresh=true&amp;favoriteOnly=' + favoriteChannelOnly)">
+                               onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;refresh=1&amp;favoriteOnly=' + favoriteChannelOnly, setFocusOnLastMessage)">
                                 refresh
                             </a>
                         </li>
                         <li>
                             <a id="favoriteChannelOnlyLink" href="javascript:{}"
-                               onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;refresh=true&amp;favoriteOnly=' + invertIntegerFlag(favoriteChannelOnly), successFavoriteOnlyLink)">
+                               onclick="ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&amp;actionId={{actionToSelectedChannel}}&amp;channelId={{channel.id}}&amp;refresh=1&amp;favoriteOnly=' + invertIntegerFlag(favoriteChannelOnly), successFavoriteOnlyLink)">
                             </a>
                         </li>
                     </ul>
@@ -117,14 +121,14 @@
     var
             favoriteChannelOnly = ("{{favoriteOnly}}" == "true") ? 1 : (("{{favoriteOnly}}" == "false") || ("{{favoriteOnly}}" == "")) ? 0 : null
             ,
-            setImportantMessage = function (messageId) {
+            setImportantMessage = function (messageId, channelId) {
                 // resolve necessary
                 var
                         linkJQ = $('#setImportantMessageSpan_' + messageId),
                         classImportant = "glyphicon glyphicon-star",
                         classNotImportant = classImportant + "-empty";
 
-                ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionSetImportantMessage}}&channelId={{channel.id}}&messageId=' + messageId + '&importantFlag=' + ((linkJQ.attr("class") == classImportant) ? 0 : 1), null, function (resultObj, xhr, status) {
+                ajaxPostRequest('channelMessageContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionSetImportantMessage}}&channelId={{channel.id}}&channelId=' + channelId + '&messageId=' + messageId + '&importantFlag=' + ((linkJQ.attr("class") == classImportant) ? 0 : 1), null, function (resultObj, xhr, status) {
                     $('#refreshMessages').click();
                 });
             },
@@ -141,6 +145,7 @@
             successFavoriteOnlyLink = function (resultObj, xhr, status) {
                 favoriteChannelOnly = invertIntegerFlag(favoriteChannelOnly);
                 updateFavoriteOnlyLink();
+                setFocusOnLastMessage();
             }
             ,
             refreshChannelMessagesDelayed = function () {
@@ -154,6 +159,7 @@
         if (!e.isDefaultPrevented()) {
             ajaxPostRequestSubmitForm('postMessageForm', 'channelMessageContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionPostMessage}}&channelId={{channel.id}}', function (resultObj, xhr, status) {
                 $('#messageTextArea').val('');
+                setFocusOnLastMessage();
             });
         }
         return false;
@@ -162,8 +168,6 @@
     $('#messageTextArea').keyup(function (evt) {
         if ((evt.keyCode == 13) && (!evt.shiftKey)) {
             $('#postMessageForm').submit();
-        } else {
-            console.log("no post when shift enter is clicked ");
         }
     });
 
