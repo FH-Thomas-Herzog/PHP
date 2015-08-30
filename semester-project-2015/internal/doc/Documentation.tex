@@ -252,7 +252,7 @@ Folgender Test zeigt die Erfolgsmeldung wenn ein Channel von einem Benutzer ange
 \end{figure}\\\\
 \newpage
 
-Folgender Test zeigt die Fehlermeldung wenn ein Channel von einem Benutzer versucht wird anzulegen dieser aber bereits existiert. Groß- und Kleinschreibung wird hier ignoriert.
+Folgender Test zeigt die Fehlermeldung wenn ein Channel von einem Benutzer versucht wird anzulegen dieser aber bereits mit dem eingegebenen Titel existiert. Groß- und Kleinschreibung wird hier ignoriert.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.5]{images/start_new_channel_fail.PNG}
@@ -279,12 +279,12 @@ Folgender Test zeigt die Fehlermeldung wenn versucht wird eine Aktion auszuführ
 	{Channel anlegen wenn keine vorhanden}
 \end{figure}\\\\
 
-Im Falle das überhaupt kein Channel mehr existiert wenn versucht wird eine Aktion auszuführen dann wird auf die Seite für das Erstellen eines Channels gewechselt.
+Im Falle das überhaupt kein Channel mehr existiert wird auf die Seite für das Erstellen eines Channels gewechselt, die wiederum solange angezeigt wird bis es mindestens einen Channel gibt.
 \newpage
 
 \subsubsection{Channel Chat}
 Folgend sind die Tests für die Startseite (Channel Chat) angeführt, die nur eingeloggte Benutzer sehen können.\\\\
-Folgender Test zeigt dass bei jeder Aktion die ausgeführt wird, wenn es keinen Channel mehr gibt, wird folgende Fehlermeldung ausgegeben und der Benutzer auf die Channels Seite weitergeleitet, wobei auch hier eine Prüfung erfolgt ob es überhaupt noch Channels gibt. Wenn nicht wird der Benutzer won der Channels Seite auf die Seite New Channel erneut weitergeleitet.
+Folgender Test zeigt dass bei jeder Aktion die ausgeführt und es den channel nicht mehr gibt die folgende Fehlermeldung ausgegeben wird und der Benutzer auf die Channels Seite weitergeleitet wird, wobei auch hier eine Prüfung erfolgt ob es überhaupt noch Channels gibt. Wenn nicht wird der Benutzer von der Channels Seite auf die Seite New Channel erneut weitergeleitet.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.5]{images/start_channel_chat_no_channel_on_action.PNG}
@@ -328,7 +328,7 @@ Folgender Test zeigt dass neue Nachrichten beim erstmaligen Anzeigen mit einem F
 
 Folgender Test zeigt dass nach alle/Favoriten gefiltert werden kann.\\
 Werden nur die Favoriten angezeigt ist ein Bearbeiten ausgeschlossen.\\
-Das Menu zeigt hierbei entweder die Option "Alle" (nur Favoriten) oder "Favoriten" (Alle) an je nachdem welcher Filter gerade aktiv ist.
+Das Menu zeigt hierbei entweder die Option 'Alle' (nur Favoriten) oder 'Favoriten' (Alle) an je nachdem welcher Filter gerade aktiv ist.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.4]{images/start_channel_chat_all.PNG}

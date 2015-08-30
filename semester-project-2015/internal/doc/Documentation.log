@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.1)  30 AUG 2015 17:03
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.1)  30 AUG 2015 18:49
 entering extended mode
 **Documentation.tex
 
@@ -1451,10 +1451,10 @@ Package rerunfilecheck Info: File `Documentation.out' has not changed.
 (rerunfilecheck)             Checksum: E289CFD5707F6737508141571C863B07;670.
  ) 
 Here is how much of TeX's memory you used:
- 10885 strings out of 493921
- 175268 string characters out of 3144877
+ 10884 strings out of 493921
+ 175254 string characters out of 3144877
  300940 words of memory out of 3000000
- 13942 multiletter control sequences out of 15000+200000
+ 13941 multiletter control sequences out of 15000+200000
  5881 words of font info for 22 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  42i,18n,43p,881b,484s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1462,7 +1462,7 @@ Here is how much of TeX's memory you used:
 ><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
 C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:
 /Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on Documentation.pdf (17 pages, 1250954 bytes).
+Output written on Documentation.pdf (17 pages, 1251035 bytes).
 PDF statistics:
  276 PDF objects out of 1000 (max. 8388607)
  56 named destinations out of 1000 (max. 500000)
