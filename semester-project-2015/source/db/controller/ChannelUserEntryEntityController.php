@@ -165,6 +165,7 @@ class ChannelUserEntryEntityController extends AbstractEntityController
         parent::open();
 
         $stmtReset = null;
+        $stmtSet = null;
         $p1 = (integer)$args["favoriteFlag"];
         $p2 = (integer)$args["userId"];
         $p3 = (integer)$args["channelId"];
