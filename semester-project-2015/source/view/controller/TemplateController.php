@@ -27,7 +27,9 @@ class TemplateController extends BaseObject
      * @var array
      */
     private static $TWIG_OPTIONS = array(
-        'cache' => ROOT_PATH . '/cache/templates/compiled',
+        // Seems that compiled template is not considered by engine.
+        // There is not time for further investigation on this, therefore no compiled cache activated
+        //'cache' => ROOT_PATH . '/cache/templates/compiled',
         'debug' => false,
         'auto_reload ' => false,
         'strict_variables' => false,

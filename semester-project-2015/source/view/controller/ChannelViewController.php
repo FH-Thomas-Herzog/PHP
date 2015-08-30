@@ -151,7 +151,7 @@ class ChannelViewController extends AbstractViewController
                 "actionAssignChannel" => self::$ACTION_ASSIGN_CHANNEL,
                 "assignedChannels" => $assigned,
                 "availableChannels" => $unassigned,
-                "cacheTemplate" => false
+                "recreateTemplate" => true
             );
         } catch (DbException $e) {
             var_dump($e);
@@ -222,7 +222,7 @@ class ChannelViewController extends AbstractViewController
                 "channel" => $channel,
                 "messages" => $viewMessages,
                 "favoriteOnly" => $favoriteOnly,
-                "cacheTemplate" => false
+                "recreateTemplate" => true
             );
         } catch (DbException $e) {
             var_dump($e);
@@ -346,7 +346,7 @@ class ChannelViewController extends AbstractViewController
                 ));
                 if ($success) {
                     $jsonArray = array(
-                        "error" => false,
+                        "error" => false
                     );
                 } else {
                     $jsonArray = array(

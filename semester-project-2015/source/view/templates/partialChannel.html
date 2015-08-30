@@ -160,6 +160,7 @@
             ajaxPostRequestSubmitForm('postMessageForm', 'channelMessageContent', '/public/start.php', 'viewId={{viewId}}&actionId={{actionPostMessage}}&channelId={{channel.id}}', function (resultObj, xhr, status) {
                 $('#messageTextArea').val('');
                 setFocusOnLastMessage();
+                $('#messageTextArea').focus();
             });
         }
         return false;
