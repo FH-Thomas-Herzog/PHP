@@ -27,16 +27,11 @@ use \source\view\controller\SessionController;
 // register loaders
 Autoloader::register();
 
-// singelton security and session controller unique over a single http request
-$securityCtrl = SecurityController::getInstance();
-$sessionCtrl = SessionController::getInstance();
-
-// redirect not logged user back to login page
-if (!$securityCtrl->isUserLogged()) {
+// redirect not logged user or user with timed out session back to login page
+if (!SecurityController::getInstance()->validateUserSession()) {
     header('Location: index.php');
     return "";
-}
-// in case of redirect or refresh triggered by the logged user
+} // in case of redirect or refresh triggered by the logged user
 else {
     // in case of get request
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
@@ -44,8 +39,7 @@ else {
             $_GET['viewId'] = ViewController::$VIEW_MAIN;
             $_GET['actionId'] = ViewController::$REFRESH_ACTION;
         }
-    }
-    // in case of post request
+    } // in case of post request
     else if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (!isset($_POST['viewId'])) {
             $_POST['viewId'] = ViewController::$VIEW_MAIN;

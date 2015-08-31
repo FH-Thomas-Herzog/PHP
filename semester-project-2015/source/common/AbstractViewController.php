@@ -87,4 +87,25 @@ abstract class AbstractViewController extends BaseObject
 
         return $result;
     }
+
+    /**
+     * Utility method which sets an parameter on the current request either on GET or POSt depending on the
+     * used request method
+     *
+     * @param string $name the name of the parameter
+     * @param mixed $value the value to be set
+     * @return true if parameter has been set false otherwise
+     */
+    protected function setParameter($name, $value)
+    {
+        $result = null;
+
+        if ($this->postRequest) {
+            $_POST[$name] = $value;
+            return true;
+        } else {
+            $_GET[$name] = $value;
+            return true;
+        }
+    }
 }

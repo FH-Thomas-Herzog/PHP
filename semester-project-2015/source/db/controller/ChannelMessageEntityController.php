@@ -51,6 +51,10 @@ class ChannelMessageEntityController extends AbstractEntityController
         " AND channel_id = ? " .
         " AND creation_date >= ? ";
 
+    public static $SQL_DELETE_MESSAGES_FOR_CHANNEL =
+        " DELETE FROM channel_message " .
+        " WHERE channel_id = ? ";
+
     public function __construct()
     {
         parent::__construct();

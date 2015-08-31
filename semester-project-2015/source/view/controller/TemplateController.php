@@ -31,7 +31,7 @@ class TemplateController extends BaseObject
         // There is not time for further investigation on this, therefore no compiled cache activated
         //'cache' => ROOT_PATH . '/cache/templates/compiled',
         'debug' => false,
-        'auto_reload ' => false,
+        'auto_reload ' => true,
         'strict_variables' => false,
         'autoescape' => true
     );

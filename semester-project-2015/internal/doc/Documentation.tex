@@ -233,8 +233,9 @@ Folgender Test zeigt die serversetige Validierung der Login Daten.
 
 \newpage
 
-\subsubsection{Neuer Channel}
-Folgend sind die Tests für die Startseite (Neuer Channel) angeführt, die nur eingeloggte Benutzer sehen können.\\\\
+\subsubsection{Channel Verwaltung}
+Folgend sind die Tests für die Channel verwaltung angeführt, die nur eingeloggte Benutzer sehen können und nur Benutzer, die die Channels angelegt haben dürfen diese auch bearbeiten.\\
+Sollten Channels gelöscht werden alle abhängigen Daten ebenso gelöscht (Benutzereinträge, Nachrichten).\\\\
 Folgender Test zeigt dass wenn es noch keine Channels gibt, der Benutzer immer die Seite für das Anlegen eines Channels angezeigt bekommt. Diese Seite bekommt er solange angezeigt bis mindestens ein Channel existiert, egal welchen Link (außer Logout) er anklickt. Eine entsprechende Meldung wird ebenso angezeigt.
 \begin{figure}[h]
 	\centering
@@ -255,7 +256,24 @@ Folgender Test zeigt die Erfolgsmeldung wenn ein Channel von einem Benutzer ange
 Folgender Test zeigt die Fehlermeldung wenn ein Channel von einem Benutzer versucht wird anzulegen dieser aber bereits mit dem eingegebenen Titel existiert. Groß- und Kleinschreibung wird hier ignoriert.
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.5]{images/start_new_channel_fail.PNG}
+	\includegraphics[scale=0.5]{images/start_new_channel_already_existing.PNG}
+	\caption
+	{Channel existiert bereits}
+\end{figure}\\\\
+
+Folgender Test zeigt die Fehlermeldung wenn versucht wird einen Channel zu selektieren/updaten/löschen und dieser nicht mehr existiert.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/start_new_channel_already_deleted.PNG}
+	\caption
+	{Channel existiert bereits}
+\end{figure}\\\\
+\newpage
+
+Folgender Test zeigt die Fehlermeldung wenn ein Channel versucht wird upzudaten, der Benutzer aber keine Änderungen angegeben hat.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{images/start_new_channel_no_change.PNG}
 	\caption
 	{Channel existiert bereits}
 \end{figure}\\\\

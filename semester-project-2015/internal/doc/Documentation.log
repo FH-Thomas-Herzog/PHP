@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.1)  30 AUG 2015 18:49
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.4.14)  1 SEP 2015 00:21
 entering extended mode
 **Documentation.tex
 
-(D:\repositories\Github\PHP\semester-project-2015\internal\doc\Documentation.te
-x
+("C:\Users\Thomas\Git Repositories\Github\FH-Hagenberg\PHP\PHP\semester-project
+-2015\internal\doc\Documentation.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -64,8 +64,8 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@dimlist=\toks15
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\pdfpages\pdfpages.sty
-Package: pdfpages 2015/07/19 v0.5a Insert pages of external PDF documents (AM)
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\pdfpages\pdfpages.sty
+Package: pdfpages 2015/04/15 v0.4w Insert pages of external PDF documents (AM)
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ifthen.sty"
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
@@ -83,8 +83,8 @@ LaTeX Info: Redefining \addtolength on input line 77.
 \calc@Ccount=\count92
 \calc@Cskip=\skip45
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\eso-pic\eso-pic.sty
-Package: eso-pic 2015/07/21 v2.0g eso-pic (RN)
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\eso-pic\eso-pic.sty
+Package: eso-pic 2013/10/06 v2.0d eso-pic (RN)
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\atbegshi.sty"
 Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
@@ -95,7 +95,7 @@ Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 ))
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\xcolor\xcolor.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\xcolor\xcolor.sty
 Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
@@ -134,42 +134,31 @@ Package graphics Info: Driver file: pdftex.def on input line 91.
 \Gin@req@height=\dimen113
 \Gin@req@width=\dimen114
 )
-\AM@pagewidth=\dimen115
-\AM@pageheight=\dimen116
-
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\pdfpages\pppdftex.def
-File: pppdftex.def 2015/07/19 v0.5a Pdfpages driver for pdfTeX (AM)
-)
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\pdflscape.sty"
-Package: pdflscape 2008/08/11 v0.10 Display of landscape pages in PDF (HO)
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\lscape.sty"
-Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
-)
-Package pdflscape Info: Auto-detected driver: pdftex on input line 80.
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\pdfpages\pppdftex.def
+File: pppdftex.def 2015/04/15 v0.4w Pdfpages driver for pdfTeX (AM)
 )
 \AM@pagebox=\box26
 \AM@toc@title=\toks16
 \c@AM@survey=\count94
 \AM@templatesizebox=\box27
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption.sty
 Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
 
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption3.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption3.sty
 Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 57.
-\captionmargin=\dimen117
-\captionmargin@=\dimen118
-\captionwidth=\dimen119
-\caption@tempdima=\dimen120
-\caption@indent=\dimen121
-\caption@parindent=\dimen122
-\caption@hangindent=\dimen123
+\captionmargin=\dimen115
+\captionmargin@=\dimen116
+\captionwidth=\dimen117
+\caption@tempdima=\dimen118
+\caption@indent=\dimen119
+\caption@parindent=\dimen120
+\caption@hangindent=\dimen121
 )
 \c@ContinuedFloat=\count95
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\minted\minted.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\minted\minted.sty
 Package: minted 2015/01/31 v2.0 Yet another Pygments shim for LaTeX
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
@@ -190,7 +179,7 @@ Package etexcmds Info: Could not find \expanded.
 (etexcmds)             that some package has redefined \expanded.
 (etexcmds)             In the latter case, load this package earlier.
 )))
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\fancyvrb\fancyvrb.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\fancyvrb\fancyvrb.sty
 Package: fancyvrb 2008/02/07
 
 Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
@@ -210,9 +199,8 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks18
 \@floatcapt=\box30
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\ifplatform\ifplatform.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\ifplatform\ifplatform.sty
 Package: ifplatform 2010/10/22 v0.4 Testing for the operating system
-
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty"
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -224,8 +212,8 @@ Package pdftexcmds Info: \pdfdraftmode found.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\catchfile.sty"
 Package: catchfile 2011/03/01 v1.6 Catch the contents of a file (HO)
 ))
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\etoolbox\etoolbox.sty
-Package: etoolbox 2015/05/04 v2.2 e-TeX tools for LaTeX (JAW)
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\etoolbox\etoolbox.sty
+Package: etoolbox 2015/03/19 v2.1d e-TeX tools for LaTeX (JAW)
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\misc\etex.sty"
 Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
@@ -233,38 +221,38 @@ Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
 )
 \etb@tempcnta=\count101
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\xstring\xstring.sty
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\generic\xstring\xstring.tex
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\xstring\xstring.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\generic\xstring\xstring.tex
 \@xs@message=\write4
 \integerpart=\count102
 \decimalpart=\count103
 )
 Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\lineno\lineno.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\lineno\lineno.sty
 Package: lineno 2005/11/02 line numbers on paragraphs v4.41
 \linenopenalty=\count104
 \output=\toks19
 \linenoprevgraf=\count105
-\linenumbersep=\dimen124
-\linenumberwidth=\dimen125
+\linenumbersep=\dimen122
+\linenumberwidth=\dimen123
 \c@linenumber=\count106
 \c@pagewiselinenumber=\count107
 \c@LN@truepage=\count108
 \c@internallinenumber=\count109
 \c@internallinenumbers=\count110
-\quotelinenumbersep=\dimen126
-\bframerule=\dimen127
-\bframesep=\dimen128
+\quotelinenumbersep=\dimen124
+\bframerule=\dimen125
+\bframesep=\dimen126
 \bframebox=\box31
 LaTeX Info: Redefining \\ on input line 3056.
 )
 \minted@appexistsfile=\read2
-\FV@BreakIndent=\dimen129
-\FV@BreakSymbolSepLeft=\dimen130
-\FV@BreakSymbolSepRight=\dimen131
-\FV@BreakSymbolIndentLeft=\dimen132
-\FV@BreakSymbolIndentRight=\dimen133
+\FV@BreakIndent=\dimen127
+\FV@BreakSymbolSepLeft=\dimen128
+\FV@BreakSymbolSepRight=\dimen129
+\FV@BreakSymbolIndentLeft=\dimen130
+\FV@BreakSymbolIndentRight=\dimen131
 \c@FancyVerbLineBreakLast=\count111
 \FV@LineBox=\box32
 \FV@LineIndentBox=\box33
@@ -283,8 +271,8 @@ cumentation.aex" <nul: /p x=^%~$PATH:i>>"Documentation.aex")...executed.
 runsystem(del "Documentation.aex")...executed.
 
 
-(D:\repositories\Github\PHP\semester-project-2015\internal\doc\_minted-Document
-ation/default.pygstyle)
+("C:\Users\Thomas\Git Repositories\Github\FH-Hagenberg\PHP\PHP\semester-project
+-2015\internal\doc\_minted-Documentation/default.pygstyle")
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\babel.sty"
 Package: babel 2008/07/08 v3.8m The Babel package
 
@@ -294,16 +282,17 @@ Package: babel 2008/07/08 v3.8m The Babel package
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\bblopts.cfg"
 File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\germanb.ldf"
-Language: germanb 2008/06/01 v2.6m German support from the babel system
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\babel-german\germanb.ldf
+Language: germanb 2014/10/10 v2.7b German support for babel (traditional orthog
+raphy)
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\babel.def"
 File: babel.def 2008/07/08 v3.8m Babel common definitions
 \babel@savecnt=\count114
-\U@D=\dimen134
+\U@D=\dimen132
 )
 \l@austrian = a dialect from \language\l@german 
-Package babel Info: Making " an active character on input line 102.
+Package babel Info: Making " an active character on input line 110.
 ))
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\inputenc.sty"
 Package: inputenc 2008/03/30 v1.1d Input encoding file
@@ -522,19 +511,19 @@ Now handling font encoding U ...
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
 ))
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\titlesec\titlesec.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\titlesec\titlesec.sty
 Package: titlesec 2011/12/15 v2.10.0 Sectioning titles
 \ttl@box=\box35
 \beforetitleunit=\skip46
 \aftertitleunit=\skip47
-\ttl@plus=\dimen135
-\ttl@minus=\dimen136
+\ttl@plus=\dimen133
+\ttl@minus=\dimen134
 \ttl@toksa=\toks23
-\titlewidth=\dimen137
-\titlewidthlast=\dimen138
-\titlewidthfirst=\dimen139
+\titlewidth=\dimen135
+\titlewidthlast=\dimen136
+\titlewidthfirst=\dimen137
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\fancyhdr\fancyhdr.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\fancyhdr\fancyhdr.sty
 \fancy@headwidth=\skip48
 \f@ncyO@elh=\skip49
 \f@ncyO@erh=\skip50
@@ -545,7 +534,7 @@ Package: titlesec 2011/12/15 v2.10.0 Sectioning titles
 \f@ncyO@olf=\skip55
 \f@ncyO@orf=\skip56
 )
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\lastpage\lastpage.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\lastpage\lastpage.sty
 
 LaTeX Warning: You have requested release `2014/05/01' of LaTeX,
                but only release `2011/06/27' is available.
@@ -589,7 +578,7 @@ Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty"
 Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
 )
-\@linkdim=\dimen140
+\@linkdim=\dimen138
 \Hy@linkcounter=\count115
 \Hy@pagecounter=\count116
 
@@ -612,15 +601,15 @@ Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4688.
 \c@Hy@tempcnt=\count118
 
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\latex\url\url.sty
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\latex\url\url.sty
 \Urlmuskip=\muskip10
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 5041.
-\XeTeXLinkMargin=\dimen141
+\XeTeXLinkMargin=\dimen139
 \Fld@menulength=\count119
-\Field@Width=\dimen142
-\Fld@charsize=\dimen143
+\Field@Width=\dimen140
+\Fld@charsize=\dimen141
 Package hyperref Info: Hyper figures OFF on input line 6295.
 Package hyperref Info: Link nesting OFF on input line 6300.
 Package hyperref Info: Hyper index ON on input line 6303.
@@ -658,8 +647,8 @@ Package geometry Warning: Over-specification in `v'-direction.
     `height' (845.04684pt) is ignored.
 
 
-(D:\repositories\Github\PHP\semester-project-2015\internal\doc\Documentation.au
-x)
+("C:\Users\Thomas\Git Repositories\Github\FH-Hagenberg\PHP\PHP\semester-project
+-2015\internal\doc\Documentation.aux")
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 107.
 LaTeX Font Info:    ... okay on input line 107.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 107.
@@ -710,16 +699,16 @@ LaTeX Font Info:    ... okay on input line 107.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box36
-(C:\Users\cchet\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
+(C:\Users\Thomas\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count125
-\scratchdimen=\dimen144
+\scratchdimen=\dimen142
 \scratchbox=\box37
 \nofMPsegments=\count126
 \nofMParguments=\count127
 \everyMPshowfont=\toks24
 \MPscratchCnt=\count128
-\MPscratchDim=\dimen145
+\MPscratchDim=\dimen143
 \MPnumerator=\count129
 \makeMPintoPDFobject=\count130
 \everyMPtoPDFconversion=\toks25
@@ -744,10 +733,10 @@ LaTeX Info: Redefining \ref on input line 107.
 LaTeX Info: Redefining \pageref on input line 107.
 LaTeX Info: Redefining \nameref on input line 107.
 
-(D:\repositories\Github\PHP\semester-project-2015\internal\doc\Documentation.ou
-t)
-(D:\repositories\Github\PHP\semester-project-2015\internal\doc\Documentation.ou
-t)
+("C:\Users\Thomas\Git Repositories\Github\FH-Hagenberg\PHP\PHP\semester-project
+-2015\internal\doc\Documentation.out")
+("C:\Users\Thomas\Git Repositories\Github\FH-Hagenberg\PHP\PHP\semester-project
+-2015\internal\doc\Documentation.out")
 \@outlinefile=\write6
 
 <scm4-2015-uebung01-communication-list.pdf, id=43, 597.23125pt x 845.1575pt>
@@ -801,8 +790,23 @@ File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
 Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf, page1 used 
 on input line 109.
 (pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
+File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
 
-<scm4-2015-uebung01-communication-list.pdf, id=49, page=2, 597.23125pt x 845.15
+<use scm4-2015-uebung01-communication-list.pdf, page 1>
+Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf, page1 used 
+on input line 109.
+(pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
+ [1
+
+ <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project
+-2015/internal/doc/scm4-2015-uebung01-communication-list.pdf
+
+pdfTeX warning: pdflatex (file C:/Users/Thomas/Git Repositories/Github/FH-Hagen
+berg/PHP/PHP/semester-project-2015/internal/doc/scm4-2015-uebung01-communicatio
+n-list.pdf): PDF inclusion: invalid other resource which is no dict (key 'ProcS
+ets', type <array>); ignored.
+>]
+<scm4-2015-uebung01-communication-list.pdf, id=80, page=2, 597.23125pt x 845.15
 75pt>
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
  <use scm4-2015-uebung01-communication-list.pdf, page 2>
@@ -817,20 +821,19 @@ on input line 109.
 (pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
 
-<use scm4-2015-uebung01-communication-list.pdf, page 1>
-Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf, page1 used 
+<use scm4-2015-uebung01-communication-list.pdf, page 2>
+Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf, page2 used 
 on input line 109.
 (pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
- [1
+ [2 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/scm4-2015-uebung01-communication-list.pdf
 
- <D:/repositories/Github/PHP/semester-project-2015/internal/doc/scm4-2015-uebun
-g01-communication-list.pdf
-
-pdfTeX warning: pdflatex (file D:/repositories/Github/PHP/semester-project-2015
-/internal/doc/scm4-2015-uebung01-communication-list.pdf): PDF inclusion: invali
-d other resource which is no dict (key 'ProcSets', type <array>); ignored.
+pdfTeX warning: pdflatex (file C:/Users/Thomas/Git Repositories/Github/FH-Hagen
+berg/PHP/PHP/semester-project-2015/internal/doc/scm4-2015-uebung01-communicatio
+n-list.pdf): PDF inclusion: invalid other resource which is no dict (key 'ProcS
+ets', type <array>); ignored.
 >]
-<scm4-2015-uebung01-communication-list.pdf, id=81, page=3, 597.23125pt x 845.15
+<scm4-2015-uebung01-communication-list.pdf, id=90, page=3, 597.23125pt x 845.15
 75pt>
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
  <use scm4-2015-uebung01-communication-list.pdf, page 3>
@@ -845,28 +848,17 @@ on input line 109.
 (pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
 File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
 
-<use scm4-2015-uebung01-communication-list.pdf, page 2>
-Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf, page2 used 
-on input line 109.
-(pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
- [2 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/scm4-2015-ue
-bung01-communication-list.pdf
-
-pdfTeX warning: pdflatex (file D:/repositories/Github/PHP/semester-project-2015
-/internal/doc/scm4-2015-uebung01-communication-list.pdf): PDF inclusion: invali
-d other resource which is no dict (key 'ProcSets', type <array>); ignored.
->]
-File: scm4-2015-uebung01-communication-list.pdf Graphic file (type pdf)
- <use scm4-2015-uebung01-communication-list.pdf, page 3>
+<use scm4-2015-uebung01-communication-list.pdf, page 3>
 Package pdftex.def Info: scm4-2015-uebung01-communication-list.pdf, page3 used 
 on input line 109.
 (pdftex.def)             Requested size: 597.25711pt x 845.19412pt.
- [3 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/scm4-2015-ue
-bung01-communication-list.pdf
+ [3 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/scm4-2015-uebung01-communication-list.pdf
 
-pdfTeX warning: pdflatex (file D:/repositories/Github/PHP/semester-project-2015
-/internal/doc/scm4-2015-uebung01-communication-list.pdf): PDF inclusion: invali
-d other resource which is no dict (key 'ProcSets', type <array>); ignored.
+pdfTeX warning: pdflatex (file C:/Users/Thomas/Git Repositories/Github/FH-Hagen
+berg/PHP/PHP/semester-project-2015/internal/doc/scm4-2015-uebung01-communicatio
+n-list.pdf): PDF inclusion: invalid other resource which is no dict (key 'ProcS
+ets', type <array>); ignored.
 >]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 117.
 
@@ -908,8 +900,9 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[4{C:/Users/cchet/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <D:/reposi
-tories/Github/PHP/semester-project-2015/internal/doc/FHO_Logo_Students.jpg>]
+[4{C:/Users/Thomas/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <C:/Users
+/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/inte
+rnal/doc/FHO_Logo_Students.jpg>]
 <images/er-model.PNG, id=112, 993.7125pt x 833.1125pt>
 File: images/er-model.PNG Graphic file (type png)
 
@@ -932,8 +925,9 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[5 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/er-mod
-el.PNG>] <images/Infrastructure.JPG, id=119, 536.0025pt x 559.33969pt>
+[5 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proje
+ct-2015/internal/doc/images/er-model.PNG>]
+<images/Infrastructure.JPG, id=119, 536.0025pt x 559.33969pt>
 File: images/Infrastructure.JPG Graphic file (type jpg)
 
 <use images/Infrastructure.JPG>
@@ -955,8 +949,8 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[6 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/Infras
-tructure.JPG>]
+[6 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proje
+ct-2015/internal/doc/images/Infrastructure.JPG>]
 Underfull \hbox (badness 10000) in paragraph at lines 156--157
 
  []
@@ -1009,9 +1003,10 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[8 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/regist
-ration_client_validation_full.PNG> <D:/repositories/Github/PHP/semester-project
--2015/internal/doc/images/registration_client_validation_email.PNG>]
+[8 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proje
+ct-2015/internal/doc/images/registration_client_validation_full.PNG> <C:/Users/
+Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/inter
+nal/doc/images/registration_client_validation_email.PNG>]
 <images/registration_server_validation_email.PNG, id=151, 820.56563pt x 423.080
 63pt>
 File: images/registration_server_validation_email.PNG Graphic file (type png)
@@ -1044,9 +1039,10 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[9 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/regist
-ration_server_validation_email.PNG> <D:/repositories/Github/PHP/semester-projec
-t-2015/internal/doc/images/registration_server_validation_username.PNG>]
+[9 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proje
+ct-2015/internal/doc/images/registration_server_validation_email.PNG> <C:/Users
+/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/inte
+rnal/doc/images/registration_server_validation_username.PNG>]
 <images/registration_success.PNG, id=162, 816.04875pt x 124.96687pt>
 File: images/registration_success.PNG Graphic file (type png)
 
@@ -1080,8 +1076,8 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[10 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/regis
-tration_success.PNG>]
+[10 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/registration_success.PNG>]
 <images/login_client_validation_full.PNG, id=170, 222.07968pt x 111.41624pt>
 File: images/login_client_validation_full.PNG Graphic file (type png)
 
@@ -1128,51 +1124,52 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[11 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/login
-_client_validation_full.PNG> <D:/repositories/Github/PHP/semester-project-2015/
-internal/doc/images/login_server_validation_credentials.PNG>]
-<images/start_new_channel_no_channels.PNG, id=181, 813.79031pt x 330.48468pt>
+[11 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/login_client_validation_full.PNG> <C:/Users/Thomas
+/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/internal/do
+c/images/login_server_validation_credentials.PNG>]
+<images/start_new_channel_no_channels.PNG, id=181, 820.56563pt x 388.45125pt>
 File: images/start_new_channel_no_channels.PNG Graphic file (type png)
 
 <use images/start_new_channel_no_channels.PNG>
 Package pdftex.def Info: images/start_new_channel_no_channels.PNG used on input
- line 241.
-(pdftex.def)             Requested size: 406.89417pt x 165.24193pt.
+ line 242.
+(pdftex.def)             Requested size: 410.28181pt x 194.22514pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--245
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 237--245
+Underfull \hbox (badness 10000) in paragraph at lines 237--246
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--245
+Underfull \hbox (badness 10000) in paragraph at lines 237--246
 
  []
 
-<images/start_new_channel_successful.PNG, id=182, 818.30719pt x 328.22626pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--246
+
+ []
+
+<images/start_new_channel_successful.PNG, id=182, 801.74532pt x 382.42876pt>
 File: images/start_new_channel_successful.PNG Graphic file (type png)
 
 <use images/start_new_channel_successful.PNG>
 Package pdftex.def Info: images/start_new_channel_successful.PNG used on input 
-line 249.
-(pdftex.def)             Requested size: 409.15259pt x 164.11272pt.
+line 250.
+(pdftex.def)             Requested size: 400.87167pt x 191.2139pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 246--253
+Underfull \hbox (badness 10000) in paragraph at lines 247--254
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 246--253
+Underfull \hbox (badness 10000) in paragraph at lines 247--254
 
  []
 
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 <use FHO_Logo_Students.jpg>
-Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 253.
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 254.
 (pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
 
 
@@ -1181,48 +1178,105 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[12 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
-_new_channel_no_channels.PNG> <D:/repositories/Github/PHP/semester-project-2015
-/internal/doc/images/start_new_channel_successful.PNG>]
-<images/start_new_channel_fail.PNG, id=192, 816.04875pt x 332.74312pt>
-File: images/start_new_channel_fail.PNG Graphic file (type png)
+[12 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/start_new_channel_no_channels.PNG> <C:/Users/Thoma
+s/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/internal/d
+oc/images/start_new_channel_successful.PNG>]
+<images/start_new_channel_already_existing.PNG, id=192, 816.80156pt x 382.42876
+pt>
+File: images/start_new_channel_already_existing.PNG Graphic file (type png)
+ <use images/start_new_channel_already_existing.PNG>
+Package pdftex.def Info: images/start_new_channel_already_existing.PNG used on 
+input line 259.
+(pdftex.def)             Requested size: 408.39978pt x 191.2139pt.
 
-<use images/start_new_channel_fail.PNG>
-Package pdftex.def Info: images/start_new_channel_fail.PNG used on input line 2
-58.
-(pdftex.def)             Requested size: 408.02338pt x 166.37114pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 255--262
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 255--262
+Underfull \hbox (badness 10000) in paragraph at lines 256--263
 
  []
 
 
-<images/start_channels_assigned_after_creation.PNG, id=193, 829.59938pt x 194.9
+Underfull \hbox (badness 10000) in paragraph at lines 256--263
+
+ []
+
+
+<images/start_new_channel_already_deleted.PNG, id=193, 818.30719pt x 383.18156p
+t>
+File: images/start_new_channel_already_deleted.PNG Graphic file (type png)
+ <use images/start_new_channel_already_deleted.PNG>
+Package pdftex.def Info: images/start_new_channel_already_deleted.PNG used on i
+nput line 267.
+(pdftex.def)             Requested size: 409.15259pt x 191.5903pt.
+
+Overfull \hbox (29.49072pt too wide) in paragraph at lines 264--271
+[]\OT1/cmr/m/n/10.95 Folgender Test zeigt die Feh-ler-mel-dung wenn ver-sucht w
+ird einen Chan-nel zu se-lek-tie-ren/updaten/l[]oschen
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 264--271
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 264--271
+
+ []
+
+File: FHO_Logo_Students.jpg Graphic file (type jpg)
+<use FHO_Logo_Students.jpg>
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 271.
+(pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (42.67912pt): 
+ Make it at least 51.68465pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[13 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/start_new_channel_already_existing.PNG> <C:/Users/
+Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/inter
+nal/doc/images/start_new_channel_already_deleted.PNG>]
+<images/start_new_channel_no_change.PNG, id=204, 807.7678pt x 362.85562pt>
+File: images/start_new_channel_no_change.PNG Graphic file (type png)
+
+<use images/start_new_channel_no_change.PNG>
+Package pdftex.def Info: images/start_new_channel_no_change.PNG used on input l
+ine 276.
+(pdftex.def)             Requested size: 403.8829pt x 181.42737pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 273--280
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 273--280
+
+ []
+
+
+<images/start_channels_assigned_after_creation.PNG, id=205, 829.59938pt x 194.9
 7844pt>
 File: images/start_channels_assigned_after_creation.PNG Graphic file (type png)
 
  <use images/start_channels_assigned_after_creation.PNG>
 Package pdftex.def Info: images/start_channels_assigned_after_creation.PNG used
- on input line 266.
+ on input line 284.
 (pdftex.def)             Requested size: 414.79868pt x 97.48897pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 263--270
+Underfull \hbox (badness 10000) in paragraph at lines 281--288
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 263--270
+Underfull \hbox (badness 10000) in paragraph at lines 281--288
 
  []
 
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 <use FHO_Logo_Students.jpg>
-Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 270.
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 288.
 (pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
 
 
@@ -1231,34 +1285,35 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[13 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
-_new_channel_fail.PNG> <D:/repositories/Github/PHP/semester-project-2015/intern
-al/doc/images/start_channels_assigned_after_creation.PNG>]
-<images/start_channels_action_fail.PNG, id=204, 836.3747pt x 231.11343pt>
+[14 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/start_new_channel_no_change.PNG> <C:/Users/Thomas/
+Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/internal/doc
+/images/start_channels_assigned_after_creation.PNG>]
+<images/start_channels_action_fail.PNG, id=215, 836.3747pt x 231.11343pt>
 File: images/start_channels_action_fail.PNG Graphic file (type png)
 
 <use images/start_channels_action_fail.PNG>
 Package pdftex.def Info: images/start_channels_action_fail.PNG used on input li
-ne 277.
+ne 295.
 (pdftex.def)             Requested size: 418.18633pt x 115.55643pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 273--281
+Underfull \hbox (badness 10000) in paragraph at lines 291--299
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 273--281
+Underfull \hbox (badness 10000) in paragraph at lines 291--299
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 273--281
+Underfull \hbox (badness 10000) in paragraph at lines 291--299
 
  []
 
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 <use FHO_Logo_Students.jpg>
-Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 283.
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 301.
 (pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
 
 
@@ -1267,72 +1322,72 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[14 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
-_channels_action_fail.PNG>]
-<images/start_channel_chat_no_channel_on_action.PNG, id=212, 816.04875pt x 109.
+[15 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/start_channels_action_fail.PNG>]
+<images/start_channel_chat_no_channel_on_action.PNG, id=223, 816.04875pt x 109.
 1578pt>
 File: images/start_channel_chat_no_channel_on_action.PNG Graphic file (type png
 )
  <use images/start_channel_chat_no_channel_on_action.PNG>
 Package pdftex.def Info: images/start_channel_chat_no_channel_on_action.PNG use
-d on input line 290.
+d on input line 308.
 (pdftex.def)             Requested size: 408.02338pt x 54.57877pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 286--294
+Underfull \hbox (badness 10000) in paragraph at lines 304--312
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 286--294
+Underfull \hbox (badness 10000) in paragraph at lines 304--312
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 286--294
+Underfull \hbox (badness 10000) in paragraph at lines 304--312
 
  []
 
 
-<images/start_channel_chat_no_message_or_following.PNG, id=213, 531.48563pt x 1
+<images/start_channel_chat_no_message_or_following.PNG, id=224, 531.48563pt x 1
 36.25906pt>
 File: images/start_channel_chat_no_message_or_following.PNG Graphic file (type 
 png)
  <use images/start_channel_chat_no_message_or_following.PNG>
 Package pdftex.def Info: images/start_channel_chat_no_message_or_following.PNG 
-used on input line 298.
+used on input line 316.
 (pdftex.def)             Requested size: 265.74216pt x 68.12935pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 295--302
+Underfull \hbox (badness 10000) in paragraph at lines 313--320
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 295--302
+Underfull \hbox (badness 10000) in paragraph at lines 313--320
 
  []
 
 
-<images/start_channel_chat_delete_following_messages.PNG, id=214, 513.41812pt x
+<images/start_channel_chat_delete_following_messages.PNG, id=225, 513.41812pt x
  140.77594pt>
 File: images/start_channel_chat_delete_following_messages.PNG Graphic file (typ
 e png)
  <use images/start_channel_chat_delete_following_messages.PNG>
 Package pdftex.def Info: images/start_channel_chat_delete_following_messages.PN
-G used on input line 306.
+G used on input line 324.
 (pdftex.def)             Requested size: 256.70842pt x 70.38779pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 303--310
+Underfull \hbox (badness 10000) in paragraph at lines 321--328
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 303--310
+Underfull \hbox (badness 10000) in paragraph at lines 321--328
 
  []
 
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 <use FHO_Logo_Students.jpg>
-Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 310.
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 328.
 (pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
 
 
@@ -1341,48 +1396,49 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[15 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
-_channel_chat_no_channel_on_action.PNG> <D:/repositories/Github/PHP/semester-pr
-oject-2015/internal/doc/images/start_channel_chat_no_message_or_following.PNG> 
-<D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start_cha
-nnel_chat_delete_following_messages.PNG>]
-<images/start_channel_chat_set_favorite_fail.PNG, id=226, 531.48563pt x 136.259
+[16 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/start_channel_chat_no_channel_on_action.PNG> <C:/U
+sers/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/
+internal/doc/images/start_channel_chat_no_message_or_following.PNG> <C:/Users/T
+homas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/intern
+al/doc/images/start_channel_chat_delete_following_messages.PNG>]
+<images/start_channel_chat_set_favorite_fail.PNG, id=237, 531.48563pt x 136.259
 06pt>
 File: images/start_channel_chat_set_favorite_fail.PNG Graphic file (type png)
  <use images/start_channel_chat_set_favorite_fail.PNG>
 Package pdftex.def Info: images/start_channel_chat_set_favorite_fail.PNG used o
-n input line 315.
+n input line 333.
 (pdftex.def)             Requested size: 265.74216pt x 68.12935pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 312--319
+Underfull \hbox (badness 10000) in paragraph at lines 330--337
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 312--319
+Underfull \hbox (badness 10000) in paragraph at lines 330--337
 
  []
 
-<images/start_channel_chat_marked_unread.PNG, id=227, 524.71031pt x 337.26pt>
+<images/start_channel_chat_marked_unread.PNG, id=238, 524.71031pt x 337.26pt>
 File: images/start_channel_chat_marked_unread.PNG Graphic file (type png)
 
 <use images/start_channel_chat_marked_unread.PNG>
 Package pdftex.def Info: images/start_channel_chat_marked_unread.PNG used on in
-put line 323.
+put line 341.
 (pdftex.def)             Requested size: 262.3545pt x 168.62958pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 320--327
+Underfull \hbox (badness 10000) in paragraph at lines 338--345
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 320--327
+Underfull \hbox (badness 10000) in paragraph at lines 338--345
 
  []
 
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 <use FHO_Logo_Students.jpg>
-Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 327.
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 345.
 (pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
 
 
@@ -1391,42 +1447,43 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[16 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
-_channel_chat_set_favorite_fail.PNG> <D:/repositories/Github/PHP/semester-proje
-ct-2015/internal/doc/images/start_channel_chat_marked_unread.PNG>]
-<images/start_channel_chat_all.PNG, id=237, 558.58687pt x 520.19344pt>
+[17 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/start_channel_chat_set_favorite_fail.PNG> <C:/User
+s/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/int
+ernal/doc/images/start_channel_chat_marked_unread.PNG>]
+<images/start_channel_chat_all.PNG, id=248, 558.58687pt x 520.19344pt>
 File: images/start_channel_chat_all.PNG Graphic file (type png)
 
 <use images/start_channel_chat_all.PNG>
 Package pdftex.def Info: images/start_channel_chat_all.PNG used on input line 3
-34.
+52.
 (pdftex.def)             Requested size: 223.43079pt x 208.07368pt.
 
-<images/start_channel_chat_favorites_only.PNG, id=238, 556.32843pt x 524.71031p
+<images/start_channel_chat_favorites_only.PNG, id=249, 556.32843pt x 524.71031p
 t>
 File: images/start_channel_chat_favorites_only.PNG Graphic file (type png)
  <use images/start_channel_chat_favorites_only.PNG>
 Package pdftex.def Info: images/start_channel_chat_favorites_only.PNG used on i
-nput line 340.
+nput line 358.
 (pdftex.def)             Requested size: 222.52742pt x 209.8804pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 329--344
+Underfull \hbox (badness 10000) in paragraph at lines 347--362
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 329--344
+Underfull \hbox (badness 10000) in paragraph at lines 347--362
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 329--344
+Underfull \hbox (badness 10000) in paragraph at lines 347--362
 
  []
 
 File: FHO_Logo_Students.jpg Graphic file (type jpg)
 <use FHO_Logo_Students.jpg>
-Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 344.
+Package pdftex.def Info: FHO_Logo_Students.jpg used on input line 362.
 (pdftex.def)             Requested size: 56.9039pt x 47.60461pt.
 
 
@@ -1435,36 +1492,36 @@ Package Fancyhdr Warning: \headheight is too small (42.67912pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[17 <D:/repositories/Github/PHP/semester-project-2015/internal/doc/images/start
-_channel_chat_all.PNG> <D:/repositories/Github/PHP/semester-project-2015/intern
-al/doc/images/start_channel_chat_favorites_only.PNG>]
-
+[18 <C:/Users/Thomas/Git Repositories/Github/FH-Hagenberg/PHP/PHP/semester-proj
+ect-2015/internal/doc/images/start_channel_chat_all.PNG> <C:/Users/Thomas/Git R
+epositories/Github/FH-Hagenberg/PHP/PHP/semester-project-2015/internal/doc/imag
+es/start_channel_chat_favorites_only.PNG>] 
 AED: lastpage setting LastPage
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 348.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 348.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 366.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 366.
 
-(D:\repositories\Github\PHP\semester-project-2015\internal\doc\Documentation.au
-x)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 348.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 348.
+("C:\Users\Thomas\Git Repositories\Github\FH-Hagenberg\PHP\PHP\semester-project
+-2015\internal\doc\Documentation.aux")
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 366.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 366.
 Package rerunfilecheck Info: File `Documentation.out' has not changed.
-(rerunfilecheck)             Checksum: E289CFD5707F6737508141571C863B07;670.
+(rerunfilecheck)             Checksum: E2A69E0446B12655719C76A52AB6009B;675.
  ) 
 Here is how much of TeX's memory you used:
- 10884 strings out of 493921
- 175254 string characters out of 3144877
- 300940 words of memory out of 3000000
- 13941 multiletter control sequences out of 15000+200000
+ 10863 strings out of 493921
+ 175763 string characters out of 3144873
+ 300933 words of memory out of 3000000
+ 13920 multiletter control sequences out of 15000+200000
  5881 words of font info for 22 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 42i,18n,43p,881b,484s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,18n,43p,881b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbsy10.pfb
 ><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
 C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:
 /Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on Documentation.pdf (17 pages, 1251035 bytes).
+Output written on Documentation.pdf (18 pages, 1292620 bytes).
 PDF statistics:
- 276 PDF objects out of 1000 (max. 8388607)
- 56 named destinations out of 1000 (max. 500000)
- 231 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 287 PDF objects out of 1000 (max. 8388607)
+ 59 named destinations out of 1000 (max. 500000)
+ 241 words of extra memory for PDF output out of 10000 (max. 10000000)
 

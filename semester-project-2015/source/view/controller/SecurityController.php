@@ -20,6 +20,13 @@ class SecurityController extends SingletonObject
 {
     private static $SESSION_USER_ID = "SESSION_USER_ID";
 
+    /**
+     * The session timeout in minutes, means the time span a user is allowed to do nothing on the application
+     * Represents session timeout in minutes.
+     * @var string
+     */
+    public static $SESSION_TIMEOUT_MINUTES = 30;
+
     private $sessionController;
 
     private static $instance = null;
@@ -111,6 +118,28 @@ class SecurityController extends SingletonObject
     {
         if (!isset($userId)) {
             return false;
+        }
+        return false;
+    }
+
+
+    /**
+     * Validates the current user session if it is valid.
+     * @return bool true if session is still valid false otherwise
+     */
+    public function validateUserSession()
+    {
+        if ($this->isUserLogged()) {
+            $now = new \DateTime();
+            $lastAccess = $this->sessionController->getAttribute(SessionController::$LAST_ACCESS_TIME);
+            $lastAccess->modify("+ " . self::$SESSION_TIMEOUT_MINUTES . " minutes");
+            if ($now > $lastAccess) {
+                $this->logoutUser();
+                $this->sessionController->destroySession();
+                return false;
+            }
+            $this->sessionController->setLastAccess();
+            return true;
         }
         return false;
     }

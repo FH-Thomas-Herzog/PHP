@@ -24,6 +24,13 @@ class ChannelMessageUserEntryEntityController extends AbstractEntityController
         " WHERE user_id = ? " .
         " AND channel_message_id = ? ";
 
+    public static $SQL_DELETE_MESSAGE_USER_ENTRIES_FOR_CHANNEL =
+        " DELETE FROM channel_message_user_entry " .
+        " WHERE channel_message_id IN ( " .
+        " SELECT DISTINCT id FROM channel_message " .
+        " WHERE channel_id = ? " .
+        " ) ";
+
     public function __construct()
     {
         parent::__construct();
@@ -39,7 +46,8 @@ class ChannelMessageUserEntryEntityController extends AbstractEntityController
         throw new InternalErrorException("Deletion of channel_message_user_entry entries not allowed");
     }
 
-    public function markMessageAsImportant($userId, $messageId, $importantFlag) {
+    public function markMessageAsImportant($userId, $messageId, $importantFlag)
+    {
         parent::open();
 
         $stmt = null;
@@ -79,7 +87,7 @@ class ChannelMessageUserEntryEntityController extends AbstractEntityController
         $result = null;
         $p1 = (integer)$args["userId"];
         $p2 = (integer)$args["channelMessageId"];
-        $p3 = (!empty($args["markRead"])) ? (integer) $args["markRead"] : 0;
+        $p3 = (!empty($args["markRead"])) ? (integer)$args["markRead"] : 0;
         $p4 = (!empty($args["readFlag"])) ? ((boolean)$args["readFlag"]) : 0;
         $p5 = (!empty($args["importantFlag"])) ? ((boolean)$args["importantFlag"]) : 0;
 

@@ -26,9 +26,15 @@ class ChannelUserEntryEntityController extends AbstractEntityController
 
     public static $SQL_UPDATE_RESET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=0 WHERE favorite_flag=1 AND user_id=?";
 
+    public static $SQL_UPDATE_SET_FAVORITE_CHANNEL = "UPDATE channel_user_entry SET favorite_flag=1 WHERE channel_id = ? AND user_id=?";
+
     private static $SQL_UPDATE_CHANNEL_USER_ENTRY = "UPDATE channel_user_entry SET favorite_flag=? WHERE user_id=? AND channel_id=?";
 
     private static $SQL_DELETE_CHANNEL_USER_ENTRY = "DELETE FROM channel_user_entry WHERE user_id = ? AND channel_id = ?";
+
+    public static $SQL_DELETE_USER_ENTRIES_FOR_CHANNEL =
+        " DELETE FROM channel_user_entry " .
+        " WHERE channel_id = ? ";
 
     public function __construct()
     {
