@@ -105,11 +105,15 @@
                             </a>
                         </li>
                     </ul>
-                    <a class="input-group-addon" id="messageLabel" data-toggle="dropdown" aria-haspopup="true"
+                    <a class="input-group-addon" id="messageActions" data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
                         <span class="glyphicon glyphicon-text-background" aria-hidden="true"/>
                     </a>
-                    <textarea id="messageTextArea" name="message" rows="3" class="form-control" required/>
+
+                    <div class="form-group"><label id="messageLabel"
+                                                   class="control-label">Message</label>
+                        <textarea id="messageTextArea" name="message" rows="3" class="form-control" required/>
+                    </div>
                 </div>
             </form>
         </div>
@@ -171,7 +175,6 @@
             $('#postMessageForm').submit();
         }
     });
-
     updateFavoriteOnlyLink();
     ]]>
 </script>
